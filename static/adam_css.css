@@ -1,0 +1,70 @@
+/******************************************************************
+Theme Name: Personal
+Description:
+Author: Adam Klaus
+Version: 1.0
+Created:
+******************************************************************/
+/*------------------------------------------------------------------
+
+
+-------------------------------------------------------------------*/
+/*------------------------------------------------------------------
+[Table of contents]
+
+1.  Basic Styles
+2.  Elements
+3.  Menu Style
+4.  Home Page Style
+5.  About Page Style
+6.  Department Page Style
+7.  Blog Page Style
+8.  Contact Page Style
+9.  Footer Style
+
+-------------------------------------------------------------------*/
+/* =================================== */
+/*  Font Family and Colors Styles
+/* =================================== */
+/*
+
+$primary-font	: 'Poppins', sans-serif;
+---------------------------------------------
+
+$primary-color	: #8490ff;
+$title-color	: #222222;
+$text-color		: #777777;
+
+$white			: #fff;
+$offwhite		: #f9f9ff;
+$black			: #222;
+
+*/
+/* =================================== */
+/*  Basic Style
+/* =================================== */
+
+.c{
+    position: relative;
+    float:left;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+   }
+   .c img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 100%;
+    width: auto;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+   }
+   .c img.portrait {
+    width: auto;
+    height: auto;
+   }
+
+
+/*-------- end footer Area -------------*/
