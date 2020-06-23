@@ -18,6 +18,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='adam_css.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='clean-blog.min.css') }}" rel="stylesheet">
 
     <!--CSS From Example Personal Website -->
@@ -72,65 +73,81 @@
     </nav> -->
 
   <header>
-    
+  <div>    
     <img src="{{ url_for('static', filename='iconsnew.png') }}" alt="almostdatascience" width=100% height=20%>
-  <header>    
+  </div>
 
-    <nav class="navbar navbar-expand-lg">
-      <div class="container">
-          <ul class="nav navbar-nav"> 
-              <li class="active"><a href="#">home</a></li>
-              <li><a href="#">ask a question!</a></li>
-              <li><a href="learn.html">learn</a></li>
-              <li><a href="#">contact</a></li>
-          </ul>
-          <style>
-          .navbar{
-              background:transparent;
-          }
-          </style>
-      </div>
+  <div class="nav">
+    <style>
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+      }
+      
+      li {
+        float: left;
+      }
+      
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      
+      li a:hover {
+        background-color: #111;
+      }
+      </style>
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+  </div>
 
-    </nav>
+  </header>
 
 
+  <!-- Main Content -->
 
-  <body>
-
-    <!-- Main Content -->
-
-    <div id="home-features" class="features-wrap prospect">
-      <div id="home-feature-1" class="home-feature">
-        <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
-        <h5>College K Nearest Neighbor</h5>
-        <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
-        <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
-      </div>
-      <div id="home-feature-1" class="home-feature">
-        <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
-        <h5>College K Nearest Neighbor</h5>
-        <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
-        <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
-      </div>
-      <div id="home-feature-1" class="home-feature">
-        <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
-        <h5>College K Nearest Neighbor</h5>
-        <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
-        <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
-      </div>
+  <div id="home-features" class="features-wrap prospect">
+    <div id="home-feature-1" class="home-feature">
+      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
+      <h5>College K Nearest Neighbor</h5>
+      <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
+      <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
     </div>
-    
-    
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <p class="copyright text-muted">Copyright &copy; almostdatascience 2020</p>
-          </div>
+    <div id="home-feature-1" class="home-feature">
+      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
+      <h5>College K Nearest Neighbor</h5>
+      <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
+      <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
+    </div>
+    <div id="home-feature-1" class="home-feature">
+      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='image078.png') }}" class="aligncenter"></a>
+      <h5>College K Nearest Neighbor</h5>
+      <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
+      <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
+    </div>
+  </div>
+  
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p class="copyright text-muted">Copyright &copy; almostdatascience 2020</p>
         </div>
       </div>
-    </footer>
+    </div>
+  </footer>
 
     <!-- Bootstrap core JavaScript -->
     <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
