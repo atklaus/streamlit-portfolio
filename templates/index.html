@@ -3,115 +3,58 @@
 
   <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Custom fonts for this template -->
-    <link href="{{ url_for('static', filename='font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <!-- Custom fonts for this template -->
+  <link href="{{ url_for('static', filename='font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='adam_css.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='clean-blog.min.css') }}" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link rel='stylesheet' href="{{ url_for('static', filename='personal.css') }}" type='text/css'/>
+  <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
 
-    <!--CSS From Example Personal Website -->
-    <link href="{{ url_for('static', filename='bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='linearicons.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='magnific-popup.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='jquery-ui.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='nice-select.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='animate.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='owl.carousel.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+  <!--CSS From Example Personal Website -->
+  <link href="{{ url_for('static', filename='linearicons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='magnific-popup.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='jquery-ui.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='nice-select.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='animate.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='owl.carousel.css') }}" rel="stylesheet">
 
-    <!--Green Mountain -->
-    <link rel='stylesheet' id='gmec-tx-ion-icons-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=5.4.2' type='text/css' media='all' />
 
-    <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='gmx.css') }}" type='text/css' media='all' />
-
-    <style>
-      /* Accessible for screen readers but hidden from view */
-      .fa-hidden { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
-      .rtl .fa-hidden { left:10000px; }
-      .fa-showtext { margin-right: 5px; }
-    </style>
+  <!--Green Mountain -->
+  <link rel='stylesheet' id='gmec-tx-ion-icons-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=5.4.2' type='text/css' media='all' />
+  <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='gmx.css') }}" type='text/css' media='all' />
 
   </head>
 
-  <!-- Navigation  -->
 
-
-
-    <!-- <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
-      <div class="container">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fa fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('about') }}">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://drive.google.com/file/d/1aUZPpfrpLv7G0UI3nHK3JI8MjdbALP2E/view?usp=sharing">Resume</a>
-            </li>
-          </ul>
-          </ul>
-        </div>
-      </div>
-    </nav> -->
+  <!-- Header Image  -->
 
   <header>
-  <div>    
-    <img src="{{ url_for('static', filename='iconsnew.png') }}" alt="almostdatascience" width=100% height=20%>
-  </div>
-
-  <div class="nav">
-    <style>
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #333;
-      }
-      
-      li {
-        float: left;
-      }
-      
-      li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-      }
-      
-      li a:hover {
-        background-color: #111;
-      }
-      </style>
-      <ul>
-        <li><a class="active" href="#home">Home</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#about">About</a></li>
-      </ul>
-  </div>
-
+    <div>
+      <img src="{{ url_for('static', filename='iconsnew.png') }}" alt="almostdatascience" width=100% height=20%>
+    </div>
   </header>
+
+  
+  <!-- Navigation  -->
+  <div class="bestNav">
+    <ul >
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('about') }}">About</a></li>
+      <li><a href="https://drive.google.com/file/d/1aUZPpfrpLv7G0UI3nHK3JI8MjdbALP2E/view?usp=sharing">Resume</a></li>
+    </ul>
+  </div>
+
 
 
   <!-- Main Content -->
@@ -136,27 +79,28 @@
       <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
     </div>
   </div>
-  
-  
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <p class="copyright text-muted">Copyright &copy; almostdatascience 2020</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
-
-    <!-- Custom scripts for this template -->
-    <script src="{{ url_for('static', filename='clean-blog.min.js') }}"></script>
 
   </body>
+  
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <p class="copyright text-muted">Copyright &copy; almostdatascience.com 2020</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+
+
+  <!-- Custom scripts for this template -->
+  <script src="{{ url_for('static', filename='clean-blog.min.js') }}"></script>
+
+
 
 </html>
