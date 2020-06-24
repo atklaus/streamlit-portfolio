@@ -9299,7 +9299,7 @@
   #home-features {
     background-color: #DFF2F7;
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Oswald',sans-serif, Arial, Helvetica ;
     padding-top: 14px;
     padding-bottom: 51px;
   }
@@ -9342,8 +9342,8 @@
   }
   
   #home-features h5 {
-    color: #525455;
-    font-family: sans-serif;
+    color: #000000;
+    font-family: 'Oswald',sans-serif;
   }
   
   #home-features .home-features-text {
