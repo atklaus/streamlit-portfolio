@@ -9,6 +9,7 @@
   <meta name="author" content="">
 
   <title>Adam Klaus</title>
+  <link rel = "icon" href =  "{{ url_for('static', filename='images/logo.png') }}" type = "image/x-icon"> 
 
   <!-- Bootstrap core CSS -->
   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -49,9 +50,31 @@
   <!-- Navigation  -->
   <div class="bestNav">
     <ul >
-      <li><a href="{{ url_for('index') }}">Home</a></li>
-      <li><a href="{{ url_for('about') }}">About</a></li>
-      <li><a href="https://drive.google.com/file/d/1aUZPpfrpLv7G0UI3nHK3JI8MjdbALP2E/view?usp=sharing">Resume</a></li>
+      <li>
+        <a href="{{ url_for('index') }}">
+          <img alt="Home" src="{{ url_for('static', filename='images/house.png') }} " width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="{{ url_for('about') }}">
+          <img alt="About" src="{{ url_for('static', filename='images/info.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://drive.google.com/file/d/1aUZPpfrpLv7G0UI3nHK3JI8MjdbALP2E/view?usp=sharing">
+          <img alt="Resume" src="{{ url_for('static', filename='images/resume.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://www.linkedin.com/in/adam-klaus/">
+          <img alt="LinkedIn" src="{{ url_for('static', filename='images/linkedin.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://github.com/atklaus?tab=repositories">
+          <img alt="Code" src="{{ url_for('static', filename='images/code.png') }}" width=25% height=30%>
+        </a>
+      </li>
     </ul>
   </div>
 
@@ -61,10 +84,10 @@
 
   <div id="home-features" class="add-wrap prospect">
     <div id="home-feature-1" class="home-feature">
-      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='images/university.png') }}" class="aligncenter"></a>
+      <a href="{{ url_for('soon') }}" class="imglink"><img src="{{ url_for('static', filename='images/university.png') }}" class="aligncenter"></a>
       <h5>College K Nearest Neighbor</h5>
       <p class="home-features-text">Guess colleges competitors based on a nearest neighbor model.</p>
-      <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
+      <a href="{{ url_for('soon') }}"><button class="button home-features-button">Get Started</button></a>
     </div>
   </div>
 

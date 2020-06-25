@@ -92,7 +92,7 @@ $black			: #222;
     }
     
     .bestNav li {
-    width: 120px;
+    width: 80px;
     border-bottom: none;
     height: 50px;
     line-height: 50px;
@@ -111,6 +111,11 @@ $black			: #222;
     overflow: auto;
     }
 
+  
+    .navicon {
+
+      font-size:0;
+    }
 
 /* =================================== */
 /*  Basic Style
@@ -276,3 +281,4 @@ ul.images li {
   width: 150px;
   height: 150px;
 }
+

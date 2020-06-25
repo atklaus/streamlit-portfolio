@@ -23,6 +23,11 @@ def test():
     return render_template('test.html')
 
 
+@app.route('/soon')
+def soon():
+    return render_template('soon.html')
+
+
 @app.route('/version')
 def version():
     return '1.1.1'
