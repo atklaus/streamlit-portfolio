@@ -22,12 +22,6 @@ def about():
 def test():
     return render_template('test.html')
 
-@app.route('/update_server',methods=['POST'])
-def foo():
-   data = json.loads(request.data)
-   print "New commit by: {}".format(data['commits'][0]['author']['name'])
-   return "OK"
-
 
 @app.route('/version')
 def version():
