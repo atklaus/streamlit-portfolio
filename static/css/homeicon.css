@@ -9297,7 +9297,7 @@
   }
   
   #home-features {
-    background-color: #DFF2F7;
+    /* background-color: #DFF2F7; */
     text-align: center;
     font-family: 'Oswald',sans-serif, Arial, Helvetica ;
     padding-top: 14px;
@@ -9314,6 +9314,7 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     transition: all .3s ease;
+    background-color: #DFF2F7;
   }
   
   .hide-on-mobile,.page-sun-club-recipients .sc-head-img,.single-gmec_sc_install .sc-head-img,.tax-gmec_sc_install_cat .sc-head-img {

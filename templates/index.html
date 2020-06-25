@@ -8,12 +8,13 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <title>Adam Klaus</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
   <!-- Custom fonts for this template -->
-  <link href="{{ url_for('static', filename='font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;500;800;900&display=swap" rel="stylesheet">
@@ -22,21 +23,15 @@
 
 
   <!-- Custom styles for this template -->
-  <link rel='stylesheet' href="{{ url_for('static', filename='personal.css') }}" type='text/css'/>
-  <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+  <link rel='stylesheet' href="{{ url_for('static', filename='css/personal.css') }}" type='text/css'/>
 
   <!--CSS From Example Personal Website -->
-  <link href="{{ url_for('static', filename='linearicons.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='magnific-popup.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='jquery-ui.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='nice-select.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='animate.min.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='owl.carousel.css') }}" rel="stylesheet">
+
 
 
   <!--Green Mountain -->
   <link rel='stylesheet' id='gmec-tx-ion-icons-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=5.4.2' type='text/css' media='all' />
-  <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='gmx.css') }}" type='text/css' media='all' />  
+  <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='css/homeicon.css') }}" type='text/css' media='all' />  
   
 
   </head>
@@ -46,7 +41,7 @@
 
   <header>
     <div>
-      <img src="{{ url_for('static', filename='other_banner.png') }}" alt="almostdatascience" width=100% height=20%>
+      <img src="{{ url_for('static', filename='images/banner.png') }}" alt="almostdatascience" width=100% height=20%>
     </div>
   </header>
 
@@ -66,9 +61,9 @@
 
   <div id="home-features" class="add-wrap prospect">
     <div id="home-feature-1" class="home-feature">
-      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='university.png') }}" class="aligncenter"></a>
+      <a href="{{ url_for('about') }}" class="imglink"><img src="{{ url_for('static', filename='images/university.png') }}" class="aligncenter"></a>
       <h5>College K Nearest Neighbor</h5>
-      <p class="home-features-text">Protect the Earth and power your home with our 100% renewable wind energy plan.</p>
+      <p class="home-features-text">Guess colleges competitors based on a nearest neighbor model.</p>
       <a href="{{ url_for('about') }}"><button class="button home-features-button">Get Started</button></a>
     </div>
   </div>
@@ -85,11 +80,9 @@
 
 
   <!-- Bootstrap core JavaScript -->
-  <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 
 
-  <!-- Custom scripts for this template -->
-  <script src="{{ url_for('static', filename='clean-blog.min.js') }}"></script>
 
 
 

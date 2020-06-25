@@ -8,48 +8,40 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Clean Blog - Start Bootstrap Theme</title>
+    <title>Adam Klaus</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="{{ url_for('static', filename='font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&family=Volkhov&display=swap" rel="stylesheet">
+  
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='clean-blog.min.css') }}" rel="stylesheet">
-    <link href="static/personal.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/personal.css') }}" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
     <!--CSS From Example Personal Website -->
-    <link href="{{ url_for('static', filename='linearicons.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='magnific-popup.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='jquery-ui.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='nice-select.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='animate.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='owl.carousel.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+
 
   </head>
 
-
-    <!-- Navigation -->
-
-
-    <!-- Page Header -->
+<!-- Page Header -->
       
 
     <header>
       <div>
-        <img src="{{ url_for('static', filename='other_banner.png') }}" alt="almostdatascience" width=100% height=20%>
+        <img src="{{ url_for('static', filename='images/banner.png') }}" alt="almostdatascience" width=100% height=20%>
       </div>
     </header>
 
-      <!-- Navigation  -->
+<!-- Navigation  -->
   <div class="bestNav">
-  </style>
     <ul >
       <li><a href="{{ url_for('index') }}">Home</a></li>
       <li><a href="{{ url_for('about') }}">About</a></li>
@@ -59,19 +51,31 @@
 
   <body>
   
+<!-- Main Content -->
+
+<!-- Split row into two columns -->
     <div class="container-fluid">
       <div class="row">
-          <div class="col-lg-4 row justify-content-md-center">
+          <div class="col-lg-5 row justify-content-md-center">
             <div id="text-main" class="col-9 text-main" style="visibility: visible;right: 0%;opacity: 1;">
 
               <div class="justify-content-md-center col-centered">
-                <h1>Adam Klaus</h1>
-                  <p class="intro">I'm a product designer based in sunny Sydney, Australia.</p>
-                  <p>I enjoy turning complex problems into simple, beautiful and intuitive designs. When I'm not coding, tweeting or pushing pixels, you'll find me cooking, gardening or working out in the park.</p>
+                <div class="bio-text">Adam Klaus</div>
+                  <p class="bio-body">I'm a higher education consultant and developer based in Chicago. </p>
+                  <p class="bio-body">
+                
+                  In my current role, I'm passionate about creating automated client deliverables that can accomodate dynamic input, so any time a client has a problem, 
+                  we have the analytics at our fingertips to know how to advise them. 
+                  </p>
+                  <p class="bio-body">
+                  When I am not analyzing enrollment data for one of my university clients, 
+                  I'm working on sprint tasks in all parts the software development lifecycle. 
+                  My consulting work gives me the unique experience of understanding clients needs and then being able to convert that business logic into reusable programs. 
+                 </p>
                     
                   <p>
                     <figure>
-                      <img src="{{ url_for('static', filename='IMG_5085.jpg') }}" alt="almostdatascience" width=100% height=20%>
+                      <img src="{{ url_for('static', filename='images/profile1.jpg') }}" alt="almostdatascience" width=100% height=20%>
                     </figure>
                   </p>
               </div>
@@ -79,15 +83,13 @@
             </div>            
           </div>
 
-          <!-- Timeline -->          
-          <div class="col-lg-8 text-main">
+<!-- Timeline -->          
+          <div class="col-lg-7 text-main">
             <section class="timeline pt-80 pb-80">
 
-              <div class="text-center">
-                  <div class="menu-content pb-40">
-                      <div class="title text-center">
-                          <h1 class="mb-10">My Experience</h1>
-                      </div>
+                <div class="menu-content pb-40">
+                    <div class="title text-center">
+                        <h5 class="bio-text">My Experience</h5>
                   </div>
               </div>
           <ul>
@@ -152,37 +154,18 @@
       </div>
   </div>
 
-  <div class="row">
-    <div id="text-main" class="col-1 text-main" style="visibility: visible; right: 0%; opacity: 1;">
 
-  
-  </div>
+  <!-- Footer -->
+  <footer>
 
-  <div id="img-main" class="col-7 align-c" style="visibility: visible; left: 0%; opacity: 1;">
+    <div class="col-md-6">
+      <p class="copyright text-muted">Copyright &copy; almostdatascience.com 2020</p>
+    </div>
 
-  <!-- Main Content -->
-
-
-</body>
-
-
-    <!-- Footer -->
-    <footer>
-
-      <div class="col-md-6">
-        <p class="copyright text-muted">Copyright &copy; almostdatascience.com 2020</p>
-      </div>
-
-  </footer>
+  </footer> 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='popper.min.js') }}"></script>
-
-
-    <!-- Custom scripts for this template -->
-    <script src="{{ url_for('static', filename='clean-blog.min.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   
 
 </html>
