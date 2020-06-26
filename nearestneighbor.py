@@ -50,7 +50,7 @@ name_df = pd.read_excel('UNITID Crosswalk.xlsx')
 
 master_df = pd.merge(master_df, name_df,  how='left', left_on=['UNITID'], right_on=['UNITID'])
 
-master_df.to_csv('ipeds_2018.csv', index = False)
+master_df.to_csv('ipeds_2018.csv', index = False, encoding = 'utf8')
 
 
 
