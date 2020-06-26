@@ -1,6 +1,9 @@
 """Prepare data for Plotly Dash."""
 import pandas as pd
 import numpy as np
+import os
+THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+data_file = os.path.join(THIS_FOLDER, 'data/311-calls.csv')
 
 
 def create_dataframe():
