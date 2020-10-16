@@ -3,6 +3,10 @@ from flask import render_template
 from flask import current_app as app
 from flask import Flask, request
 import git
+import time
+import re
+import os
+import requests
 
 @app.route('/')
 def index():
@@ -38,7 +42,7 @@ def testdash():
         body="This is a homepage served with Flask."
     )
 
-@app.route('/update_server', methods=['POST'])
+@app.route('/update_server', methods=['GET','POST'])
 def webhook():
     if request.method == 'POST':
         repo = git.Repo('/var/www/')

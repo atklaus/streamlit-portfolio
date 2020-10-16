@@ -32,10 +32,10 @@ def version():
     return '1.1.1'
 
 
-@app.route('/update_server', methods=['POST'])
+@app.route('/update_server')
 def webhook():
     if request.method == 'POST':
-        repo = git.Repo('https://github.com/atklaus/PersonalBlog.git')
+        repo = git.Repo('/var/www/')
         origin = repo.remotes.origin
         origin.pull()
         return 'Updated PythonAnywhere successfully', 200
