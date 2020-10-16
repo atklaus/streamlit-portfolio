@@ -3,10 +3,6 @@ from flask import render_template
 from flask import current_app as app
 from flask import Flask, request
 import git
-import time
-import re
-import os
-import requests
 
 @app.route('/')
 def index():
