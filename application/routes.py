@@ -41,7 +41,7 @@ def testdash():
 @app.route('/update_server', methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        repo = git.Repo('path/to/git_repo')
+        repo = git.Repo('https://github.com/atklaus/PersonalBlog.git')
         origin = repo.remotes.origin
         origin.pull()
         return 'Updated PythonAnywhere successfully', 200
