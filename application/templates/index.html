@@ -28,8 +28,6 @@
 
   <!--CSS From Example Personal Website -->
 
-
-
   <!--Green Mountain -->
   <link rel='stylesheet' id='gmec-tx-ion-icons-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=5.4.2' type='text/css' media='all' />
   <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='css/homeicon.css') }}" type='text/css' media='all' />  
@@ -41,15 +39,26 @@
   <!-- Header Image  -->
 
   <header>
-    <div>
-      <img src="{{ url_for('static', filename='images/banner.png') }}" alt="almostdatascience" width=100% height=20%>
-    </div>
-  </header>
 
+    <div class="container">
+      <div class="row">
+        <a >
+          <img class = "logo" float="left" src="{{ url_for('static', filename='images/final_adsc_logo.png') }}" alt="almostdatascience" width=10% height=100% >
+        </a>  
   
-  <!-- Navigation  -->
-  <div class="bestNav">
-    <ul >
+
+      </div>
+
+    </div>
+
+
+    <div class="bestNav">
+
+      <ul >
+      <a >
+        <img class = "logo" float="left" src="{{ url_for('static', filename='images/final_adsc_logo.png') }}" alt="almostdatascience" width=10% height=100% >
+      </a>  
+
       <li>
         <a href="{{ url_for('index') }}">
           <img alt="Home" src="{{ url_for('static', filename='images/house.png') }} " width=25% height=30%>
@@ -78,9 +87,16 @@
     </ul>
   </div>
 
+  </header>
+
+  
+  <!-- Navigation  -->
+  
 
 
   <!-- Main Content -->
+  <tbody>
+
 
   <div id="home-features" class="add-wrap prospect">
     <div id="home-feature-1" class="home-feature">
@@ -91,22 +107,19 @@
     </div>
   </div>
 
+  </tbody>
+
   
     <!-- Footer -->
-    <footer>
-
-        <div class="col-md-6">
-          <p class="copyright text-muted">Copyright &copy; almostdatascience.com 2020</p>
-        </div>
-
-    </footer>
+    <div class="container-fluid text-left bottom-container">
+      <footer>
+          <p>Copyright &copy;2020. almostdatascience.com.</p>
+      </footer>
+    </div>
 
 
   <!-- Bootstrap core JavaScript -->
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-
-
-
 
 
 </html>

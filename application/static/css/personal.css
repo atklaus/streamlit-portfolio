@@ -39,11 +39,6 @@ $black			: #222;
 
 /* Add a black background color to the top navigation */
 
-/* =================================== */
-/*  Basic Style
-/* =================================== */
-
-
 
 .bestNav a, a:visited {
     color:white;
@@ -55,19 +50,19 @@ $black			: #222;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
-    /* padding-left: 6.3em; */
-    }
-    
-    .bestNav li {
-    font-family: sans-serif, Arial, Helvetica;
-    font-size: 1.2em;
-    
+    background-color: rgb(116, 116, 116);
+    border-bottom: none;
+    vertical-align: bottom;
+    width: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
     }
     
     .bestNav a {
     text-decoration: none;
     color: #fff;
+    vertical-align: bottom;
+    border-bottom: none;
     }
     
     .bestNav li a {
@@ -78,7 +73,7 @@ $black			: #222;
     }
     
     .bestNav li a:hover {
-    background-color: #005f5f;
+    background-color: #803d3d;
     transition: .3s background-color;
     }
     
@@ -86,25 +81,23 @@ $black			: #222;
     background-color: #fff;
     color: #444;
     }
-    
+        
     .bestNav li {
-    margin-bottom: 0;
-    }
-    
-    .bestNav li {
-    width: 80px;
+    font-family: sans-serif, Arial, Helvetica;
+    font-size: 1.2em;
+    margin-top:3%;
+    /* margin-bottom:5%; */
+    width: 120px;
     border-bottom: none;
     height: 50px;
     line-height: 50px;
     font-size: 1.4em;
-    }
+    float: right
+
+  }
     
     .bestNav li {
     display: inline-block;
-    }
-    
-    .bestNav li {
-    float: left;
     }
     
     .bestNav ul {
@@ -282,3 +275,20 @@ ul.images li {
   height: 150px;
 }
 
+/* =================================== */
+/*  header
+/* =================================== */
+
+.navbar-inverse .navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+.navbar-brand img {
+  height: 100%;
+  margin-right: 20px;
+}
+
+.logo {
+vertical-align: bottom;
+}
