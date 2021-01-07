@@ -9,6 +9,7 @@ html_layout = '''
             {%favicon%}
             {%css%}
         </head>
+        {% include "includes/nav.html" %}
         <body class="dash-template">
             <header>
               <div class="nav-wrapper">
