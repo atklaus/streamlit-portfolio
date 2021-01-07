@@ -7,17 +7,16 @@ import dash_html_components as html
 import dash_core_components as dcc
 from .data import create_dataframe
 from .layout import html_layout
+import plotly.express as px
+
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 
 def create_dashboard(server):
     """Create a Plotly Dash dashboard."""
-    dash_app = dash.Dash(
+    dash_app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
         server=server,
-        routes_pathname_prefix='/dashapp/',
-        external_stylesheets=[
-            '/static/css/dashstyles.css',
-            'https://fonts.googleapis.com/css?family=Lato'
-        ]
+        routes_pathname_prefix='/dashapp/'
     )
 
     # Load DataFrame
