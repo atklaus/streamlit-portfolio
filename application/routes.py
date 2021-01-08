@@ -22,7 +22,7 @@ def version():
     return '1.1.1'
 
 
-@app.route('/dash')
+@app.route('/dashapp')
 def testdash():
     """Landing page."""
     return render_template(
