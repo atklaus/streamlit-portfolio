@@ -13,13 +13,14 @@
           </div>
         </div>
         <div id="ik0zo" class="cell gpd-navbar__menu">
-          <a id="ikdod" href="" class="gpd-icon">
+          <a id="ikdod" class="gpd-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z">
               </path>
             </svg>
           </a>
         </div>
+
         <div id="ij7oc" class="cell gpd-navbar__items">
           <div id="i4dfto">
             <a id="izkljc" href="{{url_for('index')}}" class="gpd-link-box nav-icon">
@@ -69,3 +70,13 @@
       </svg>
     </div>
 
+    <script>
+      function myFunction() {
+        var x = document.getElementById("ij7oc");
+        if (x.style.display === "block") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "block";
+        }
+      }
+      </script>
