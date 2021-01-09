@@ -5,7 +5,6 @@ import dash
 import dash_table
 import dash_html_components as html
 import dash_core_components as dcc
-from .data import create_dataframe
 from .layout import html_layout
 import plotly.express as px
 from dash.dependencies import Input, Output 
