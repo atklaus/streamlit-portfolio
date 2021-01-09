@@ -7,7 +7,7 @@ import os
 with open(os.path.join(BASE_DIR,'templates','includes','nav.html'), 'r') as temp:
     NAV_HTML = temp.read().replace('\n', '')
 
-with open(os.path.join(BASE_DIR,'templates','includes','footer.html')) as temp:
+with open(os.path.join(BASE_DIR,'templates','includes','footer.html'), 'r') as temp:
     FOOTER_HTML = temp.read().replace('\n', '')
 
 DASH_HEADER = '''
