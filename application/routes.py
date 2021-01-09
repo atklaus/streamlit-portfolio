@@ -16,21 +16,10 @@ def about():
 def soon():
     return render_template('soon.html')
 
-
 @app.route('/version')
 def version():
     return '1.1.1'
 
 
-@app.route('/dashapp')
-def testdash():
-    """Landing page."""
-    return render_template(
-        'index.jinja2',
-        title='Plotly Dash Flask Tutorial',
-        description='Embed Plotly Dash into your Flask applications.',
-        template='home-template',
-        body="This is a homepage served with Flask."
-    )
 
 
