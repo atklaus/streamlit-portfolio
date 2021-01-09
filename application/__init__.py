@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_redis import FlaskRedis
 from flask_assets import Environment
 
-
 # Globally accessible libraries
 db = SQLAlchemy()
 r = FlaskRedis()
