@@ -1,10 +1,13 @@
 """Plotly Dash HTML layout override."""
 
+from ..config import BASE_DIR
 import dash
-with open("application/templates/includes/nav.html", 'r') as temp:
+import os
+
+with open(os.path.join(BASE_DIR,'templates','includes','nav.html'), 'r') as temp:
     NAV_HTML = temp.read().replace('\n', '')
 
-with open("application/templates/includes/footer.html", 'r') as temp:
+with open(os.path.join(BASE_DIR,'templates','includes','footer.html')) as temp:
     FOOTER_HTML = temp.read().replace('\n', '')
 
 DASH_HEADER = '''
