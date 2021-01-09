@@ -12,13 +12,9 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/soon')
-def soon():
-    return render_template('soon.html')
-
 @app.route('/version')
 def version():
-    return '1.1.1'
+    return '2.1.1'
 
 
 
