@@ -2,12 +2,12 @@
 
 import dash
 with open("application/templates/includes/nav.html", 'r') as temp:
-    nav_html = temp.read().replace('\n', '')
+    NAV_HTML = temp.read().replace('\n', '')
 
 with open("application/templates/includes/footer.html", 'r') as temp:
-    footer_html = temp.read().replace('\n', '')
+    FOOTER_HTML = temp.read().replace('\n', '')
 
-dash_tags = '''
+DASH_HEADER = '''
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,17 +19,19 @@ dash_tags = '''
   </head>
   '''
 
-dash_string = '''
+CUSTOM_STRING = '''
     <section id="temp-1" class="dash-section">
         <div class="dash-container">
-            <div id="temp-row-1" class="dash-row">
+
             {%app_entry%}            
-            </div>
         </div>
     </section>
-    {%config%}
-    {%scripts%}
-    {%renderer%}
 '''
 
-html_layout = dash_tags + nav_html + dash_string + footer_html
+DASH_FOOTER = '''
+{%config%}
+{%scripts%}
+{%renderer%}
+'''
+
+HTML_LAYOUT = DASH_HEADER + NAV_HTML + CUSTOM_STRING + DASH_FOOTER + FOOTER_HTML
