@@ -18,17 +18,34 @@ import requests
 from tqdm import tqdm
 import os.path
 from googleapiclient.http import MediaFileUpload
-FILE_DIR = os.path.abspath(os.path.dirname(__file__))
+import gspread
+from df2gspread import df2gspread as d2g
+
+from oauth2client.service_account import ServiceAccountCredentials
+try:
+    FILE_DIR = os.path.abspath(os.path.dirname(__file__))
+except:
+    FILE_DIR = os.path.join(os.getcwd(),'application','models')
+
+
+# HAVE TO SHARE WORKSHEET WITH THIS
+'portfolio@total-furnace-239118.iam.gserviceaccount.com'
 
 
 class DriveAPI:
 
     def __init__(self):
-        pass
+        self.service = self.get_gdrive_service()
+        self.gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
+        self.main(100)
 
     def get_gdrive_service(self):
         # If modifying these scopes, delete the file token.pickle.
-        SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+        # SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+        SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly',
+            'https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive',
+         'https://www.googleapis.com/auth/spreadsheets']
 
         creds = None
 
@@ -52,18 +69,19 @@ class DriveAPI:
         # return Google Drive API service
         return build('drive', 'v3', credentials=creds)
 
-    def main(self):
+    def main(self, file_num = 50):
         """Shows basic usage of the Drive v3 API.
         Prints the names and ids of the first 5 files the user has access to.
         """
         service = self.get_gdrive_service()
         # Call the Drive v3 API
-        results = service.files().list(
-            pageSize=50, fields="nextPageToken, files(id, name, mimeType, size, parents, modifiedTime)").execute()
+        results = service.files().list(pageSize=file_num, fields="nextPageToken, files(id, name, mimeType, size, parents, modifiedTime)").execute()
         # get the results
         items = results.get('files', [])
+        self.items = items
         # list all 20 files & folders
         self.list_files(items)
+        self.files_df = pd.DataFrame(items)
 
     def list_files(self, items):
         """given items returned by Google Drive API, prints them in a tabular way"""
@@ -133,6 +151,7 @@ class DriveAPI:
                 # no more files
                 break
         return result
+    
 
     def download(self, filename):
         # If modifying these scopes, delete the file token.pickle.
@@ -150,6 +169,7 @@ class DriveAPI:
         service.permissions().create(body={"role": "reader", "type": "anyone"}, fileId=file_id).execute()
         # download file
         return self.download_file_from_google_drive(file_id, filename)
+
 
     def download_file_from_google_drive(self, id, destination):
         def stream_data(chunk):
@@ -211,8 +231,7 @@ class DriveAPI:
         return save_response_content(response, destination)
 
 
-
-    def upload_files(self, folder_name, mime_type, file_name):
+    def upload_files(self, folder_name, file_name):
         """
         Creates a folder and upload a file to it
         """
@@ -222,13 +241,16 @@ class DriveAPI:
 
         # authenticate account
         service = self.get_gdrive_service()
+        self.service = service
         # folder details we want to make
         folder_metadata = {
             "name": folder_name,
-            "mimeType": mime_type
+            "mimeType": 'application/vnd.google-apps.folder'
         }
         # create the folder
         file = service.files().create(body=folder_metadata, fields="id").execute()
+
+        
         # get the folder id
         folder_id = file.get("id")
         print("Folder ID:", folder_id)
@@ -242,4 +264,55 @@ class DriveAPI:
         media = MediaFileUpload(file_name, resumable=True)
         file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
         print("File created, id:", file.get("id"))
+
+    ##################################
+    # Section 2: gspread integration
+    ##################################
+
+    def get_sheet_id_by_name(self, sheet_name):
+        files_df = self.files_df
+        return files_df[files_df.name == sheet_name]['id'].iloc[0]
+
+    def upload_df_to_sheets(self, df, sheet_id, tab):
+        gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
+        sh = gc.open_by_key(sheet_id)
+        
+        scope = ['https://spreadsheets.google.com/feeds',
+                'https://www.googleapis.com/auth/drive']
+        
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(FILE_DIR,'service_account.json'), scope)
+        d2g.upload(df, sheet_id, tab, credentials=credentials, row_names=False)
+
+    def download_sheets_to_df_by_name(self, sheet_name):
+        '''
+        only first sheet
+        '''
+        gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
+        wks = gc.open(sheet_name).sheet1
+
+        data = wks.get_all_values()
+        headers = data.pop(0)
+        df = pd.DataFrame(data, columns=headers)
+        return df
+
+    def download_sheets_to_df_by_id(self, sheet_id, tab='Sheet1'):
+        '''
+        only first sheet
+        '''
+        sh = gc.open_by_key(sheet_id)
+        worksheet = sh.get_worksheet(0)
+        worksheet = sh.worksheet(tab)
+        
+        return pd.DataFrame(worksheet.get_all_records())
+
+
+
+
+# # sheet_id = '1fUa9GB3WzUjsAUi-y1V2ao98bx9YnoSn46X5F4oX6R8'
+# gdrive = DriveAPI()
+# sheet_id = gdrive.get_sheet_id_by_name('SunriseEventsCategories')
+# df = gdrive.download_sheets_to_df_by_id(sheet_id,'SunriseEvents')
+
+# gdrive.upload_df_to_sheets(df, sheet_id, 'test')
+
 
