@@ -52,8 +52,8 @@ class DriveAPI:
         # The file token.pickle stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
-        if os.path.exists(os.path.join(FILE_DIR,'token.pickle')):
-            with open(os.path.join(FILE_DIR,'token.pickle'), 'rb') as token:
+        if os.path.exists(os.path.join(CREDS_PATH,'token.pickle')):
+            with open(os.path.join(CREDS_PATH,'token.pickle'), 'rb') as token:
                 creds = pickle.load(token)
         # If there are no (valid) credentials available, let the user log in.
         if not creds:
@@ -61,15 +61,15 @@ class DriveAPI:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    os.path.join(FILE_DIR,'credentials.json'), SCOPES)
+                    os.path.join(CREDS_PATH,'credentials.json'), SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open(os.path.join(FILE_DIR,'token.pickle'), 'wb') as token:
+            with open(os.path.join(CREDS_PATH,'token.pickle'), 'wb') as token:
                 pickle.dump(creds, token)
         # return Google Drive API service
         return build('drive', 'v3', credentials=creds)
 
-    def main(self, file_num = 50):
+    def main(self, file_num = 10000):
         """Shows basic usage of the Drive v3 API.
         Prints the names and ids of the first 5 files the user has access to.
         """
@@ -113,11 +113,11 @@ class DriveAPI:
                 modified_time = item["modifiedTime"]
                 # append everything to the list
                 rows.append((id, name, parents, size, mime_type, modified_time))
-            print("Files:")
+            # print("Files:")
             # convert to a human readable table
             table = tabulate(rows, headers=["ID", "Name", "Parents", "Size", "Type", "Modified Time"])
             # print the table
-            print(table)
+            # print(table)
 
 
     def get_size_format(self, b, factor=1024, suffix="B"):
@@ -151,9 +151,17 @@ class DriveAPI:
                 # no more files
                 break
         return result
-    
+
+    def search_get_file_id(self, filename):
+        service = self.get_gdrive_service()
+        search_result = self.search(service, query=f"name='{filename}'")
+        # get the GDrive ID of the file
+        file_id = search_result[0][0]
+        return file_id
 
     def download(self, filename):
+        self.filename = filename
+
         # If modifying these scopes, delete the file token.pickle.
         SCOPES = ['https://www.googleapis.com/auth/drive.metadata',
                 'https://www.googleapis.com/auth/drive',
@@ -172,22 +180,45 @@ class DriveAPI:
 
 
     def download_file_from_google_drive(self, id, destination):
-        def stream_data(chunk):
-            try:
-                s=str(chunk,'utf-8')
-            except:
-                s=str(chunk,'latin-1')
-
-            data = StringIO(s)        
-            chunk_df=pd.read_csv(data, engine='python', error_bad_lines=False, encoding='utf-8')
-
-            return chunk_df
+        filename = self.filename
+        extension = os.path.splitext(filename)[1]
 
         def get_confirm_token(response):
             for key, value in response.cookies.items():
                 if key.startswith('download_warning'):
                     return value
             return None
+
+        def make_data_string(progress):
+            data_string = ''
+            # chunk = None
+            for chunk in progress:
+                if chunk: # filter out keep-alive new chunks
+                    try:
+                        s=str(chunk,'utf-8')
+                    except:
+                        s=str(chunk,'latin-1')
+                    data_string += s
+
+                    # update the progress bar
+                    progress.update(len(chunk))
+            progress.close()
+    
+            return data_string
+
+        def parse_data_string(data_string):
+            
+            data = StringIO(data_string)
+
+            if extension == '.json':
+
+                json_data = json.load(data)
+                temp_df = pd.json_normalize(json_data)
+
+            elif extension == '.csv' or extension == '.xlsx' or extension == '.xls':
+                temp_df = pd.read_csv(data, engine='python', encoding='utf-8')
+            
+            return temp_df
 
         def save_response_content(response, destination):
             CHUNK_SIZE = 32768
@@ -201,15 +232,8 @@ class DriveAPI:
             print("[+] File name:", filename)
             progress = tqdm(response.iter_content(CHUNK_SIZE), f"Downloading {filename}", total=file_size, unit="Byte", unit_scale=True, unit_divisor=1024)
 
-            temp_df = pd.DataFrame()
-            chunk = None
-            for chunk in progress:
-                if chunk: # filter out keep-alive new chunks
-                    chunk_df = stream_data(chunk)
-                    temp_df = pd.concat([chunk_df, temp_df])
-                    # update the progress bar
-                    progress.update(len(chunk))
-            progress.close()
+            data_string = make_data_string(progress)
+            temp_df = parse_data_string(data_string)
 
             return temp_df
 
@@ -250,7 +274,6 @@ class DriveAPI:
         # create the folder
         file = service.files().create(body=folder_metadata, fields="id").execute()
 
-        
         # get the folder id
         folder_id = file.get("id")
         print("Folder ID:", folder_id)
@@ -270,35 +293,41 @@ class DriveAPI:
     ##################################
 
     def get_sheet_id_by_name(self, sheet_name):
-        files_df = self.files_df
-        return files_df[files_df.name == sheet_name]['id'].iloc[0]
 
-    def upload_df_to_sheets(self, df, sheet_id, tab):
-        gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
+        # files_df = self.files_df
+        # files_df[files_df.name == sheet_name]['id'].iloc[0]
+        return 
+
+    def upload_df_to_sheets(self, df, sheet_name, tab):
+        sheet_id = self.search_get_file_id(sheet_name)
+
+        gc = gspread.service_account(filename=os.path.join(CREDS_PATH,'service_account.json'))
         sh = gc.open_by_key(sheet_id)
         
         scope = ['https://spreadsheets.google.com/feeds',
                 'https://www.googleapis.com/auth/drive']
         
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(FILE_DIR,'service_account.json'), scope)
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(CREDS_PATH,'service_account.json'), scope)
         d2g.upload(df, sheet_id, tab, credentials=credentials, row_names=False)
 
-    def download_sheets_to_df_by_name(self, sheet_name):
+    def download_sheets_to_array(self, sheet_name, tab='Sheet1'):
         '''
-        only first sheet
         '''
-        gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
-        wks = gc.open(sheet_name).sheet1
+        sheet_id = self.search_get_file_id(sheet_name)
+        gc = gspread.service_account(filename=os.path.join(CREDS_PATH,'service_account.json'))
+        sh = gc.open_by_key(sheet_id)
+        worksheet = sh.get_worksheet(0)
+        worksheet = sh.worksheet(tab)
+        
+        return np.array(worksheet.get_all_values())
 
-        data = wks.get_all_values()
-        headers = data.pop(0)
-        df = pd.DataFrame(data, columns=headers)
-        return df
+    def download_sheets_to_df(self, sheet_name, tab='Sheet1'):
+        '''
+        '''
+        # sheet_id = self.get_sheet_id_by_name(sheet_name)
+        sheet_id = self.search_get_file_id(sheet_name)
 
-    def download_sheets_to_df_by_id(self, sheet_id, tab='Sheet1'):
-        '''
-        only first sheet
-        '''
+        gc = gspread.service_account(filename=os.path.join(CREDS_PATH,'service_account.json'))
         sh = gc.open_by_key(sheet_id)
         worksheet = sh.get_worksheet(0)
         worksheet = sh.worksheet(tab)
@@ -308,11 +337,11 @@ class DriveAPI:
 
 
 
-# # sheet_id = '1fUa9GB3WzUjsAUi-y1V2ao98bx9YnoSn46X5F4oX6R8'
-# gdrive = DriveAPI()
-# sheet_id = gdrive.get_sheet_id_by_name('SunriseEventsCategories')
-# df = gdrive.download_sheets_to_df_by_id(sheet_id,'SunriseEvents')
+# sheet_id = '1fUa9GB3WzUjsAUi-y1V2ao98bx9YnoSn46X5F4oX6R8'
+gdrive = DriveAPI()
+sheet_id = gdrive.get_sheet_id_by_name('SunriseEventsCategories')
+df = gdrive.download_sheets_to_df_by_id(sheet_id,'SunriseEvents')
 
-# gdrive.upload_df_to_sheets(df, sheet_id, 'test')
+gdrive.upload_df_to_sheets(df, sheet_id, 'test')
 
 
