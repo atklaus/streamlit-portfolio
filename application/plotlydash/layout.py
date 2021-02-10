@@ -27,6 +27,7 @@ CUSTOM_STRING = '''
         <div class="dash-container">
 
             {%app_entry%}            
+
         </div>
     </section>
 '''

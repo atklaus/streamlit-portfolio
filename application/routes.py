@@ -2,7 +2,9 @@
 from flask import render_template
 from flask import current_app as app
 from flask import Flask, request
+import flask
 import git
+import dash
 
 @app.route('/')
 def index():
@@ -16,6 +18,8 @@ def about():
 def version():
     return '2.1.1'
 
-
+@app.route('/plotly_dashboard') 
+def render_dashboard():
+    return flask.redirect('/project1/')
 
 
