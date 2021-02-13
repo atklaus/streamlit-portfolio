@@ -16,6 +16,7 @@
   .gpd-section {
     display: flex;
     padding: 50px 0;
+    background-color: white;
   }
   
   .gpd-image-block {

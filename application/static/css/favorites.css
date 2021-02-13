@@ -20,11 +20,7 @@
       display: none;
     }
     
-    #iva9i {
-      text-align: center;
-      padding: 10px 0 70px 0;
-      background-color: white;
-    }
+
     
     .gpd-shape-divider {
       position: absolute;
@@ -60,14 +56,7 @@
       fill: currentColor;
     }
     
-    .gpd-shape-divider-inv > path {
-      transform: scale(-1, -1) translate(-100%, -100%);
-    }
     
-    #i7r0vq {
-      height: 69px;
-      color: #21222b;
-    }
     
     #im0u3g {
       background-color: #21222b;
@@ -124,13 +113,12 @@
       height: 34px;
     }
     
+
+
     #im0u3g:hover {
       background-color: #21222b;
     }
     
-    #i7r0vq:hover {
-      color: #21222b;
-    }
     
     .gpd-navbar {
       width: 100%;
@@ -345,13 +333,9 @@
       margin: 0 0 0 0;
     }
     
-    #i0dt5a {
-      margin: 0 0 0.05% 0;
-      color: #000000;
-    }
     
     .gpd-box {
-      padding: 5px 0;
+      padding: 10px 10px 0 4%;
     }
     
     * {
@@ -701,19 +685,16 @@
     
     #idz7dy {
       color: #000000;
+      padding: 10px 10px 0 0;
     }
     
     #im39q {
-      max-width: 100%;
     }
     
     #i11dhj:hover {
       color: #749de7;
     }
-    
-    #ic6uek:hover {
-      color: #749de7;
-    }
+  
     
     #incuh:hover {
       color: #749de7;
@@ -820,6 +801,8 @@
     
     #igkfzn {
       color: #000000;
+      margin: 0 8% 0 8%;
+      text-align: center;
     }
     
     #ivy0wu {
@@ -827,17 +810,9 @@
     }
     
     #im7v1m {
-      background-color: #ffffff;
+      background-color:#ffffff;
       justify-content: space-between;
       padding: 10px 10px 10px 10px;
-    }
-    
-    #im7v1m:hover {
-      color: #749de7;
-    }
-    
-    #idz7dy:hover {
-      color: #749de7;
     }
     
     #i3mddf {
@@ -1412,13 +1387,66 @@
         min-height: auto;
         width: 100%;
       }
-    
+
+      #iiupas {
+        margin: 0 8% 0 8%;
+      }
+      
+      
+      #i1rlqj {
+        height: 3px;
+        margin: 5px 1000px 5px 0;
+        background-color: #21222b;
+      }
+      
+      #i0dt5a {
+        margin: 10px 10px 0 0;
+        color: black;
+      }
+      
+      .gpd-box {
+        padding: 10px 0;
+
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      #if3aka {
+        color: #21222b;
+      }
+      
+      #i1xwrg {
+        background-color: #ffffff;
+      }
+      
+      .gpd-header {
+        margin: 10px 10px 0 0;
+      }
+      
       #i1gunf {
+        padding: 5px 105px 5px 105px;
+      }
+      
+      #ifrcw3 {
+        background-color: #ffffff;
+      }
+      
+      #iwikx {
+        justify-content: space-between;
         padding: 0 0 0 0;
       }
-    
-      #i0dt5a {
-        margin: 0 10% 0 10%;
+      
+      .experience.content {
+        opacity: 1;
+        color: #000000;
+        padding: 10px 0 10px 0;
+      }
+      
+
+      #i1gunf {
+        padding: 0 0 0 0;
       }
     
       #i1rlqj {

@@ -2,15 +2,6 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-}
-
-body {
-  font-size: 17px;
-  color: #333;
-  background-color: #21222b;
-}
 
 .gpd-navbar {
   width: 100%;
@@ -18,12 +9,6 @@ body {
 
 .gpd-navbar__menu {
   display: none;
-}
-
-#iva9i {
-  text-align: center;
-  padding: 10px 0 70px 0;
-  background-color: white;
 }
 
 .gpd-shape-divider {
@@ -64,16 +49,7 @@ body {
   transform: scale(-1, -1) translate(-100%, -100%);
 }
 
-#i7r0vq {
-  height: 69px;
-  color: #21222b;
-}
 
-#im0u3g {
-  background-color: #21222b;
-  color: white;
-  padding: 0 0 0 0;
-}
 
 #iobnhd {
   padding: 0 0 25px 0;
@@ -89,12 +65,6 @@ body {
 
 #ird0zk {
   font-size: 0.85rem;
-}
-
-#ivi361 {
-  height: 1px;
-  margin: 10px 10px 10px 10px;
-  background-color: rgba(255,255,255,0.05);
 }
 
 #ivyzt7 {
@@ -128,14 +98,8 @@ body {
   background-color: #21222b;
 }
 
-#i7r0vq:hover {
-  color: #21222b;
-}
 
-#ijuo8g {
-  padding: 0 0 0 0;
-  background-color: #ffffff;
-}
+
 
 #ituc1f {
   background-image: none;
@@ -624,13 +588,6 @@ body {
   height: 32px;
 }
 
-.content:hover {
-  background-color: #ff0000;
-}
-
-#iifftf:hover {
-  background-color: #f9fffb;
-}
 
 #iwikx:hover {
   justify-content: space-around;
@@ -725,10 +682,11 @@ body {
   color: #ffffff;
 }
 
-#ic6uek {
-  background-color: #ffffff;
-  justify-content: space-between;
-  padding: 10px 10px 10px 10px;
+
+#timeline-header {
+  text-align: center;
+  font-size: 1.4em;
+  padding: 0 0 0 0;
 }
 
 #ip6sk3 {
@@ -737,64 +695,6 @@ body {
   background-color: #85868b;
 }
 
-#iiupas {
-  margin: 0 8% 0 8%;
-}
-
-#ieahds {
-  min-height: 50px;
-  margin: 0 80% 0 0;
-  width: 20%;
-}
-
-#i1rlqj {
-  height: 3px;
-  margin: 5px 1000px 5px 0;
-  background-color: #21222b;
-}
-
-#i0dt5a {
-  margin: 0 0 0.05% 0;
-}
-
-.gpd-box {
-  padding: 5px 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-#if3aka {
-  color: #21222b;
-}
-
-#i1xwrg {
-  background-color: #ffffff;
-}
-
-.gpd-header {
-  margin: 0;
-}
-
-#i1gunf {
-  padding: 5px 105px 5px 105px;
-}
-
-#ifrcw3 {
-  background-color: #ffffff;
-}
-
-#iwikx {
-  justify-content: space-between;
-  padding: 0 0 0 0;
-}
-
-.experience.content {
-  opacity: 1;
-  color: #000000;
-  padding: 10px 0 10px 0;
-}
 
 @keyframes fade {
   from {
@@ -999,7 +899,7 @@ body {
   }
 
   #i0dt5a {
-    margin: 0 10% 0 10%;
+    margin: 0 0 0 0;
   }
 
   #i1rlqj {
