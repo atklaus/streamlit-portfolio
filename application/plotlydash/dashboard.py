@@ -46,17 +46,17 @@ def create_project1(server):
 
     dash_app.layout = html.Div(
         [
-            html.H3("Welcome to the Happy Prime Calculator."),
+            html.H3("Happy Prime Calculator."),
 
-            html.H5("For an initial integer, consider the sum of the square of the individual digits. The number will either eventually equal 1 or continue in a never-ending loop."),
-            html.H5("Numbers that end in a 1 are considered 'Happy' numbers"),
+            html.P("For an initial integer, consider the sum of the square of the individual digits. Continue this process, the number will either eventually equal 1 or continue in a never-ending loop. Numbers that end in a 1 are considered" + ' "Happy" numbers.'),
             html.Br(),
             html.H5("Example: 13"),
-            html.H5("1^2 + 3^2 = 10"),
-            html.H5("1^2 + 0^2 = 1"),
+            html.H5("1\u00b2 + 3\u00b2 = 10"),
+            html.H5("1\u00b2 + 0\u00b2 = 1"),
 
             html.Br(),
             dcc.Input(id="hp_input", type="text", placeholder="Enter an integer", debounce=True),
+            html.Button('Button 1', id='btn-1'),
             html.Div(id="hp_output"),
         ]
     )
