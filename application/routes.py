@@ -21,9 +21,3 @@ def interests():
 @app.route('/version')
 def version():
     return '2.1.1'
-
-@app.route('/plotly_dashboard') 
-def render_dashboard():
-    return flask.redirect('/project1/')
-
-
