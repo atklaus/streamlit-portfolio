@@ -14,9 +14,9 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/favorites')
-def favorites():
-    return render_template('favorites.html')
+@app.route('/interests')
+def interests():
+    return render_template('interests.html')
 
 @app.route('/version')
 def version():

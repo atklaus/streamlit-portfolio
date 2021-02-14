@@ -24,11 +24,11 @@ DASH_HEADER = '''
 
 CUSTOM_STRING = '''
     <section id="temp-1" class="dash-section">
-        <div class="dash-container">
+        <span class="dash-container center">
 
             {%app_entry%}            
 
-        </div>
+        </span>
     </section>
 '''
 

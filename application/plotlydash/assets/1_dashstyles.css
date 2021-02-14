@@ -7,14 +7,25 @@
 .dash-container {
   width: 90%;
   padding: 25px 25px;
-  margin: 0 auto;
+  margin: auto;
   max-width: 1200px;
+  min-height: 0px;
+
 }
+
 
 .dash-section {
   display: flex;
-  padding: 0px 50px 50px 50px ;
+  margin: auto;
+  padding: 0px 50px 200px 50px ;
+
 }
+
+.center {
+  border: 5px;
+  display: flex;
+  justify-content: center;
+  }
 
 .dash-row,.row {
   display: flex;
@@ -29,6 +40,9 @@
 #temp-row-1 {
   justify-content: center;
   padding: 10px 10px 10px 10px;
+
 }
 
-
+#hp_output {
+  padding: 10px 0 0 0;
+}
