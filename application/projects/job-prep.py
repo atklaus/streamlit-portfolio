@@ -28,13 +28,13 @@ doc = docx.Document("Adam_Klaus_Cover_Letter.docx")
 
 #Define unique job
 manager = 'Hiring Manager'
-industry = 'Data Science'
-company = "Discover"
-role = 'Senior Data Science Analyst'
+industry = 'data science'
+company = "Civis Analytics"
+role = 'senior data scientist'
 source = 'LinkedIn'
-custom = "This job posting caught my attention because of the incredible reputation of Discover and the opportunity to complete end to end analysis."
-skill1 = "I have a strong programming background with an emphasis on writing clean and maintainable code. This ensures that I reduce tech debt on the project I am working on and allows others to easily review my work."
-skill2 = "I have more than 2 years of modeling experience and experience working on the Risk and Analytics team in my current role. In these roles I've worked with clients and cross-functional teams and am comfortable presenting my analysis."
+custom = "This job posting caught my attention because of the opportunity to use my experience to empower progressive advocacy organizations. Over the past year, I have volunteered as the data team lead for the Chicago Hub of Sunrise Movement (a progressive non-profit fighting for climate justice). In this role I have helped create data pipelines to automate tasks, track member growth and created models to understand membership dropoff. With that in mind, helping other progressive organizations in my full-time job is truly my dream career."  
+skill1 = "I have a strong programming background and have written code in a production environment. I also have had experience working in a variety of tech stacks to create these solutions."
+skill2 = "I have worked in consulting before and have experience working with clients and presenting technical work."
 # custom = "Additionally, I have a depth of experience working with Qualtrics and their API to create analysis of social science data from a large number of responses."
 
 ###################################################################
@@ -66,6 +66,7 @@ for para in all_paras:
         para.text = para.text.replace(skill2_input,skill2)
         
     print(para.text)
+
 
 file_name = company + '_Cover_Letter'
 doc.save(file_name + ".docx")
