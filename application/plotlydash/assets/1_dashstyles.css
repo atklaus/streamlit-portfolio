@@ -23,7 +23,7 @@
 
 .center {
   border: 5px;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   }
 

@@ -17,6 +17,7 @@ import sys
 import os
 from ..projects.happy_prime import HappyPrime
 
+
 # sys.path.append(os.path.join(BASE_DIR,models)
 # from ..models import google_drive_api 
 # gdrive = google_drive_api.DriveAPI
@@ -92,51 +93,40 @@ def create_project2(server):
         routes_pathname_prefix='/project2/'
     )
 
-    # dash_app.index_string = HTML_LAYOUT
+    dash_app.index_string = HTML_LAYOUT
 
-    # temp_drive = gdrive()
-    # filename = 'SunriseEventsCategories'
-    # df = temp_drive.download(filename)
-
-    # dash_app.layout = dash_table.DataTable(
-    #     id='table',
-    #     columns=[{"name": i, "id": i} for i in df.columns],
-    #     data=df.to_dict('records'),
-    # )
-
-    df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv')
+    df = px.data.gapminder()
+    animations = {
+        'Scatter': px.scatter(
+            df, x="gdpPercap", y="lifeExp", animation_frame="year", 
+            animation_group="country", size="pop", color="continent", 
+            hover_name="country", log_x=True, size_max=55, 
+            range_x=[100,100000], range_y=[25,90]),
+        'Bar': px.bar(
+            df, x="continent", y="pop", color="continent", 
+            animation_frame="year", animation_group="country", 
+            range_y=[0,4000000000]),
+    }
 
     dash_app.layout = html.Div([
-        dcc.Graph(id='graph-with-slider'),
-        dcc.Slider(
-            id='year-slider',
-            min=df['year'].min(),
-            max=df['year'].max(),
-            value=df['year'].min(),
-            marks={str(year): str(year) for year in df['year'].unique()},
-            step=None
+        html.P("Select an animation:"),
+        dcc.RadioItems(
+            id='selection',
+            options=[{'label': x, 'value': x} for x in animations],
+            value='Scatter'
         ),
-
+        dcc.Graph(id="graph"),
     ])
 
     @dash_app.callback(
-        Output('graph-with-slider', 'figure'),[
-        Input('year-slider', 'value')])
-    def update_figure(selected_year):
-        filtered_df = df[df.year == selected_year]
-
-        fig = px.scatter(filtered_df, x="gdpPercap", y="lifeExp",
-                        size="pop", color="continent", hover_name="country",
-                        log_x=True, size_max=55)
-
-        fig.update_layout(transition_duration=500)
-
-        return fig
-
+        Output("graph", "figure"), 
+        [Input("selection", "value")])
+    def display_animated_graph(s):
+        return animations[s]
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)
-    
+        
     return dash_app.server
 
 
