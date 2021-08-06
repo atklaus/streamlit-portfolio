@@ -108,7 +108,7 @@ class GoogleAPI:
         print(res)
 
     def get_spreadsheet_id(self, spreadsheet_name):
-        drive = build('drive', 'v3', credentials=creds)
+        drive = build('drive', 'v3', credentials=self.creds)
         results = []
         page_token = None
 
@@ -170,15 +170,19 @@ class GoogleAPI:
 
 
 
-# gdrive = GoogleAPI()
-# creds = gdrive.creds
+gdrive = GoogleAPI()
 # spreadsheet_id = gdrive.get_spreadsheet_id("IPEDS Data")
+df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
+df['PDI_Tier'] = df['PDI_Tier'].replace('',None)
+df['Apps_Tot_FT'] = df['Apps_Tot_FT'].replace('',None)
+df['Adm_Tot_FT'] = df['Adm_Tot_FT'].replace('',None)
 
-# sheet_id = "IPEDS Data"
+df['PDI_Tier']= df['PDI_Tier'].astype(float)
+df['Apps_Tot_FT']= df['Apps_Tot_FT'].astype(float)
+df['Adm_Tot_FT']= df['Adm_Tot_FT'].astype(float)
 
-# df = gdrive.sheet_to_df("Grad School", "GPA")
 
-
+# https://stackoverflow.com/questions/66767685/how-to-get-only-filtered-rows-from-google-sheets-to-python-script-using-google-a
 
 # spreadsheet_id = "###" # Please set the Spreadsheet ID.
 # sheet_id = "0"  # Please set the sheet name.

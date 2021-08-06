@@ -148,11 +148,23 @@ def create_project3(server):
 
     dash_app.index_string = HTML_LAYOUT
 
-    df = px.data.iris()
-    GameObj = GameOfLife(10, .5)
-    GameObj.advance(30)
-    data = GameObj.grids[0]
-    df = pd.DataFrame(data)
+    gdrive = GoogleAPI()
+    df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
+    df['PDI_Tier'] = df['PDI_Tier'].replace('',None)
+    df['Apps_Tot_FT'] = df['Apps_Tot_FT'].replace('',None)
+    df['Adm_Tot_FT'] = df['Adm_Tot_FT'].replace('',None)
+
+    df = df.dropna()
+    df['PDI_Tier']= df['PDI_Tier'].astype(float)
+    df['Apps_Tot_FT']= df['Apps_Tot_FT'].astype(float)
+    df['Adm_Tot_FT']= df['Adm_Tot_FT'].astype(float)
+
+
+    # df = px.data.iris()
+    # GameObj = GameOfLife(10, .5)
+    # GameObj.advance(30)
+    # data = GameObj.grids[0]
+    # df = pd.DataFrame(data)
 
 
     dash_app.layout = html.Div([
@@ -160,9 +172,9 @@ def create_project3(server):
         html.P("Petal Width:"),
         dcc.RangeSlider(
             id='range-slider',
-            min=0, max=2.5, step=0.1,
+            min=0, max=7, step=1,
             marks={0: '0', 2.5: '2.5'},
-            value=[0.5, 2]
+            value=[0, 7]
         ),
     ])
 
@@ -171,11 +183,11 @@ def create_project3(server):
         [Input("range-slider", "value")])
     def update_bar_chart(slider_range):
         low, high = slider_range
-        mask = (df['petal_width'] > low) & (df['petal_width'] < high)
+        mask = (df['PDI_Tier'] > low) & (df['PDI_Tier'] < high)
         fig = px.scatter(
-            df[mask], x="sepal_width", y="sepal_length", 
-            color="species", size='petal_length', 
-            hover_data=['petal_width'])
+            df[mask], x="Apps_Tot_FT", y="Adm_Tot_FT", 
+            color="PDI_Tier", size='Apps_Tot_FT', 
+            hover_data=['PDI_Tier'])
         return fig
 
     if __name__ == '__main__':
