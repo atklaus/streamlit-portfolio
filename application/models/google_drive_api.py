@@ -27,9 +27,10 @@ try:
 except:
     FILE_DIR = os.path.join(os.getcwd(),'application','models')
 
+CREDS_PATH = FILE_DIR
 
 # HAVE TO SHARE WORKSHEET WITH THIS
-'portfolio@total-furnace-239118.iam.gserviceaccount.com'
+# 'portfolio@total-furnace-239118.iam.gserviceaccount.com'
 
 
 class DriveAPI:
@@ -335,11 +336,12 @@ class DriveAPI:
         return pd.DataFrame(worksheet.get_all_records())
 
 
-
-
-# sheet_id = '1fUa9GB3WzUjsAUi-y1V2ao98bx9YnoSn46X5F4oX6R8'
 gdrive = DriveAPI()
-sheet_id = gdrive.get_sheet_id_by_name('SunriseEventsCategories')
+
+
+tab = 'Sheet3'
+sheet_name = "Ultimate Tourneys & Games"
+sheet_id = '1l90NctABksNEF558E0h331JXU6hAyF6xhjbhSA65bXM'
 df = gdrive.download_sheets_to_df_by_id(sheet_id,'SunriseEvents')
 
 gdrive.upload_df_to_sheets(df, sheet_id, 'test')

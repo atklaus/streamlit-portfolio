@@ -1,6 +1,8 @@
 """
 Instantiate Dash apps.
 """
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import numpy as np
 import pandas as pd
 import dash
@@ -16,6 +18,8 @@ from ..config import BASE_DIR
 import sys
 import os
 from ..projects.happy_prime import HappyPrime
+from ..projects.GameofLife import GameOfLife
+import matplotlib.pyplot as plt
 
 
 # sys.path.append(os.path.join(BASE_DIR,models)
@@ -100,7 +104,7 @@ def create_project2(server):
         'Scatter': px.scatter(
             df, x="gdpPercap", y="lifeExp", animation_frame="year", 
             animation_group="country", size="pop", color="continent", 
-            hover_name="country", log_x=True, size_max=55, 
+            hover_name="country", log_x=True, size_max=55,
             range_x=[100,100000], range_y=[25,90]),
         'Bar': px.bar(
             df, x="continent", y="pop", color="continent", 
@@ -123,6 +127,55 @@ def create_project2(server):
         [Input("selection", "value")])
     def display_animated_graph(s):
         return animations[s]
+
+    if __name__ == '__main__':
+        dash_app.run_server(debug=True)
+        
+    return dash_app.server
+
+def create_project3(server):
+    """Create a Plotly Dash dashboard."""
+
+    external_stylesheets = []
+
+    dash_app = dash.Dash(__name__,
+        title='Project',
+        external_stylesheets=external_stylesheets,
+        server=server,
+        routes_pathname_prefix='/project3/'
+    )
+
+    dash_app.index_string = HTML_LAYOUT
+
+    df = px.data.iris()
+    GameObj = GameOfLife(10, .5)
+    GameObj.advance(30)
+    data = GameObj.grids[0]
+    df = pd.DataFrame(data)
+
+
+    dash_app.layout = html.Div([
+        dcc.Graph(id="scatter-plot"),
+        html.P("Petal Width:"),
+        dcc.RangeSlider(
+            id='range-slider',
+            min=0, max=2.5, step=0.1,
+            marks={0: '0', 2.5: '2.5'},
+            value=[0.5, 2]
+        ),
+    ])
+
+    @dash_app.callback(
+        Output("scatter-plot", "figure"), 
+        [Input("range-slider", "value")])
+    def update_bar_chart(slider_range):
+        low, high = slider_range
+        mask = (df['petal_width'] > low) & (df['petal_width'] < high)
+        fig = px.scatter(
+            df[mask], x="sepal_width", y="sepal_length", 
+            color="species", size='petal_length', 
+            hover_data=['petal_width'])
+        return fig
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)

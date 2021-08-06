@@ -7,7 +7,8 @@ Video Link: https://youtu.be/9Om-TLvBMRM
 """
 
 import numpy as np
-import matplotlib.pyplot as plt 
+import pandas as pd
+import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import os
 os.chdir(os.getcwd())
@@ -176,58 +177,56 @@ class GameOfLife:
         plt.close(self.fig)
 
 
-GameObj = GameOfLife(10, .5)
-GameObj.advance(30)
-data = GameObj.grids[0]
+# GameObj = GameOfLife(10, .5)
+# GameObj.advance(30)
+# data = GameObj.grids[0]
 
-df = pd.DataFrame(data)
+# df = pd.DataFrame(data)
 
+# GameObj.display()
+# GameObj.end_display()
 
-GameObj.display()
-GameObj.end_display()
+# import plotly.graph_objects as go
+# import numpy as np
 
-import plotly.graph_objects as go
-
-import numpy as np
-
-# Generate curve data
-t = np.linspace(-1, 1, 100)
-x = t + t ** 2
-y = t - t ** 2
-xm = np.min(x) - 1.5
-xM = np.max(x) + 1.5
-ym = np.min(y) - 1.5
-yM = np.max(y) + 1.5
-N = 50
-s = np.linspace(-1, 1, N)
-xx = s + s ** 2
-yy = s - s ** 2
+# # Generate curve data
+# t = np.linspace(-1, 1, 100)
+# x = t + t ** 2
+# y = t - t ** 2
+# xm = np.min(x) - 1.5
+# xM = np.max(x) + 1.5
+# ym = np.min(y) - 1.5
+# yM = np.max(y) + 1.5
+# N = 50
+# s = np.linspace(-1, 1, N)
+# xx = s + s ** 2
+# yy = s - s ** 2
 
 
-import plotly.graph_objects as go
+# import plotly.graph_objects as go
 
-# Create random data with numpy
-import numpy as np
-np.random.seed(1)
+# # Create random data with numpy
+# import numpy as np
+# np.random.seed(1)
 
-N = 100
-random_x = np.linspace(0, 1, N)
-random_y0 = np.random.randn(N) + 5
-random_y1 = np.random.randn(N)
-random_y2 = np.random.randn(N) - 5
+# N = 100
+# random_x = np.linspace(0, 1, N)
+# random_y0 = np.random.randn(N) + 5
+# random_y1 = np.random.randn(N)
+# random_y2 = np.random.randn(N) - 5
 
-fig = go.Figure()
+# fig = go.Figure()
 
-# Add traces
-fig.add_trace(go.Scatter(x=random_x, y=random_y0,
-                    mode='lines',
-                    name='markers',
-                    marker_symbol='square'))
-fig.add_trace(go.Scatter(x=random_x, y=random_y1,
-                    mode='lines+markers',
-                    name='lines+markers'))
-fig.add_trace(go.Scatter(x=random_x, y=random_y2,
-                    mode='lines',
-                    name='lines'))
+# # Add traces
+# fig.add_trace(go.Scatter(x=random_x, y=random_y0,
+#                     mode='lines',
+#                     name='markers',
+#                     marker_symbol='square'))
+# fig.add_trace(go.Scatter(x=random_x, y=random_y1,
+#                     mode='lines+markers',
+#                     name='lines+markers'))
+# fig.add_trace(go.Scatter(x=random_x, y=random_y2,
+#                     mode='lines',
+#                     name='lines'))
 
-fig.show()
+# fig.show()
