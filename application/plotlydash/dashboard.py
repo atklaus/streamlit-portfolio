@@ -19,6 +19,7 @@ import sys
 import os
 from ..projects.happy_prime import HappyPrime
 from ..projects.GameofLife import GameOfLife
+from ..models.data_pipeline import GoogleAPI
 import matplotlib.pyplot as plt
 
 

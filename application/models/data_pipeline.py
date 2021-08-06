@@ -11,8 +11,10 @@ from oauth2client import file, client, tools
 from io import BytesIO
 from io import StringIO
 import pandas as pd
-import re
+import csv
 import io
+import requests
+import re
 from googleapiclient.http import MediaIoBaseDownload
 import requests
 from tqdm import tqdm
@@ -34,15 +36,13 @@ SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly',
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/spreadsheets']
 
-
 # HAVE TO SHARE WORKSHEET WITH THIS
 'portfolio@total-furnace-239118.iam.gserviceaccount.com'
 
-
-class DriveAPI:
+class GoogleAPI:
 
     def __init__(self):
-        self.service = self.get_creds()
+        self.get_creds()
         self.gc = gspread.service_account(filename=os.path.join(FILE_DIR,'service_account.json'))
 
     def get_creds(self):
@@ -107,7 +107,8 @@ class DriveAPI:
         res['id']
         print(res)
 
-    def get_spreadsheet_id(self, api_service, spreadsheet_name):
+    def get_spreadsheet_id(self, spreadsheet_name):
+        drive = build('drive', 'v3', credentials=creds)
         results = []
         page_token = None
 
@@ -118,7 +119,7 @@ class DriveAPI:
                 if page_token:
                     param['pageToken'] = page_token
 
-                files = api_service.files().list(**param).execute()
+                files = drive.files().list(**param).execute()
                 results.extend(files.get('files'))
 
                 # Google Drive API shows our files in multiple pages when the number of files exceed 100
@@ -127,64 +128,65 @@ class DriveAPI:
                 if not page_token:
                     break
 
-            except errors.HttpError as error:
-                print(f'An error has occurred: {error}')
+            except:
                 break
 
         spreadsheet_id = [result.get('id') for result in results if result.get('name') == spreadsheet_name][0]
 
         return spreadsheet_id
 
-    def sheet_to_df(sheets_instance, spreadsheet_id, sheet_name):
-        sheets_instance = build('sheets', 'v4', credentials=self.creds)
-        result = sheets_instance.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=sheet_name).execute()
+    def sheet_to_df(self, sheet_name, tab):
+
+        service = build('sheets', 'v4', credentials=self.creds)
+        sheet = service.spreadsheets()
+        spreadsheet_id = self.get_spreadsheet_id(sheet_name)
+        result = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=tab).execute()
         values = result.get('values', [])
 
         if not values:
             pass
         else:
-            rows = sheet.values().get(spreadsheetId=spreadsheet_id,range=sheet_name).execute()
-
+            rows = sheet.values().get(spreadsheetId=spreadsheet_id,range=tab).execute()
             data = rows.get('values')
-            print("COMPLETE: Data copied")
 
         df = pd.DataFrame(data, columns=data[0])
         df = df.drop(0)
         df.reset_index(inplace=True)
+        return df
+
+    def open_sheet(self, sheet_name, tab):
+        doc = self.gc.open(sheet_name)
+        sheet_obj = doc.worksheet(tab)
+        self.sheet_obj = sheet_obj
+    
+    def get_cell_value(self, row, column):
+        return self.sheet_obj.cell(row, column).value
+
+    def update_cell_value(self, row, column, value):
+        self.sheet_obj.update_cell(row, column, value)
+
+    def insert_row(self, row_values_list, row_index):
+        self.sheet_obj.insert_row(row_values_list, row_index)
 
 
 
-spreadsheet_id = gdrive.get_spreadsheet_id(gdrive.drive, spreadsheet_name)
-sheet_name = "Tournaments"
+# gdrive = GoogleAPI()
+# creds = gdrive.creds
+# spreadsheet_id = gdrive.get_spreadsheet_id("IPEDS Data")
 
-gdrive = DriveAPI()
-sheets_instance = gdrive.service
-sheets_instance = build('sheets', 'v4', credentials=creds)
+# sheet_id = "IPEDS Data"
 
-
-result = sheets_instance.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=sheet_name).execute()
+# df = gdrive.sheet_to_df("Grad School", "GPA")
 
 
 
+# spreadsheet_id = "###" # Please set the Spreadsheet ID.
+# sheet_id = "0"  # Please set the sheet name.
 
+# url = 'https://docs.google.com/spreadsheets/d/' + spreadsheet_id + '/gviz/tq?tqx=out:csv&gid=' + str(sheet_id)
+# res = requests.get(url, headers={'Authorization': 'Bearer ' + creds.token})
+# ar = [row for row in csv.reader(io.StringIO(res.text), delimiter=',')]
+# # ar.pop(0) # When you want to remove the header row, you can also use this.
+# pd.DataFrame(ar)
 
-
-spreadsheet_name = "Ultimate Tourneys & Games"
-
-gdrive = DriveAPI()
-creds = gdrive.creds
-
-sheet_id = '1l90NctABksNEF558E0h331JXU6hAyF6xhjbhSA65bXM'
-
-# return Google Drive API service
-build('drive', 'v3', credentials=creds)
-
-
-service = build('sheets', 'v4', credentials=creds)
-# sheet = service.spreadsheets()
-
-sheets = discovery.build('sheets', 'v4', credentials=creds)
-
-
-
-
+# print(ar)
