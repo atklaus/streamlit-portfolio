@@ -385,13 +385,13 @@ class OverlapOfEllipses:
 
         if in_e1 and in_e2:
             self.overlap_points += 1
-            self.points_df.loc[self.i,'overlap'] = 'Both'
+            self.points_df.loc[self.i,'Location'] = 'Both'
         elif in_e1:
-            self.points_df.loc[self.i,'overlap'] = 'Ellipse 1'
+            self.points_df.loc[self.i,'Location'] = 'Ellipse 1'
         elif in_e2:
-            self.points_df.loc[self.i,'overlap'] = 'Ellipse 2'
+            self.points_df.loc[self.i,'Location'] = 'Ellipse 2'
         else:
-            self.points_df.loc[self.i,'overlap'] = 'Neither'
+            self.points_df.loc[self.i,'Location'] = 'Neither'
 
     def get_prng_list(self, iters=10000):
         """
@@ -427,8 +427,31 @@ class OverlapOfEllipses:
             self.points_df.loc[i,'x'] = x
             self.points_df.loc[i,'y'] = y
 
-
             self.point_in_both_ellipses(input_points[0], input_points[1])
+
+        # self.add_focal_points_label()
+
+    def add_focal_points_label(self):
+        """
+        Add labels to show where focal points on ellipses are
+        """
+
+        self.points_df.loc[self.i+1,'x'] = self.e1.p1.x
+        self.points_df.loc[self.i+1,'y'] = self.e1.p1.y
+        self.points_df.loc[self.i+1,'Location'] = 'Focal Point'
+
+        self.points_df.loc[self.i+2,'x'] = self.e1.p2.x
+        self.points_df.loc[self.i+2,'y'] = self.e1.p2.y
+        self.points_df.loc[self.i+2,'Location'] = 'Focal Point'
+
+        self.points_df.loc[self.i+3,'x'] = self.e2.p1.x
+        self.points_df.loc[self.i+3,'y'] = self.e2.p1.y
+        self.points_df.loc[self.i+3,'Location'] = 'Focal Point'
+
+        self.points_df.loc[self.i+4,'x'] = self.e2.p2.x
+        self.points_df.loc[self.i+4,'y'] = self.e2.p2.y
+        self.points_df.loc[self.i+4,'Location'] = 'Focal Point'
+
 
     def computeOverlapOfEllipses(self, e1, e2):
         """
@@ -453,7 +476,8 @@ class OverlapOfEllipses:
         self.place_random_numbers_in_box()
         self.perc_points_box = (self.overlap_points/(self.iters/2)) #take half iters because it takes two random numbers to create 1 point
         self.overlap_area = round(self.perc_points_box*self.box_area, 2)
-        print('Area of overlapping ellipses: ' + str(self.overlap_area))
+        self.overlap_area_txt = 'Area of overlapping ellipses: ' + str(self.overlap_area)
+        # print('Area of overlapping ellipses: ' + str(self.overlap_area))
 
 
 #Example 1
