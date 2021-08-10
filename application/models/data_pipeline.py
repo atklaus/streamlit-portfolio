@@ -22,7 +22,6 @@ import os.path
 from googleapiclient.http import MediaFileUpload
 import gspread
 from df2gspread import df2gspread as d2g
-
 from oauth2client.service_account import ServiceAccountCredentials
 try:
     FILE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -169,18 +168,14 @@ class GoogleAPI:
         self.sheet_obj.insert_row(row_values_list, row_index)
 
 
-
+# int('2,3'.split(',')[0])
 gdrive = GoogleAPI()
 # spreadsheet_id = gdrive.get_spreadsheet_id("IPEDS Data")
-df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
-df['PDI_Tier'] = df['PDI_Tier'].replace('',None)
-df['Apps_Tot_FT'] = df['Apps_Tot_FT'].replace('',None)
-df['Adm_Tot_FT'] = df['Adm_Tot_FT'].replace('',None)
+# df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
 
-df['PDI_Tier']= df['PDI_Tier'].astype(float)
-df['Apps_Tot_FT']= df['Apps_Tot_FT'].astype(float)
-df['Adm_Tot_FT']= df['Adm_Tot_FT'].astype(float)
 
+
+#ATTEMPT TO FILTER A SPREADSHEET
 
 # https://stackoverflow.com/questions/66767685/how-to-get-only-filtered-rows-from-google-sheets-to-python-script-using-google-a
 

@@ -12,14 +12,16 @@ import dash_core_components as dcc
 from .layout import HTML_LAYOUT
 import dash_bootstrap_components as dbc
 import plotly.express as px
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import pandas as pd
 from ..config import BASE_DIR
 import sys
 import os
 from ..projects.happy_prime import HappyPrime
+from ..projects.AreaOfEllipse import Point, Ellipse, OverlapOfEllipses
 from ..projects.GameofLife import GameOfLife
 from ..models.data_pipeline import GoogleAPI
+
 import matplotlib.pyplot as plt
 
 
@@ -100,34 +102,103 @@ def create_project2(server):
 
     dash_app.index_string = HTML_LAYOUT
 
-    df = px.data.gapminder()
-    animations = {
-        'Scatter': px.scatter(
-            df, x="gdpPercap", y="lifeExp", animation_frame="year", 
-            animation_group="country", size="pop", color="continent", 
-            hover_name="country", log_x=True, size_max=55,
-            range_x=[100,100000], range_y=[25,90]),
-        'Bar': px.bar(
-            df, x="continent", y="pop", color="continent", 
-            animation_frame="year", animation_group="country", 
-            range_y=[0,4000000000]),
-    }
 
-    dash_app.layout = html.Div([
-        html.P("Select an animation:"),
-        dcc.RadioItems(
-            id='selection',
-            options=[{'label': x, 'value': x} for x in animations],
-            value='Scatter'
-        ),
-        dcc.Graph(id="graph"),
-    ])
+    # points_df = points_df[points_df['overlap'] == True]
+
+    # animations = {
+    #     'Scatter': px.scatter(
+    #         points_df, x="x", y="y", animation_frame="group", color='overlap',
+    #         animation_group="count", hover_name="count", size_max=(len(points_df)),
+    #         range_x=[0,1], range_y=[0,1])
+    # }
+
+    # # EXAMPLE
+    # df = px.data.gapminder()
+    # animations = {
+    #     'Scatter': px.scatter(
+    #         points_df, x="x", y="y", animation_frame="group", color='overlap',
+    #         animation_group="count", hover_name="count", size_max=(len(points_df)),
+    #         range_x=[0,1], range_y=[0,1]),
+    # }
+
+    # dash_app.layout = html.Div([
+    #     html.P("Select an animation:"),
+    #     dcc.RadioItems(
+    #         id='selection',
+    #         options=[{'label': x, 'value': x} for x in animations],
+    #         value='Scatter'
+    #     ),
+    #     dcc.Graph(id="graph"),
+    # ])
+
+    dash_app.layout = html.Div(
+        [
+            html.H3("Area of Overlapping Ellipse"),
+            html.P("Define math for overlapping ellipses"),
+            html.Br(),
+
+            html.H5("Coordinates of focal points for Ellipse 1"),
+            html.Br(),
+
+            dcc.Input(id="focal_pt_1", type="text", placeholder='2,3'),
+            dcc.Input(id="focal_pt_2", type="text", placeholder='2,3'),
+            html.Br(),
+            html.Br(),
+
+            html.H5("Coordinates of focal points for Ellipse 2"),
+            html.Br(),
+
+            dcc.Input(id="focal_pt_3", type="text", placeholder='2,3'),
+            dcc.Input(id="focal_pt_4", type="text", placeholder='2,3'),                  
+            html.Br(),
+            html.Br(),
+
+            html.H5("Number of Iterations"),
+            html.Br(),
+
+            dcc.Input(id="n_iterations", type="int", placeholder=1000),                  
+
+            html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
+            dcc.Graph(id="ellipse_plot"),
+        ]
+    )
 
     @dash_app.callback(
-        Output("graph", "figure"), 
-        [Input("selection", "value")])
-    def display_animated_graph(s):
-        return animations[s]
+        Output("ellipse_plot", "figure"), 
+        [Input("submit-button-state", "n_clicks")],
+        [State("focal_pt_1", "value"),
+        State("focal_pt_2", "value"),
+        State("focal_pt_3", "value"),
+        State("focal_pt_4", "value"),
+        State("iterations", "value")])
+    def update_ellipse(n_clicks,input1,input2,input3,input4, n_iterations):
+        x1 = int(input1.split(',')[0])
+        y1 = int(input1.split(',')[1])
+        x2 = int(input2.split(',')[0])
+        y2 = int(input2.split(',')[1])
+        x3 = int(input3.split(',')[0])
+        y3 = int(input3.split(',')[1])
+        x4 = int(input4.split(',')[0])
+        y4 = int(input4.split(',')[1])
+
+        p1 = Point(x1,y1)
+        p2 = Point(x2,y2)
+        p3 = Point(x3,y3)
+        p4 = Point(x4,y4)
+        e1 = Ellipse(p1,p2, 2)
+        e2 = Ellipse(p3,p4, 2)
+
+        EllObj = OverlapOfEllipses(seed = 20, iters = n_iterations)
+        EllObj.computeOverlapOfEllipses(e1,e2)
+
+        points_df = EllObj.points_df.copy()
+        # points_df['group'] = 'one'
+        points_df['count'] = range(0,len(points_df))
+        ell_fig = px.scatter(
+        points_df, x="x", y="y", 
+        color="overlap", hover_data=['count'])
+        
+        return ell_fig
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)
