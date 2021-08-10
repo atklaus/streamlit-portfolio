@@ -156,7 +156,7 @@ def create_project2(server):
             html.H5("Number of Iterations"),
             html.Br(),
 
-            dcc.Input(id="n_iterations", type="int", placeholder=1000),                  
+            dcc.Input(id="n_iterations", type="text", placeholder='1000'),                  
 
             html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
             dcc.Graph(id="ellipse_plot"),
@@ -170,8 +170,8 @@ def create_project2(server):
         State("focal_pt_2", "value"),
         State("focal_pt_3", "value"),
         State("focal_pt_4", "value"),
-        State("iterations", "value")])
-    def update_ellipse(n_clicks,input1,input2,input3,input4, n_iterations):
+        State("n_iterations", "value")])
+    def update_ellipse(n_clicks,input1,input2,input3,input4, input5):
         x1 = int(input1.split(',')[0])
         y1 = int(input1.split(',')[1])
         x2 = int(input2.split(',')[0])
@@ -188,7 +188,7 @@ def create_project2(server):
         e1 = Ellipse(p1,p2, 2)
         e2 = Ellipse(p3,p4, 2)
 
-        EllObj = OverlapOfEllipses(seed = 20, iters = n_iterations)
+        EllObj = OverlapOfEllipses(seed = 20, iters = int(input5))
         EllObj.computeOverlapOfEllipses(e1,e2)
 
         points_df = EllObj.points_df.copy()
