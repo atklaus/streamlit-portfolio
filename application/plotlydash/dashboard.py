@@ -1,6 +1,7 @@
 """
 Instantiate Dash apps.
 """
+from dash_html_components.Div import Div
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
@@ -140,23 +141,37 @@ def create_project2(server):
             html.H5("Coordinates of focal points for Ellipse 1"),
             html.Br(),
 
-            dcc.Input(id="focal_pt_1", type="text", placeholder='2,3'),
-            dcc.Input(id="focal_pt_2", type="text", placeholder='2,3'),
+            # html.H5("Coordinates of focal points for Ellipse 1"),
+            html.Div(children=[
+
+                html.H5("Focal Point 1"),
+                dcc.Input(id="focal_pt_1", type="text", value='0,0'),
+
+                html.H5("Focal Point 2"),
+                dcc.Input(id="focal_pt_2", type="text", value='0,0'),
+
+                html.H5("Ellipse Width"),
+                dcc.Input(id="width_1", type="text", value='2'),
+
+                ], style={'columnCount': 3}),
+
             html.Br(),
             html.Br(),
 
             html.H5("Coordinates of focal points for Ellipse 2"),
             html.Br(),
 
-            dcc.Input(id="focal_pt_3", type="text", placeholder='2,3'),
-            dcc.Input(id="focal_pt_4", type="text", placeholder='2,3'),                  
+            dcc.Input(id="focal_pt_3", type="text", value='1,1'),
+            dcc.Input(id="focal_pt_4", type="text", value='1,1'),                  
+            dcc.Input(id="width_2", type="text", value='2'),
             html.Br(),
             html.Br(),
 
             html.H5("Number of Iterations"),
+            
             html.Br(),
 
-            dcc.Input(id="n_iterations", type="text", placeholder='1000'),                  
+            dcc.Input(id="n_iterations", type="text", value='5000'),                  
 
             html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
             dcc.Graph(id="ellipse_plot"),
@@ -168,37 +183,43 @@ def create_project2(server):
         [Input("submit-button-state", "n_clicks")],
         [State("focal_pt_1", "value"),
         State("focal_pt_2", "value"),
+        State("width_1", "value"),
         State("focal_pt_3", "value"),
         State("focal_pt_4", "value"),
+        State("width_2", "value"),
         State("n_iterations", "value")])
-    def update_ellipse(n_clicks,input1,input2,input3,input4, input5):
-        x1 = int(input1.split(',')[0])
-        y1 = int(input1.split(',')[1])
-        x2 = int(input2.split(',')[0])
-        y2 = int(input2.split(',')[1])
-        x3 = int(input3.split(',')[0])
-        y3 = int(input3.split(',')[1])
-        x4 = int(input4.split(',')[0])
-        y4 = int(input4.split(',')[1])
+    def update_ellipse(n_clicks,input1,input2,width1,input3,input4,width2,input5):
+        if n_clicks > 0:
+            x1 = int(input1.split(',')[0])
+            y1 = int(input1.split(',')[1])
+            x2 = int(input2.split(',')[0])
+            y2 = int(input2.split(',')[1])
+            x3 = int(input3.split(',')[0])
+            y3 = int(input3.split(',')[1])
+            x4 = int(input4.split(',')[0])
+            y4 = int(input4.split(',')[1])
 
-        p1 = Point(x1,y1)
-        p2 = Point(x2,y2)
-        p3 = Point(x3,y3)
-        p4 = Point(x4,y4)
-        e1 = Ellipse(p1,p2, 2)
-        e2 = Ellipse(p3,p4, 2)
+            p1 = Point(x1,y1)
+            p2 = Point(x2,y2)
+            p3 = Point(x3,y3)
+            p4 = Point(x4,y4)
+            e1 = Ellipse(p1,p2, int(width1))
+            e2 = Ellipse(p3,p4, int(width2))
 
-        EllObj = OverlapOfEllipses(seed = 20, iters = int(input5))
-        EllObj.computeOverlapOfEllipses(e1,e2)
+            EllObj = OverlapOfEllipses(seed = 20, iters = int(input5))
+            EllObj.computeOverlapOfEllipses(e1,e2)
 
-        points_df = EllObj.points_df.copy()
-        # points_df['group'] = 'one'
-        points_df['count'] = range(0,len(points_df))
-        ell_fig = px.scatter(
-        points_df, x="x", y="y", 
-        color="overlap", hover_data=['count'])
-        
-        return ell_fig
+            points_df = EllObj.points_df.copy()
+            # points_df['group'] = 'one'
+            points_df['count'] = range(0,len(points_df))
+            ell_fig = px.scatter(
+            points_df, x="x", y="y", 
+            color="overlap", hover_data=['count'])
+            
+            return ell_fig
+        else:
+            ell_fig = px.scatter()
+            return ell_fig
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)
