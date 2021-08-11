@@ -106,35 +106,6 @@ def create_project2(server):
 
     dash_app.index_string = HTML_LAYOUT
 
-
-    # points_df = points_df[points_df['overlap'] == True]
-
-    # animations = {
-    #     'Scatter': px.scatter(
-    #         points_df, x="x", y="y", animation_frame="group", color='overlap',
-    #         animation_group="count", hover_name="count", size_max=(len(points_df)),
-    #         range_x=[0,1], range_y=[0,1])
-    # }
-
-    # # EXAMPLE
-    # df = px.data.gapminder()
-    # animations = {
-    #     'Scatter': px.scatter(
-    #         points_df, x="x", y="y", animation_frame="group", color='overlap',
-    #         animation_group="count", hover_name="count", size_max=(len(points_df)),
-    #         range_x=[0,1], range_y=[0,1]),
-    # }
-
-    # dash_app.layout = html.Div([
-    #     html.P("Select an animation:"),
-    #     dcc.RadioItems(
-    #         id='selection',
-    #         options=[{'label': x, 'value': x} for x in animations],
-    #         value='Scatter'
-    #     ),
-    #     dcc.Graph(id="graph"),
-    # ])
-
     dash_app.layout = html.Div(
         [
             html.H3("Area of Overlapping Ellipses"),
@@ -258,124 +229,149 @@ def create_project3(server):
 
     dash_app.index_string = HTML_LAYOUT
 
-    GameObj = GameOfLife(10, .5)
-    GameObj.advance(30)
-    df = pd.DataFrame(columns = ['x','y','value','step'])
-
-    for i in range(GameObj.steps):
-        temp_df = pd.DataFrame(data=GameObj.grids[i])
-        temp_df = temp_df.reset_index()
-        temp_df = temp_df.rename(columns={"index":"x"})
-        test_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,10)))
-        test_df = test_df.rename(columns={"variable":"y"})
-        test_df = test_df[test_df.value ==1]
-        test_df['step'] = i
-        df = pd.concat([df,test_df])
-
-    df['x'] = df['x'] - .5
-    df['x'] = df['x'] - .5
-
-    fig = px.scatter(
-        df, x='x', y='y', animation_frame="step", size_max=55, 
-        range_x=[0,GameObj.s], range_y=[0,GameObj.s])
-    fig.show()
-
-    # fig.add_trace(go.Scatter(
-    # x=test_df['New_ID'], 
-    # y=test_df['variable'],
-    # mode='markers',
-    # marker_color='Blue'
-    # ))
-
-    # # Set options common to all traces with fig.update_traces
-    # fig.update_traces(mode='markers', marker_size=30,marker_symbol='square')
-    # fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)')
-    # fig.update_yaxes(nticks=10)
-    # fig.update_xaxes(nticks=10)
-
-    animations = {
-    'Scatter': fig,
-    # 'Scatter': px.scatter(
-    #     df, x='New_ID', y='variable', animation_frame="step", size_max=55, 
-    #     range_x=[0,GameObj.s], range_y=[0,GameObj.s]),
-    }
+    # fig.show()
 
     dash_app.layout = html.Div([
-    html.P("Select an animation:"),
-    dcc.RadioItems(
-        id='selection',
-        options=[{'label': x, 'value': x} for x in animations],
-        value='Scatter'
-    ),
-    dcc.Graph(id="graph"),
+        dcc.Input(id="probability", type="text", value='.3',className='life_input'), 
+        dcc.Graph(id="life_plot"),
     ])
 
     @dash_app.callback(
-        Output("graph", "figure"), 
-        [Input("selection", "value")])
-    def display_animated_graph(s):
-        return animations[s]
+        Output("life_plot", "figure"), 
+        [Input("probability", "value")])
+    def display_animated_graph(life_input):
+        p=.3
+        b=6
+        t=30
+
+        GameObj = GameOfLife(b, p)
+        universe = np.zeros((6, 6))
+        beacon = [[1, 1, 0, 0],
+                [1, 1, 0, 0],
+                [0, 0, 1, 1],
+                [0, 0, 1, 1]]
+        universe[1:5, 1:5] = beacon
+        GameObj.b = universe
+
+        GameObj.advance(t)
+        # GameObj.grids
+
+        df = pd.DataFrame(columns = ['x','y','value','step'])
+
+        for i in range(GameObj.steps):
+            temp_df = pd.DataFrame(data=GameObj.grids[i])
+            temp_df = temp_df.reset_index()
+            temp_df = temp_df.rename(columns={"index":"x"})
+            temp_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,b)))
+            temp_df = temp_df.rename(columns={"variable":"y"})
+            # temp_df = temp_df[temp_df.value ==1]
+            temp_df['step'] = i
+            df = pd.concat([df,temp_df])
+
+        df['x'] = df['x'] + .5
+        df['y'] = df['y'] + .5
+
+        fig = go.Figure(
+            data=[go.Scatter(x=[0], y=[0])],
+            layout=go.Layout(
+                xaxis=dict(range=[0, b], autorange=False),
+                yaxis=dict(range=[0, b], autorange=False),
+                title="Start Title",
+                updatemenus=[dict(
+                    type="buttons",
+                    buttons=[dict(label="Run",
+                                method="animate",
+                                args=[None])])]
+            ),
+            frames=[go.Frame(
+                data=[go.Scatter(
+                    x=df[df['step']==k]['y'],
+                    y=df[df['step']==k]['x'],
+                    mode="markers",
+                    marker=dict(
+                    size=80,
+                    color=df[df['step']==k]['value'], #set color equal to a variable
+                    symbol='square',
+                    showscale=True),
+
+                    # marker_color='Blue',
+                    # marker_size=80,
+                    # marker_symbol='square'
+                    
+                    )])
+                for k in range(30)]
+        )
+
+        fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
+
+        fig.update_yaxes(nticks=10)
+        fig.update_xaxes(nticks=10)
+        return fig
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)
         
     return dash_app.server
 
+# p=.3
+# b=6
+# t=30
 
+# GameObj = GameOfLife(b, p)
+# universe = np.zeros((6, 6))
+# beacon = [[1, 1, 0, 0],
+#           [1, 1, 0, 0],
+#           [0, 0, 1, 1],
+#           [0, 0, 1, 1]]
+# universe[1:5, 1:5] = beacon
+# GameObj.b = universe
 
-p=.3
-b=6
-t=30
+# GameObj.advance(t)
+# GameObj.grids
 
-universe = np.zeros((6, 6))
-beacon = [[1, 1, 0, 0],
-          [1, 1, 0, 0],
-          [0, 0, 1, 1],
-          [0, 0, 1, 1]]
-universe[1:5, 1:5] = beacon
+# df = pd.DataFrame(columns = ['x','y','value','step'])
 
-GameObj = GameOfLife(b, p)
-GameObj.grids[0] = universe
-GameObj.advance(t)
-GameObj.grids[29]
+# for i in range(GameObj.steps):
+#     temp_df = pd.DataFrame(data=GameObj.grids[i])
+#     temp_df = temp_df.reset_index()
+#     temp_df = temp_df.rename(columns={"index":"x"})
+#     temp_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,b)))
+#     temp_df = temp_df.rename(columns={"variable":"y"})
+#     temp_df = temp_df[temp_df.value ==1]
+#     temp_df['step'] = i
+#     df = pd.concat([df,temp_df])
 
-df = pd.DataFrame(columns = ['x','y','value','step'])
+# df['x'] = df['x'] + .5
+# df['y'] = df['y'] + .5
 
-for i in range(GameObj.steps):
-    temp_df = pd.DataFrame(data=GameObj.grids[i])
-    temp_df = temp_df.reset_index()
-    temp_df = temp_df.rename(columns={"index":"x"})
-    test_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,10)))
-    test_df = test_df.rename(columns={"variable":"y"})
-    test_df = test_df[test_df.value ==1]
-    test_df['step'] = i
-    df = pd.concat([df,test_df])
+# fig = go.Figure(
+#     data=[go.Scatter(x=[0], y=[0])],
+#     layout=go.Layout(
+#         xaxis=dict(range=[0, b], autorange=False),
+#         yaxis=dict(range=[0, b], autorange=False),
+#         title="Start Title",
+#         updatemenus=[dict(
+#             type="buttons",
+#             buttons=[dict(label="Run",
+#                           method="animate",
+#                           args=[None])])]
+#     ),
+#     frames=[go.Frame(
+#         data=[go.Scatter(
+#             x=df[df['step']==k]['y'],
+#             y=df[df['step']==k]['x'],
+#             mode="markers",
+#             marker_color='Blue',
+#             marker_size=30,marker_symbol='square',
+#             marker=dict(color="Blue", size=40))])
+#         for k in range(30)]
+# )
 
-df['x'] = df['x'] - .5
-df['y'] = df['y'] - .5
+# fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
 
-fig = go.Figure(
-    data=[go.Scatter(x=[0], y=[0])],
-    layout=go.Layout(
-        xaxis=dict(range=[0, b], autorange=False),
-        yaxis=dict(range=[0, b], autorange=False),
-        title="Start Title",
-        updatemenus=[dict(
-            type="buttons",
-            buttons=[dict(label="Run",
-                          method="animate",
-                          args=[None])])]
-    ),
-    frames=[go.Frame(
-        data=[go.Scatter(
-            x=df[df['step']==k]['y'],
-            y=df[df['step']==k]['x'],
-            mode="markers",
-            marker_color='Blue',
-            marker_size=30,marker_symbol='square',
-            marker=dict(color="Blue", size=40))])
-        for k in range(30)]
-)
+# fig.update_yaxes(nticks=10)
+# fig.update_xaxes(nticks=10)
+# fig.show()
 
 # fig.update_layout(go.Scatter(
 # x=test_df['New_ID'], 
@@ -386,12 +382,10 @@ fig = go.Figure(
 
 # # Set options common to all traces with fig.update_traces
 # fig.update_traces(mode='markers',marker_color='Blue' marker_size=30,marker_symbol='square')
-fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
+
 # fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 30
 
-fig.update_yaxes(nticks=10)
-fig.update_xaxes(nticks=10)
-fig.show()
+
 
 #############
 # GOOGLE DRIVE EXAMPLE
