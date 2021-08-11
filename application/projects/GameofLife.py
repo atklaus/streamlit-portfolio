@@ -13,6 +13,8 @@ import matplotlib.animation as animation
 import os
 os.chdir(os.getcwd())
 
+# Failed test case of p = 1. Only corners should survive on second turn. This was not the case for your code.
+
 class GameOfLife:
 
     """
@@ -54,7 +56,7 @@ class GameOfLife:
         :param b: conway board object
         :param t: number of steps to advance the board
         """
-    
+        self.steps = t
         for i in range(t):
             new_b = self.b.copy() #get size of board
             self.new_grid(new_b)
@@ -179,7 +181,15 @@ class GameOfLife:
 
 # GameObj = GameOfLife(10, .5)
 # GameObj.advance(30)
-# data = GameObj.grids[0]
+# df = pd.DataFrame(columns = list(range(GameObj.s)) + ['step'])
+
+
+# for i in range(GameObj.steps):
+#     temp_df = pd.DataFrame(data=GameObj.grids[i])
+#     temp_df['step'] = i
+#     df = pd.concat([df,temp_df])
+
+
 
 # df = pd.DataFrame(data)
 

@@ -3,6 +3,9 @@ Instantiate Dash apps.
 """
 from dash_html_components.Div import Div
 import matplotlib.pyplot as plt
+from plotly.validators.scatter import marker
+from plotly.validators.scatter.marker import SymbolValidator
+import plotly.graph_objects as go
 import matplotlib.animation as animation
 import numpy as np
 import pandas as pd
@@ -154,10 +157,7 @@ def create_project2(server):
             ], style={'columnCount': 3}
             ),
 
-            html.Br(),
-            html.H5("Enter inputs for Ellipse 2"),
-            html.Br(),
-
+            html.H4("Enter inputs for Ellipse 2"),
             html.Div(children=[
 
                 html.H5("Focal Point 1"),
@@ -224,11 +224,19 @@ def create_project2(server):
             points_df['point_number'] = range(0,len(points_df))
             ell_fig = px.scatter(
             points_df, x="x", y="y", 
+            # height=600, width=600,
             color="Location", hover_data=['point_number'])
+            ell_fig.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+            ))
             
             return ell_fig, EllObj.overlap_area
         else:
-            ell_fig = px.scatter()
+            ell_fig = px.scatter(height=600, width=600)
             return ell_fig, ''
 
     if __name__ == '__main__':
@@ -245,52 +253,68 @@ def create_project3(server):
         title='Project',
         external_stylesheets=external_stylesheets,
         server=server,
-        routes_pathname_prefix='/project3/'
+        routes_pathname_prefix='/life/'
     )
 
     dash_app.index_string = HTML_LAYOUT
 
-    gdrive = GoogleAPI()
-    df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
-    df['PDI_Tier'] = df['PDI_Tier'].replace('',None)
-    df['Apps_Tot_FT'] = df['Apps_Tot_FT'].replace('',None)
-    df['Adm_Tot_FT'] = df['Adm_Tot_FT'].replace('',None)
+    GameObj = GameOfLife(10, .5)
+    GameObj.advance(30)
+    df = pd.DataFrame(columns = ['x','y','value','step'])
 
-    df = df.dropna()
-    df['PDI_Tier']= df['PDI_Tier'].astype(float)
-    df['Apps_Tot_FT']= df['Apps_Tot_FT'].astype(float)
-    df['Adm_Tot_FT']= df['Adm_Tot_FT'].astype(float)
+    for i in range(GameObj.steps):
+        temp_df = pd.DataFrame(data=GameObj.grids[i])
+        temp_df = temp_df.reset_index()
+        temp_df = temp_df.rename(columns={"index":"x"})
+        test_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,10)))
+        test_df = test_df.rename(columns={"variable":"y"})
+        test_df = test_df[test_df.value ==1]
+        test_df['step'] = i
+        df = pd.concat([df,test_df])
 
+    df['x'] = df['x'] - .5
+    df['x'] = df['x'] - .5
 
-    # df = px.data.iris()
-    # GameObj = GameOfLife(10, .5)
-    # GameObj.advance(30)
-    # data = GameObj.grids[0]
-    # df = pd.DataFrame(data)
+    fig = px.scatter(
+        df, x='x', y='y', animation_frame="step", size_max=55, 
+        range_x=[0,GameObj.s], range_y=[0,GameObj.s])
+    fig.show()
 
+    # fig.add_trace(go.Scatter(
+    # x=test_df['New_ID'], 
+    # y=test_df['variable'],
+    # mode='markers',
+    # marker_color='Blue'
+    # ))
+
+    # # Set options common to all traces with fig.update_traces
+    # fig.update_traces(mode='markers', marker_size=30,marker_symbol='square')
+    # fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)')
+    # fig.update_yaxes(nticks=10)
+    # fig.update_xaxes(nticks=10)
+
+    animations = {
+    'Scatter': fig,
+    # 'Scatter': px.scatter(
+    #     df, x='New_ID', y='variable', animation_frame="step", size_max=55, 
+    #     range_x=[0,GameObj.s], range_y=[0,GameObj.s]),
+    }
 
     dash_app.layout = html.Div([
-        dcc.Graph(id="scatter-plot"),
-        html.P("Petal Width:"),
-        dcc.RangeSlider(
-            id='range-slider',
-            min=0, max=7, step=1,
-            marks={0: '0', 2.5: '2.5'},
-            value=[0, 7]
-        ),
+    html.P("Select an animation:"),
+    dcc.RadioItems(
+        id='selection',
+        options=[{'label': x, 'value': x} for x in animations],
+        value='Scatter'
+    ),
+    dcc.Graph(id="graph"),
     ])
 
     @dash_app.callback(
-        Output("scatter-plot", "figure"), 
-        [Input("range-slider", "value")])
-    def update_bar_chart(slider_range):
-        low, high = slider_range
-        mask = (df['PDI_Tier'] > low) & (df['PDI_Tier'] < high)
-        fig = px.scatter(
-            df[mask], x="Apps_Tot_FT", y="Adm_Tot_FT", 
-            color="PDI_Tier", size='Apps_Tot_FT', 
-            hover_data=['PDI_Tier'])
-        return fig
+        Output("graph", "figure"), 
+        [Input("selection", "value")])
+    def display_animated_graph(s):
+        return animations[s]
 
     if __name__ == '__main__':
         dash_app.run_server(debug=True)
@@ -299,3 +323,135 @@ def create_project3(server):
 
 
 
+p=.3
+b=6
+t=30
+
+universe = np.zeros((6, 6))
+beacon = [[1, 1, 0, 0],
+          [1, 1, 0, 0],
+          [0, 0, 1, 1],
+          [0, 0, 1, 1]]
+universe[1:5, 1:5] = beacon
+
+GameObj = GameOfLife(b, p)
+GameObj.grids[0] = universe
+GameObj.advance(t)
+GameObj.grids[29]
+
+df = pd.DataFrame(columns = ['x','y','value','step'])
+
+for i in range(GameObj.steps):
+    temp_df = pd.DataFrame(data=GameObj.grids[i])
+    temp_df = temp_df.reset_index()
+    temp_df = temp_df.rename(columns={"index":"x"})
+    test_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,10)))
+    test_df = test_df.rename(columns={"variable":"y"})
+    test_df = test_df[test_df.value ==1]
+    test_df['step'] = i
+    df = pd.concat([df,test_df])
+
+df['x'] = df['x'] - .5
+df['y'] = df['y'] - .5
+
+fig = go.Figure(
+    data=[go.Scatter(x=[0], y=[0])],
+    layout=go.Layout(
+        xaxis=dict(range=[0, b], autorange=False),
+        yaxis=dict(range=[0, b], autorange=False),
+        title="Start Title",
+        updatemenus=[dict(
+            type="buttons",
+            buttons=[dict(label="Run",
+                          method="animate",
+                          args=[None])])]
+    ),
+    frames=[go.Frame(
+        data=[go.Scatter(
+            x=df[df['step']==k]['y'],
+            y=df[df['step']==k]['x'],
+            mode="markers",
+            marker_color='Blue',
+            marker_size=30,marker_symbol='square',
+            marker=dict(color="Blue", size=40))])
+        for k in range(30)]
+)
+
+# fig.update_layout(go.Scatter(
+# x=test_df['New_ID'], 
+# y=test_df['variable'],
+# mode='markers',
+# marker_color='Blue'
+# ))
+
+# # Set options common to all traces with fig.update_traces
+# fig.update_traces(mode='markers',marker_color='Blue' marker_size=30,marker_symbol='square')
+fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
+# fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 30
+
+fig.update_yaxes(nticks=10)
+fig.update_xaxes(nticks=10)
+fig.show()
+
+#############
+# GOOGLE DRIVE EXAMPLE
+#############
+
+# def create_project3(server):
+#     """Create a Plotly Dash dashboard."""
+
+#     external_stylesheets = []
+
+#     dash_app = dash.Dash(__name__,
+#         title='Project',
+#         external_stylesheets=external_stylesheets,
+#         server=server,
+#         routes_pathname_prefix='/life/'
+#     )
+
+#     dash_app.index_string = HTML_LAYOUT
+
+#     gdrive = GoogleAPI()
+#     df = gdrive.sheet_to_df("IPEDS Data", "IPEDS Data")
+#     df['PDI_Tier'] = df['PDI_Tier'].replace('',None)
+#     df['Apps_Tot_FT'] = df['Apps_Tot_FT'].replace('',None)
+#     df['Adm_Tot_FT'] = df['Adm_Tot_FT'].replace('',None)
+
+#     df = df.dropna()
+#     df['PDI_Tier']= df['PDI_Tier'].astype(float)
+#     df['Apps_Tot_FT']= df['Apps_Tot_FT'].astype(float)
+#     df['Adm_Tot_FT']= df['Adm_Tot_FT'].astype(float)
+
+#     # df = px.data.iris()
+#     # GameObj = GameOfLife(10, .5)
+#     # GameObj.advance(30)
+#     # data = GameObj.grids[0]
+#     # df = pd.DataFrame(data)
+
+#     dash_app.layout = html.Div([
+#         dcc.Graph(id="scatter-plot"),
+#         html.P("Petal Width:"),
+#         dcc.RangeSlider(
+#             id='range-slider',
+#             min=0, max=7, step=1,
+#             marks={0: '0', 2.5: '2.5'},
+#             value=[0, 7]
+#         ),
+#     ])
+
+#     @dash_app.callback(
+#         Output("scatter-plot", "figure"), 
+#         [Input("range-slider", "value")])
+#     def update_bar_chart(slider_range):
+#         low, high = slider_range
+#         mask = (df['PDI_Tier'] > low) & (df['PDI_Tier'] < high)
+#         fig = px.scatter(
+#             df[mask], x="Apps_Tot_FT", y="Adm_Tot_FT", 
+#             color="PDI_Tier", size='Apps_Tot_FT', 
+#             hover_data=['PDI_Tier'])
+#         return fig
+
+#     if __name__ == '__main__':
+#         dash_app.run_server(debug=True)
+        
+#     return dash_app.server
