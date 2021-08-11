@@ -232,28 +232,49 @@ def create_project3(server):
     # fig.show()
 
     dash_app.layout = html.Div([
-        dcc.Input(id="probability", type="text", value='.3',className='life_input'), 
+            html.H3("Conway's Game of Life"),
+            html.P("Explanation of it and wiki link"),
+            html.Br(),
+            html.P("The default example is two concentric circles and the area should be close to π (Pi)."),
+            html.H4("Enter inputs for Ellipse 1"),
+
+            html.Div(children=[
+
+                html.H5("Start Probability"),
+                dcc.Input(id="prob", type="int", value=.3,className='life_input'),
+                html.H5("Board Size"),
+                dcc.Input(id="board_size", type="int", value=6,className='life_input'),
+                html.H5("Iterations"),
+                dcc.Input(id="iters", type="int", value=30,className='life_input'),
+                dcc.Input(id="test", type="int", value=30,className='life_input'),
+
+            ], style={'columnCount': 3}
+            ),
         dcc.Graph(id="life_plot"),
     ])
 
+    #FIGURE OUT HOW TO HAVE EMPTY INPUT
     @dash_app.callback(
         Output("life_plot", "figure"), 
-        [Input("probability", "value")])
-    def display_animated_graph(life_input):
-        p=.3
-        b=6
-        t=30
+        # [Input("none", "children")],
+        [Input("test", "value")],
+        [State("prob", "value"),
+        State("board_size", "value"),
+        State("iters", "value")])
+    def display_animated_graph(none, prob, board_size, iters):
 
-        GameObj = GameOfLife(b, p)
-        universe = np.zeros((6, 6))
-        beacon = [[1, 1, 0, 0],
-                [1, 1, 0, 0],
-                [0, 0, 1, 1],
-                [0, 0, 1, 1]]
-        universe[1:5, 1:5] = beacon
-        GameObj.b = universe
+        GameObj = GameOfLife(board_size, prob)
+        
+        def preset():
+            universe = np.zeros((6, 6))
+            beacon = [[1, 1, 0, 0],
+                    [1, 1, 0, 0],
+                    [0, 0, 1, 1],
+                    [0, 0, 1, 1]]
+            universe[1:5, 1:5] = beacon
+            GameObj.b = universe
 
-        GameObj.advance(t)
+        GameObj.advance(iters)
         # GameObj.grids
 
         df = pd.DataFrame(columns = ['x','y','value','step'])
@@ -262,7 +283,7 @@ def create_project3(server):
             temp_df = pd.DataFrame(data=GameObj.grids[i])
             temp_df = temp_df.reset_index()
             temp_df = temp_df.rename(columns={"index":"x"})
-            temp_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,b)))
+            temp_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,board_size)))
             temp_df = temp_df.rename(columns={"variable":"y"})
             # temp_df = temp_df[temp_df.value ==1]
             temp_df['step'] = i
@@ -274,9 +295,8 @@ def create_project3(server):
         fig = go.Figure(
             data=[go.Scatter(x=[0], y=[0])],
             layout=go.Layout(
-                xaxis=dict(range=[0, b], autorange=False),
-                yaxis=dict(range=[0, b], autorange=False),
-                title="Start Title",
+                xaxis=dict(range=[0, board_size], autorange=False),
+                yaxis=dict(range=[0, board_size], autorange=False),
                 updatemenus=[dict(
                     type="buttons",
                     buttons=[dict(label="Run",
@@ -289,7 +309,7 @@ def create_project3(server):
                     y=df[df['step']==k]['x'],
                     mode="markers",
                     marker=dict(
-                    size=80,
+                    size=120,
                     color=df[df['step']==k]['value'], #set color equal to a variable
                     symbol='square',
                     showscale=True),
@@ -302,7 +322,9 @@ def create_project3(server):
                 for k in range(30)]
         )
 
-        fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
+        fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,
+        width=800,height=800,
+        paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
 
         fig.update_yaxes(nticks=10)
         fig.update_xaxes(nticks=10)
