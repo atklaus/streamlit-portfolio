@@ -1,6 +1,7 @@
 """
 Instantiate Dash apps.
 """
+from dash_html_components.Br import Br
 from dash_html_components.Div import Div
 import matplotlib.pyplot as plt
 from plotly.validators.scatter import marker
@@ -236,34 +237,49 @@ def create_project3(server):
             html.P("Explanation of it and wiki link"),
             html.Br(),
             html.P("The default example is two concentric circles and the area should be close to π (Pi)."),
-            html.H4("Enter inputs for Ellipse 1"),
+            html.H4("Enter inputs"),
 
+            html.Button(id='submit-button-state', n_clicks=0, children='Create New Board'),
+            html.Br(),
+            html.Br(),
             html.Div(children=[
 
                 html.H5("Start Probability"),
                 dcc.Input(id="prob", type="int", value=.3,className='life_input'),
                 html.H5("Board Size"),
-                dcc.Input(id="board_size", type="int", value=6,className='life_input'),
+                dcc.Input(id="board_size", type="int", value=15,className='life_input'),
                 html.H5("Iterations"),
                 dcc.Input(id="iters", type="int", value=30,className='life_input'),
-                dcc.Input(id="test", type="int", value=30,className='life_input'),
-
             ], style={'columnCount': 3}
             ),
+            dcc.Dropdown(
+                id='seed-dropdown',
+                options=[
+                    {'label': 'Beacon', 'value': 'Beacon'},
+                    ],
+                    value='Beacon', 
+                    style={'columnCount': 3}
+                ),
+            
+            html.P(id='placeholder'),
         dcc.Graph(id="life_plot"),
     ])
 
     #FIGURE OUT HOW TO HAVE EMPTY INPUT
     @dash_app.callback(
         Output("life_plot", "figure"), 
-        # [Input("none", "children")],
-        [Input("test", "value")],
+        [Input("placeholder", "value"),
+        Input("submit-button-state", "n_clicks")],
         [State("prob", "value"),
         State("board_size", "value"),
         State("iters", "value")])
-    def display_animated_graph(none, prob, board_size, iters):
+    def display_animated_graph(input1,input2,input3,input4,input5):
+        prob = input3
+        board_size = int(input4)
+        iters = int(input5)
 
         GameObj = GameOfLife(board_size, prob)
+        print(board_size)
         
         def preset():
             universe = np.zeros((6, 6))
@@ -274,60 +290,49 @@ def create_project3(server):
             universe[1:5, 1:5] = beacon
             GameObj.b = universe
 
+        # universe = np.zeros((6, 6))
+        # beacon = [[1, 1, 0, 0],
+        #         [1, 1, 0, 0],
+        #         [0, 0, 1, 1],
+        #         [0, 0, 1, 1]]
+        # universe[1:5, 1:5] = beacon
+        # GameObj.b = universe
         GameObj.advance(iters)
-        # GameObj.grids
-
-        df = pd.DataFrame(columns = ['x','y','value','step'])
-
-        for i in range(GameObj.steps):
-            temp_df = pd.DataFrame(data=GameObj.grids[i])
-            temp_df = temp_df.reset_index()
-            temp_df = temp_df.rename(columns={"index":"x"})
-            temp_df = pd.melt(temp_df, id_vars=['x'], value_vars=list(range(0,board_size)))
-            temp_df = temp_df.rename(columns={"variable":"y"})
-            # temp_df = temp_df[temp_df.value ==1]
-            temp_df['step'] = i
-            df = pd.concat([df,temp_df])
-
-        df['x'] = df['x'] + .5
-        df['y'] = df['y'] + .5
 
         fig = go.Figure(
-            data=[go.Scatter(x=[0], y=[0])],
+            data=[go.Heatmap(
+                x = list(range(0, board_size)),
+                y = list(range(0, board_size)),
+                z = GameObj.grids[0])],
             layout=go.Layout(
                 xaxis=dict(range=[0, board_size], autorange=False),
                 yaxis=dict(range=[0, board_size], autorange=False),
+                showlegend = False,
                 updatemenus=[dict(
                     type="buttons",
-                    buttons=[dict(label="Run",
+                    buttons=[dict(label="Run Simulation",
                                 method="animate",
                                 args=[None])])]
             ),
             frames=[go.Frame(
-                data=[go.Scatter(
-                    x=df[df['step']==k]['y'],
-                    y=df[df['step']==k]['x'],
-                    mode="markers",
-                    marker=dict(
-                    size=120,
-                    color=df[df['step']==k]['value'], #set color equal to a variable
-                    symbol='square',
-                    showscale=True),
-
-                    # marker_color='Blue',
-                    # marker_size=80,
-                    # marker_symbol='square'
-                    
-                    )])
-                for k in range(30)]
+                data=[go.Heatmap(x = list(range(0, board_size)),
+                y = list(range(0, board_size)),
+                z = GameObj.grids[k])])
+                for k in range(iters)]
+        )
+        axis_template = dict(range = [0,board_size], autorange = False,
+            showgrid = False, zeroline = False, showticklabels = False,
+            ticks = '' )
+        
+        fig.update_layout(showlegend = False,autosize = False,xaxis = axis_template,yaxis = axis_template)
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
+        fig.update_traces(showscale=False)
+        fig.update_layout(width=800,height=800
+        # ,transition = {'duration': 1000}
         )
 
-        fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,
-        width=800,height=800,
-        paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
-
-        fig.update_yaxes(nticks=10)
-        fig.update_xaxes(nticks=10)
+        # fig.update_yaxes(range=[0-.5, board_size-.5])
+        # fig.update_xaxes(nticks=10)
         return fig
 
     if __name__ == '__main__':
@@ -365,48 +370,6 @@ def create_project3(server):
 
 # df['x'] = df['x'] + .5
 # df['y'] = df['y'] + .5
-
-# fig = go.Figure(
-#     data=[go.Scatter(x=[0], y=[0])],
-#     layout=go.Layout(
-#         xaxis=dict(range=[0, b], autorange=False),
-#         yaxis=dict(range=[0, b], autorange=False),
-#         title="Start Title",
-#         updatemenus=[dict(
-#             type="buttons",
-#             buttons=[dict(label="Run",
-#                           method="animate",
-#                           args=[None])])]
-#     ),
-#     frames=[go.Frame(
-#         data=[go.Scatter(
-#             x=df[df['step']==k]['y'],
-#             y=df[df['step']==k]['x'],
-#             mode="markers",
-#             marker_color='Blue',
-#             marker_size=30,marker_symbol='square',
-#             marker=dict(color="Blue", size=40))])
-#         for k in range(30)]
-# )
-
-# fig.update_layout(yaxis_zeroline=False, xaxis_zeroline=False,width=600,height=600,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 1000})
-
-# fig.update_yaxes(nticks=10)
-# fig.update_xaxes(nticks=10)
-# fig.show()
-
-# fig.update_layout(go.Scatter(
-# x=test_df['New_ID'], 
-# y=test_df['variable'],
-# mode='markers',
-# marker_color='Blue'
-# ))
-
-# # Set options common to all traces with fig.update_traces
-# fig.update_traces(mode='markers',marker_color='Blue' marker_size=30,marker_symbol='square')
-
-# fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 30
-
 
 
 #############

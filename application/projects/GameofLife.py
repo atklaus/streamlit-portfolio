@@ -32,8 +32,8 @@ class GameOfLife:
     """
 
     def __init__(self, s, p=.1):
-        self.s = s
-        self.p = p
+        self.s = int(s)
+        self.p = float(p)
         self.grids = []
         self.b = self.conway(self.s, self.p)
 
@@ -43,6 +43,8 @@ class GameOfLife:
         :param s: int size of the board
         :param p: probability
         """
+        print(s)
+        print(type(s))
         b = np.random.random((s,s)) #create s by s board
         b  = np.where(b < p, 1, 0) #where values are less than
         self.grids.append(b)
