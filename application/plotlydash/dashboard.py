@@ -252,15 +252,21 @@ def create_project3(server):
                 dcc.Input(id="iters", type="int", value=30,className='life_input'),
             ], style={'columnCount': 3}
             ),
+            html.Br(),
+            html.Div(id='life-dropdown',children=[
             dcc.Dropdown(
                 id='seed-dropdown',
                 options=[
-                    {'label': 'Beacon', 'value': 'Beacon'},
+                    {'label': 'Beacon', 'value': 'bcn'},
+                    {'label': 'Blinker', 'value': 'blkr'},
+                    {'label': 'Toad', 'value': 'td'},
+                    {'label': 'Oscilator', 'value': 'osltr'},
+
+
                     ],
-                    value='Beacon', 
-                    style={'columnCount': 3}
+                    value='Beacon'
                 ),
-            
+            ],style={'marginRight':'95vh'}),
             html.P(id='placeholder'),
         dcc.Graph(id="life_plot"),
     ])
@@ -279,7 +285,6 @@ def create_project3(server):
         iters = int(input5)
 
         GameObj = GameOfLife(board_size, prob)
-        print(board_size)
         
         def preset():
             universe = np.zeros((6, 6))
@@ -288,15 +293,27 @@ def create_project3(server):
                     [0, 0, 1, 1],
                     [0, 0, 1, 1]]
             universe[1:5, 1:5] = beacon
+
             GameObj.b = universe
 
-        # universe = np.zeros((6, 6))
-        # beacon = [[1, 1, 0, 0],
-        #         [1, 1, 0, 0],
-        #         [0, 0, 1, 1],
-        #         [0, 0, 1, 1]]
-        # universe[1:5, 1:5] = beacon
-        # GameObj.b = universe
+            blinker = [1, 1, 1]
+            toad = [[1, 1, 1, 0],
+            [0, 1, 1, 1]]
+
+            universe = np.zeros((11, 11))
+            universe[2, 1:4] = blinker
+            universe[2:4, 6:10] = toad
+            GameObj.b = universe
+
+            #Oscillator
+            universe = np.zeros((17, 17))
+            universe[2, 4:7] = 1
+            universe[4:7, 7] = 1
+            universe += universe.T
+            universe += universe[:, ::-1]
+            universe += universe[::-1, :]
+            GameObj.b = universe
+
         GameObj.advance(iters)
 
         fig = go.Figure(
@@ -320,7 +337,7 @@ def create_project3(server):
                 z = GameObj.grids[k])])
                 for k in range(iters)]
         )
-        axis_template = dict(range = [0,board_size], autorange = False,
+        axis_template = dict(range = [0-1,board_size+1], autorange = False,
             showgrid = False, zeroline = False, showticklabels = False,
             ticks = '' )
         

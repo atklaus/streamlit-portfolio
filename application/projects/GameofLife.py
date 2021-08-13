@@ -43,8 +43,6 @@ class GameOfLife:
         :param s: int size of the board
         :param p: probability
         """
-        print(s)
-        print(type(s))
         b = np.random.random((s,s)) #create s by s board
         b  = np.where(b < p, 1, 0) #where values are less than
         self.grids.append(b)
