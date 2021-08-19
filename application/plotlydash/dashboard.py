@@ -6,7 +6,6 @@ from dash_html_components.Div import Div
 from plotly.validators.scatter import marker
 from plotly.validators.scatter.marker import SymbolValidator
 import plotly.graph_objects as go
-import matplotlib.animation as animation
 import numpy as np
 import pandas as pd
 import dash
@@ -25,8 +24,6 @@ from ..projects.happy_prime import HappyPrime
 from ..projects.AreaOfEllipse import Point, Ellipse, OverlapOfEllipses
 from ..projects.GameofLife import GameOfLife
 from ..models.data_pipeline import GoogleAPI
-
-import matplotlib.pyplot as plt
 
 
 # sys.path.append(os.path.join(BASE_DIR,models)
