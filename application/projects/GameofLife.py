@@ -31,13 +31,23 @@ class GameOfLife:
         figure to display the results on the board
     """
 
-    def __init__(self, s, p=.1):
+    def __init__(self, s, p=.1, choice=None):
         self.s = int(s)
         self.p = float(p)
+        self.b = [[1, 1, 0, 0],[1, 1, 0, 0],[0, 0, 1, 1],[0, 0, 1, 1]]
+        self.choice = choice
         self.grids = []
-        self.b = self.conway(self.s, self.p)
+        self.set_board()
+        
 
-    def conway(self, s, p=.1):
+    def set_board(self):
+        if self.choice != None:
+            self.set_preset(choice=self.choice)
+            self.grids.append(self.b)
+        else:
+            self.random_board(self.s,self.p)
+
+    def random_board(self, s, p=.1):
         """
         generate a conway board, whcih is a square 2d array size s by s
         :param s: int size of the board
@@ -46,8 +56,7 @@ class GameOfLife:
         b = np.random.random((s,s)) #create s by s board
         b  = np.where(b < p, 1, 0) #where values are less than
         self.grids.append(b)
-
-        return b
+        self.b = b
 
     def advance(self,t):
         """
@@ -178,6 +187,64 @@ class GameOfLife:
         """
         plt.close(self.fig)
 
+    def set_preset(self, choice):
+
+        if choice=='beacon':
+            universe = np.zeros((6, 6))
+            beacon = [[1, 1, 0, 0],
+                    [1, 1, 0, 0],
+                    [0, 0, 1, 1],
+                    [0, 0, 1, 1]]
+            universe[1:5, 1:5] = beacon
+            self.b = universe
+            self.s = 6
+       
+        elif choice == 'blinker':
+            blinker = [1, 1, 1]
+            toad = [[1, 1, 1, 0],
+            [0, 1, 1, 1]]
+
+            universe = np.zeros((11, 11))
+            universe[2, 1:4] = blinker
+            universe[2:4, 6:10] = toad
+            self.b = universe
+            self.s = 11
+
+        elif choice == 'oscilator':
+            #Oscillator
+            universe = np.zeros((17, 17))
+            universe[2, 4:7] = 1
+            universe[4:7, 7] = 1
+            universe += universe.T
+            universe += universe[:, ::-1]
+            universe += universe[::-1, :]
+            self.b = universe
+            self.s = 17
+
+        elif choice == 'growth':
+            #Growth
+            unbounded = [[1, 1, 1, 0, 1],
+            [1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1],
+            [0, 1, 1, 0, 1],
+            [1, 0, 1, 0, 1]]
+            universe = np.zeros((40, 40))
+            universe[15:20, 18:23] = unbounded
+            self.b = universe
+            self.s = 40
+        
+
+
+
+GameObj = GameOfLife(6, .1)
+input6 = 'blinker'
+GameObj.b
+
+if input6 != None:
+    GameObj.set_preset(choice=input6)
+    board_size = len(GameObj.b)
+
+GameObj.b
 
 # GameObj = GameOfLife(6, .5)
 # universe = np.zeros((6, 6))

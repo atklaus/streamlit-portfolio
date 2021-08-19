@@ -238,10 +238,6 @@ def create_project3(server):
             html.Br(),
             html.P("The default example is two concentric circles and the area should be close to π (Pi)."),
             html.H4("Enter inputs"),
-
-            html.Button(id='submit-button-state', n_clicks=0, children='Create New Board'),
-            html.Br(),
-            html.Br(),
             html.Div(children=[
 
                 html.H5("Start Probability"),
@@ -252,22 +248,24 @@ def create_project3(server):
                 dcc.Input(id="iters", type="int", value=30,className='life_input'),
             ], style={'columnCount': 3}
             ),
-            html.Br(),
+            html.H4("OR"),
+            html.H5("Choose a popular scenario"),
             html.Div(id='life-dropdown',children=[
             dcc.Dropdown(
                 id='seed-dropdown',
                 options=[
-                    {'label': 'Beacon', 'value': 'bcn'},
-                    {'label': 'Blinker', 'value': 'blkr'},
-                    {'label': 'Toad', 'value': 'td'},
-                    {'label': 'Oscilator', 'value': 'osltr'},
-
-
+                    {'label': 'Beacon', 'value': 'beacon'},
+                    {'label': 'Blinker', 'value': 'blinker'},
+                    {'label': 'Toad', 'value': 'toad'},
+                    {'label': 'Oscilator', 'value': 'oscilator'},
+                    {'label': 'Growth', 'value': 'growth'},
                     ],
-                    value='Beacon'
+                    value=None
                 ),
             ],style={'marginRight':'95vh'}),
             html.P(id='placeholder'),
+            html.Br(),
+            html.Button(id='submit-button-state', n_clicks=0, children='Create New Board'),
         dcc.Graph(id="life_plot"),
     ])
 
@@ -278,49 +276,26 @@ def create_project3(server):
         Input("submit-button-state", "n_clicks")],
         [State("prob", "value"),
         State("board_size", "value"),
-        State("iters", "value")])
-    def display_animated_graph(input1,input2,input3,input4,input5):
+        State("iters", "value"),
+        State("seed-dropdown", "value")])
+    def display_animated_graph(input1,input2,input3,input4,input5,input6):
         prob = input3
         board_size = int(input4)
         iters = int(input5)
+        shape = input6
 
-        GameObj = GameOfLife(board_size, prob)
-        
-        def preset():
-            universe = np.zeros((6, 6))
-            beacon = [[1, 1, 0, 0],
-                    [1, 1, 0, 0],
-                    [0, 0, 1, 1],
-                    [0, 0, 1, 1]]
-            universe[1:5, 1:5] = beacon
-
-            GameObj.b = universe
-
-            blinker = [1, 1, 1]
-            toad = [[1, 1, 1, 0],
-            [0, 1, 1, 1]]
-
-            universe = np.zeros((11, 11))
-            universe[2, 1:4] = blinker
-            universe[2:4, 6:10] = toad
-            GameObj.b = universe
-
-            #Oscillator
-            universe = np.zeros((17, 17))
-            universe[2, 4:7] = 1
-            universe[4:7, 7] = 1
-            universe += universe.T
-            universe += universe[:, ::-1]
-            universe += universe[::-1, :]
-            GameObj.b = universe
-
+        GameObj = GameOfLife(board_size, prob, shape)
+        board_size = len(GameObj.b)
         GameObj.advance(iters)
 
         fig = go.Figure(
             data=[go.Heatmap(
                 x = list(range(0, board_size)),
                 y = list(range(0, board_size)),
-                z = GameObj.grids[0])],
+                z = GameObj.grids[0],
+                colorscale=[[0.0, '#D3D3D3'], 
+                         [1.0, '#191970']]
+                )],
             layout=go.Layout(
                 xaxis=dict(range=[0, board_size], autorange=False),
                 yaxis=dict(range=[0, board_size], autorange=False),
