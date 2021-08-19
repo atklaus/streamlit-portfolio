@@ -264,7 +264,7 @@ def create_project3(server):
                     ],
                     value=None
                 ),
-            ],style={'marginRight':'95vh'}),
+            ],style={'marginRight':'300'}),
             html.P(id='placeholder'),
             html.Br(),
             html.Button(id='submit-button-state', n_clicks=0, children='Create New Board'),
