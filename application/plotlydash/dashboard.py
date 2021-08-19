@@ -117,9 +117,9 @@ def create_project2(server):
             html.Div(children=[
 
                 html.H5("Focal Point 1"),
-                dcc.Input(id="focal_pt_1", type="text", value='0,0',className='ellipse_input'),
+                dcc.Input(id="focal_pt_1", type="text", value='1,1',className='ellipse_input'),
                 html.H5("Focal Point 2"),
-                dcc.Input(id="focal_pt_2", type="text", value='0,0',className='ellipse_input'),
+                dcc.Input(id="focal_pt_2", type="text", value='1,1',className='ellipse_input'),
                 html.H5("Ellipse Width"),
                 dcc.Input(id="width_1", type="text", value='2',className='ellipse_input'),
             ], style={'columnCount': 3}
@@ -232,8 +232,8 @@ def create_project3(server):
             html.H3("Conway's Game of Life"),
             html.P("Game of Life is a popular programming problem that can be set with unlimited initial configurations to display exciting graphics. Starting with a two-dimensional grid, the highlighted cells will change with each iteration based on the following rules:"),
             dcc.Markdown('''
-            1. Any live cell with two or three live neighbours survives. 
-            2. Any dead cell with three live neighbours becomes a live cell. 
+            1. Any live cell with two or three live neighbors survives. 
+            2. Any dead cell with three live neighbors becomes a live cell. 
             3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
             You can find more details about the game [here](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
@@ -243,9 +243,9 @@ def create_project3(server):
             html.Div(children=[
 
                 html.H5("Start Probability"),
-                dcc.Input(id="prob", type="int", value=.3,className='life_input'),
+                dcc.Input(id="prob", type="int", value=.1,className='life_input'),
                 html.H5("Board Size"),
-                dcc.Input(id="board_size", type="int", value=15,className='life_input'),
+                dcc.Input(id="board_size", type="int", value=30,className='life_input'),
                 html.H5("Iterations"),
                 dcc.Input(id="iters", type="int", value=30,className='life_input'),
             ], style={'columnCount': 3}
@@ -259,7 +259,7 @@ def create_project3(server):
                     {'label': 'Beacon', 'value': 'beacon'},
                     {'label': 'Blinker', 'value': 'blinker'},
                     {'label': 'Toad', 'value': 'toad'},
-                    {'label': 'Oscilator', 'value': 'oscilator'},
+                    {'label': 'Oscillator', 'value': 'oscilator'},
                     {'label': 'Growth', 'value': 'growth'},
                     ],
                     value=None
