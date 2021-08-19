@@ -8,8 +8,6 @@ Video Link: https://youtu.be/9Om-TLvBMRM
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import os
 os.chdir(os.getcwd())
 
@@ -157,35 +155,6 @@ class GameOfLife:
 
             neigh_sum += b[tup[0],tup[1]]
         return neigh_sum
-    
-    def display(self):
-        """
-        using matplot libs animation functionality, create a graphic to show the board with each advancement of time t
-        """
-
-        self.fig = plt.figure() 
-        frames = [] #create list of plot objects for each np.array grid that has been created
-
-        # Remove the axes for aesthetics
-        plt.axis('off')
-
-        for grid in self.grids: #iterate through all grids created and create matplotlib instance
-            frames.append((plt.imshow(grid, cmap='Blues'),))
-        
-        # Create the animation based on all matplotlib instances
-        ani_obj = animation.ArtistAnimation(self.fig, frames, interval=700,repeat_delay=1000, blit=True)
-
-        # write animation to gif
-        ani_obj.save(os.getcwd() + '/animation.gif', writer="PillowWriter")
-
-        # display the animation of the progression of the board
-        self.fig.show()
-
-    def end_display(self):
-        """
-        close the active matplotlib figure
-        """
-        plt.close(self.fig)
 
     def set_preset(self, choice):
 
