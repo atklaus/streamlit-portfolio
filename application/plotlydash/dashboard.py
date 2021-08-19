@@ -3,7 +3,6 @@ Instantiate Dash apps.
 """
 from dash_html_components.Br import Br
 from dash_html_components.Div import Div
-import matplotlib.pyplot as plt
 from plotly.validators.scatter import marker
 from plotly.validators.scatter.marker import SymbolValidator
 import plotly.graph_objects as go
