@@ -234,9 +234,15 @@ def create_project3(server):
 
     dash_app.layout = html.Div([
             html.H3("Conway's Game of Life"),
-            html.P("Explanation of it and wiki link"),
-            html.Br(),
-            html.P("The default example is two concentric circles and the area should be close to π (Pi)."),
+            html.P("Game of Life is a popular programming problem that can be set with unlimited initial configurations to display exciting graphics. Starting with a two-dimensional grid, the highlighted cells will change with each iteration based on the following rules:"),
+            dcc.Markdown('''
+            1. Any live cell with two or three live neighbours survives. 
+            2. Any dead cell with three live neighbours becomes a live cell. 
+            3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
+
+            You can find more details about the game [here](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
+            '''),
+            # html.A("Wikipedia Explanation",href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life',target='_blank'),
             html.H4("Enter inputs"),
             html.Div(children=[
 
