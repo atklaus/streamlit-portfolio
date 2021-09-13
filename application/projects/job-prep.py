@@ -20,7 +20,7 @@ from docx2pdf import convert
 #INPUTS
 ###################################################################
 
-working = '/Users/adamklaus/Documents/Personal/Develop/Career/Resume'
+working = '/Users/adamklaus/Documents/Personal/Career/Resume'
 os.chdir(working)
 
 #Create doc object
@@ -28,14 +28,13 @@ doc = docx.Document("Adam_Klaus_Cover_Letter.docx")
 
 #Define unique job
 manager = 'Hiring Manager'
-industry = 'data science'
-company = "Civis Analytics"
-role = 'senior data scientist'
-source = 'LinkedIn'
-custom = "This job posting caught my attention because of the opportunity to use my experience to empower progressive advocacy organizations. Over the past year, I have volunteered as the data team lead for the Chicago Hub of Sunrise Movement (a progressive non-profit fighting for climate justice). In this role I have helped create data pipelines to automate tasks, track member growth and created models to understand membership dropoff. With that in mind, helping other progressive organizations in my full-time job is truly my dream career."  
-skill1 = "I have a strong programming background and have written code in a production environment. I also have had experience working in a variety of tech stacks to create these solutions."
-skill2 = "I have worked in consulting before and have experience working with clients and presenting technical work."
-# custom = "Additionally, I have a depth of experience working with Qualtrics and their API to create analysis of social science data from a large number of responses."
+industry = 'data engineering'
+company = "Grainger"
+role = 'Senior Data Engineer'
+source = 'Caroline from BurtchWorks'
+custom = "This role caught my attention because of the incredible reputation of Grainger, as someone who graduated from the Grainger school of business at UW-Madison I've always had a lot respect for the company."  
+skill1 = "I have experience in each part of the tech stack from sourcing data to deploying models to building self-service analytics."
+skill2 = "I'm motivated by learning and will continue to refine my skills and keep up with new technology."
 
 ###################################################################
 #Replace
