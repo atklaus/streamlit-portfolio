@@ -9,7 +9,6 @@ import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 import dash
-import dash_table
 import dash_html_components as html
 import dash_core_components as dcc
 from .layout import HTML_LAYOUT
@@ -20,11 +19,13 @@ import pandas as pd
 from ..config import BASE_DIR
 import sys
 import os
-from ..projects.happy_prime import HappyPrime
-from ..projects.AreaOfEllipse import Point, Ellipse, OverlapOfEllipses
-from ..projects.GameofLife import GameOfLife
-from ..models.data_pipeline import GoogleAPI
-
+# from ..projects.happy_prime import HappyPrime
+# from ..projects.AreaOfEllipse import Point, Ellipse, OverlapOfEllipses
+# from ..projects.GameofLife import GameOfLife
+# from ..models.data_pipeline import GoogleAPI
+import dash
+import dash_bootstrap_components as dbc
+from dash_bootstrap_components._components.Container import Container
 
 # sys.path.append(os.path.join(BASE_DIR,models)
 # from ..models import google_drive_api 
@@ -33,6 +34,61 @@ from ..models.data_pipeline import GoogleAPI
 ############################
 #Application 1
 ############################
+
+
+def new_layout(server):
+
+    # 2. Create a Dash app instance
+    app = dash.Dash(name=__name__,external_stylesheets=[dbc.themes.BOOTSTRAP],assets_folder=os.getcwd() +'/application/assets')
+
+    # app.layout = html.Div([
+    #     html.Div(
+    #         className="app-header",
+    #         children=[
+    #             html.Div('Plotly Dash', className="app-header--title")
+    #         ]
+    #     ),
+    #     html.Div(
+    #         children=html.Div([
+    #             html.H5('Overview'),
+    #             html.Div('''
+    #                 This is an example of a simple Dash app with
+    #                 local, customized CSS.
+    #             ''')
+    #         ])
+    #     )
+    # ])
+
+    navbar = dbc.NavbarSimple(
+        children=[
+            dbc.NavItem(dbc.NavLink("Page 1", href="#")),
+            dbc.DropdownMenu(
+                children=[
+                    dbc.DropdownMenuItem("More pages", header=True),
+                    dbc.DropdownMenuItem("Page 2", href="#"),
+                    dbc.DropdownMenuItem("Page 3", href="#"),
+                ],
+                nav=True,
+                in_navbar=True,
+                label="More",
+            ),
+        ],
+        brand="NavbarSimple",
+        brand_href="#",
+        color="#3F5D70",
+        dark=True,
+        id='navbar_item',
+        # brand_style=
+
+    )
+
+    app.layout = navbar
+
+    # 5. Start the Dash server
+    if __name__ == "__main__":
+        app.run_server()
+    
+    return app.server
 
 def create_project1(server):
     """

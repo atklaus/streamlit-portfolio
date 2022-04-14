@@ -23,10 +23,8 @@ def create_app():
         from .assets import compile_static_assets
 
         # Import Dash application
-        from .plotlydash.dashboard import create_project1, create_project2, create_project3
-        app = create_project1(app)
-        app = create_project2(app)
-        app = create_project3(app)
+        from .src.dashboard import new_layout
+        app = new_layout(app)
 
 
         # Compile static assets
