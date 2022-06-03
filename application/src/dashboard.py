@@ -41,27 +41,21 @@ def new_layout(server):
     # 2. Create a Dash app instance
     app = dash.Dash(name=__name__,external_stylesheets=[dbc.themes.BOOTSTRAP],assets_folder=os.getcwd() +'/application/assets')
 
-    # app.layout = html.Div([
-    #     html.Div(
-    #         className="app-header",
-    #         children=[
-    #             html.Div('Plotly Dash', className="app-header--title")
-    #         ]
-    #     ),
-    #     html.Div(
-    #         children=html.Div([
-    #             html.H5('Overview'),
-    #             html.Div('''
-    #                 This is an example of a simple Dash app with
-    #                 local, customized CSS.
-    #             ''')
-    #         ])
-    #     )
-    # ])
 
-    navbar = dbc.NavbarSimple(
-        children=[
-            dbc.NavItem(dbc.NavLink("Page 1", href="#")),
+    navbar = dbc.Navbar(
+    [
+        html.Div(
+            dbc.Row(
+                [
+                    dbc.Col(html.Img(src = app.get_asset_url("/images/final_adsc_logo.png"), height= "120px"),width=12,style={"border":"2px black solid"}),      
+                ]
+
+            )
+        ),
+        dbc.NavbarToggler(id="navbar-toggler2"),
+        dbc.Collapse(
+            dbc.Nav(
+                # right align dropdown menu with ml-auto className
             dbc.DropdownMenu(
                 children=[
                     dbc.DropdownMenuItem("More pages", header=True),
@@ -71,15 +65,15 @@ def new_layout(server):
                 nav=True,
                 in_navbar=True,
                 label="More",
+            ), className="ml-auto", navbar=True
             ),
-        ],
-        brand="NavbarSimple",
-        brand_href="#",
-        color="#3F5D70",
-        dark=True,
-        id='navbar_item',
-        # brand_style=
+            id="navbar-collapse2",
+            navbar=True,
+            ),
 
+    ]
+    ,id='navbar_item'
+    ,color="#3F5D70"
     )
 
     app.layout = navbar
@@ -89,6 +83,8 @@ def new_layout(server):
         app.run_server()
     
     return app.server
+
+
 
 def create_project1(server):
     """
