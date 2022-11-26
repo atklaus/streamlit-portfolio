@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KZ8ZMD5');</script>
+    <!-- End Google Tag Manager -->
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+        <title>Adam Klaus</title>
+
+        <link rel = "icon" href =  "{{ url_for('static', filename='images/favicon.ico') }}" type = "image/x-icon"> 
+        
+        <meta name="description" content="">
+        <meta name="generator" content="Grapedrop">
+
+        <!-- <meta property="og:url"                content="http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html" />
+        <meta property="og:type"               content="article" />
+        <meta property="og:title"              content="When Great Minds Don’t Think Alike" />
+        <meta property="og:description"        content="How much does culture influence creative thinking?" />
+        <meta property="og:image"              content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg" /> -->
+        
+        <!-- Apple Stuff -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Adam Klaus">
+        
+        <!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="Adam Klaus">
+        <meta itemprop="description" content="">
+        <meta itemprop="image" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png">
+        
+        <!-- MS Tile - for Microsoft apps-->
+        <meta name="msapplication-TileImage" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png">
+        
+        <!-- LinkedIn Meta Tags -->
+        <meta name="description" content="portfolio" />
+        <meta name="title" property="og:title" content="almostdatascience by Adam Klaus" />
+        <meta property="og:type" content="_" />
+        <meta name="image" property="og:image" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png" />
+        <meta name="description" property="og:description" content="_" /><meta name="author" content="_" />
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:type" content="portfolio">
+        <meta property="og:title" content="almostdatascience by Adam Klaus">
+        <meta property="og:description" content="">
+        <meta property="og:image" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png">
+        <meta property="og:url" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png">
+        
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="portfolio">
+        <meta name="twitter:title" content="almostdatascience by Adam Klaus">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image" content="https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png">
+        <script type="application/ld+json">
+        {
+            "@context":"http://schema.org",
+            "@type":"WebPage",
+            "url":"http://6c83674.grapedrop.net",
+            "description":"",
+            "name":"Adam Klaus",
+            "image":"https://cdn.grapedrop.com/u0e8c2eda803f4757a1488f6bc8b68881/3523ba756d344863bb3b7e2fea8052dc_adc_logo.png"
+        }
+        </script>
+        <script>
+        window._formUrl = "";
+        window.__gRecapKey = "";
+        window.postJQCnt = [];
+        window.postJQ = function() {
+            window._jqloaded = 1;
+            postJQCnt.forEach(function(fn) {
+            fn && fn() }
+                            )
+        }
+        </script>
+
+        <script async src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="postJQ()"></script>
+
+        <script src="static/js/main.js" type="text/javascript"></script>
+
+        <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        </style>
+        <style data-css-anim>
+        [data-anim-type]:not([data-anim-done]) {
+            opacity: 0;
+        }
+        </style>
+        <link rel="stylesheet" href="static/css/base.css">
+        <link rel="stylesheet" href="static/css/index-style.css">
+        <link rel="stylesheet" href="static/css/about.css">
+        <link rel="stylesheet" href="static/css/favorites.css">
+
+    </head>
+    <body>
+
+        {% include "includes/nav.html" %}
+
+        {% block content %}
+        {% endblock %}
+
+        {% include "includes/footer.html" %}
+
+    </body>
+</html>
+
+

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Adam Klaus</title>
+  <link rel = "icon" href =  "{{ url_for('static', filename='images/logo.png') }}" type = "image/x-icon"> 
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;500;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
+
+
+  <!-- Custom styles for this template -->
+  <link rel='stylesheet' href="{{ url_for('static', filename='css/personal.css') }}" type='text/css'/>
+
+  <!--CSS From Example Personal Website -->
+
+  <!--Green Mountain -->
+  <link rel='stylesheet' id='gmec-tx-ion-icons-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=5.4.2' type='text/css' media='all' />
+  <link rel='stylesheet' id='gmec-styles-css'  href="{{ url_for('static', filename='css/homeicon.css') }}" type='text/css' media='all' />  
+  
+
+  </head>
+
+
+  <!-- Header Image  -->
+
+  <header>
+
+    <div class="container">
+      <div class="row">
+        <a >
+          <img class = "logo" float="left" src="{{ url_for('static', filename='images/final_adsc_logo.png') }}" alt="almostdatascience" width=10% height=100% >
+        </a>  
+  
+
+      </div>
+
+    </div>
+
+
+    <div class="bestNav">
+
+      <ul >
+      <a >
+        <img class = "logo" float="left" src="{{ url_for('static', filename='images/final_adsc_logo.png') }}" alt="almostdatascience" width=10% height=100% >
+      </a>  
+
+      <li>
+        <a href="{{ url_for('index') }}">
+          <img alt="Home" src="{{ url_for('static', filename='images/house.png') }} " width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="{{ url_for('about') }}">
+          <img alt="About" src="{{ url_for('static', filename='images/info.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li> 
+        <a href="{{ url_for('static', filename='images/AdamKlaus.pdf') }}" target="_blank">
+          <img alt="Resume" src="{{ url_for('static', filename='images/resume.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://www.linkedin.com/in/adam-klaus/">
+          <img alt="LinkedIn" src="{{ url_for('static', filename='images/linkedin.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://github.com/atklaus?tab=repositories">
+          <img alt="Code" src="{{ url_for('static', filename='images/code.png') }}" width=25% height=30%>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  </header>
+
+  
+  <!-- Navigation  -->
+  
+
+
+  <!-- Main Content -->
+  <tbody>
+
+
+  <div id="home-features" class="add-wrap prospect">
+    <div id="home-feature-1" class="home-feature">
+      <a href="{{ url_for('soon') }}" class="imglink"><img src="{{ url_for('static', filename='images/university.png') }}" class="aligncenter"></a>
+      <h5>Project (Coming Soon)</h5>
+      <p class="home-features-text"></p>
+      <a href="{{ url_for('soon') }}"><button class="button home-features-button">Explore</button></a>
+    </div>
+  </div>
+
+  </tbody>
+
+  
+    <!-- Footer -->
+    <div class="container-fluid text-left bottom-container">
+      <footer>
+          <p>Copyright &copy;2020. almostdatascience.com.</p>
+      </footer>
+    </div>
+
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+
+</html>

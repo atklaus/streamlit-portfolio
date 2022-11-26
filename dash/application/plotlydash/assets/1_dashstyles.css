@@ -1,0 +1,73 @@
+#temp-1 {
+  /* text-align: center; */
+  /* padding: 20px 20px 20px 20px; */
+  background-color: white;
+}
+
+.dash-container {
+  width: 90%;
+  padding: 25px 25px;
+  margin: auto;
+  max-width: 1200px;
+  min-height: 0px;
+
+}
+
+
+.dash-section {
+  display: flex;
+  margin: auto;
+  padding: 0px 50px 200px 50px ;
+
+}
+
+.dash-graph {
+  justify-content: center;
+  margin: 0 0 0 0;
+
+}
+
+.center {
+  border: 5px;
+  /* display: flex; */
+  justify-content: center;
+  }
+
+.dash-row,.row {
+  display: flex;
+  justify-content: left;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  padding: 10px;
+  min-height: 75px;
+  flex-direction: row;
+}
+
+.plot_container {
+  display: flex;
+  justify-content: center;
+  margin: 0 50% 10% 0;
+}
+
+#temp-row-1 {
+  justify-content: center;
+  padding: 10px 10px 10px 10px;
+
+}
+
+#hp_output {
+  padding: 10px 0 0 0;
+}
+
+#input_1 {
+  padding: 10px 0 0 0;
+}
+
+#ellipse_plot.dash-graph {
+  display: flex;
+  justify-content: center;
+}
+
+.ellipse_input {
+}
+

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Adam Klaus</title>
+    <link rel = "icon" href =  "{{ url_for('static', filename='images/logo.png') }}" type = "image/x-icon"> 
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&family=Volkhov&display=swap" rel="stylesheet">
+  
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/personal.css') }}" rel="stylesheet">
+
+    <!--CSS From Example Personal Website -->
+
+
+  </head>
+  <!-- Header Image  -->
+
+  <header>
+    <div>
+      <img src="{{ url_for('static', filename='images/banner.png') }}" alt="almostdatascience" width=100% height=20%>
+    </div>
+  </header>
+
+  
+  <!-- Navigation  -->
+  <div class="bestNav">
+    <ul >
+      <li>
+        <a href="{{ url_for('index') }}">
+          <img alt="Home" src="{{ url_for('static', filename='images/house.png') }} " width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="{{ url_for('about') }}">
+          <img alt="About" src="{{ url_for('static', filename='images/info.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://drive.google.com/file/d/1aUZPpfrpLv7G0UI3nHK3JI8MjdbALP2E/view?usp=sharing">
+          <img alt="Resume" src="{{ url_for('static', filename='images/resume.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://www.linkedin.com/in/adam-klaus/">
+          <img alt="LinkedIn" src="{{ url_for('static', filename='images/linkedin.png') }}" width=25% height=30%>
+        </a>
+      </li>
+      <li>      
+        <a href="https://github.com/atklaus?tab=repositories">
+          <img alt="Code" src="{{ url_for('static', filename='images/code.png') }}" width=25% height=30%>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+  
+<!-- Main Content -->
+
+<!-- Split row into two columns -->
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-lg-5 row justify-content-md-center">
+            <div id="text-main" class="col-9 text-main" style="visibility: visible;right: 0%;opacity: 1;">
+
+              <div class="justify-content-md-center col-centered">
+                <div class="bio-text">Adam Klaus</div>
+                  <p class="bio-body">I'm a Business Analyst working at a Fintech Startup in Chicago. </p>
+                  <p class="bio-body">
+                  I'm passionate about creating flexible self-service analytic tools, so any time a strategy reccomendation is needed, the data to make those reccomendations is at the user's fingertips.
+                  I enjoy looking for opportunities to automate tasks when appropriate, so myself and colleagues can spend less time preparing the data and more time understanding what the data is telling us.
+                  </p>
+                  <p class="bio-body">
+                  <!-- Throughout my career I've worked on tasks related to data engineering, software development and data science, which has given me the experience to understand each part of the machine learning pipeline.  -->
+                 </p>
+                    
+                  <p>
+                    <figure>
+                      <img src="{{ url_for('static', filename='images/profile1.JPG') }}" alt="almostdatascience" width=100% height=20%>
+                    </figure>
+                  </p>
+              </div>
+    
+            </div>            
+          </div>
+<!-- Add logos at some point -->
+<!-- Timeline -->          
+          <div class="col-lg-7 text-main">
+            <section class="timeline pt-80 pb-80">
+
+                <div class="menu-content pb-40">
+                    <div class="title text-center">
+                        <h5 class="bio-text">My Experience</h5>
+                  </div>
+              </div>
+          <ul>
+            <li>
+              <div class="content hidden" style="opacity: 1;">
+                <h4>
+                  <time>Business Analyst</time>
+                </h4>
+                <p><b>CreditNinja</b></p>
+                <p>November 2020 - Present</p>
+              </div>
+            </li>
+            <li>
+              <div class="content hidden" style="opacity: 1;">
+                <h4>
+                  <time>M.S. in Data Science</time>
+                </h4>
+                <p><b>DePaul University </b></p>
+                <p>Exp. Graduation 2022</p>
+              </div>
+            </li>
+            <li>
+              <div class="content hidden" style="opacity: 1;">
+                <h4>
+                  <time>Research Analyst</time>
+                </h4>
+                <p><b>Human Capital Research Corporation</a></b></p>
+                <p>October 2018 - October 2020</p>
+              </div>
+            </li>
+            <li>
+              <div class="content hidden" style="opacity: 1;">
+                <h4>
+                  <time>Staff Consultant</time>
+                </h4>
+                <p><b>Baker Tilly</b></p>
+                <p>June 2018 - October 2018</p>
+              </div>
+            </li>
+            <li>
+            <div class="content hidden" style="opacity: 1;">
+              <h4>
+                <time>B.B.A. in Finance and Operations & Technology Management</time>
+              </h4>
+              <p><b>University of Wisconsin-Madison</b></p>
+              <p>September 2014 - May 2018</p>
+            </div>
+          </li>
+          <li>
+            <div class="content hidden" style="opacity: 1;">
+              <h4>
+                <time>Student Tableau Developer</time>
+              </h4>
+              <p><b>UW-Madison Academic Planning & Institutional Research</b></p>
+              <p>January 2018 - June 2018</p>
+            </div>
+          </li>
+          <li>
+            <div class="content hidden" style="opacity: 1;">
+              <h4>
+                <time>Summer Analyst</time>
+              </h4>
+              <p><b>JPMorgan Chase & Co.</b></p>
+              <p>June 2017 - August 2017</p>
+            </div>
+          </li>
+        
+          </ul>
+        </section>
+          </div>
+      </div>
+  </div>
+
+
+  <!-- Footer -->
+  <footer>
+
+    <div class="col-md-6">
+      <p class="copyright text-muted">Copyright &copy; almostdatascience.com 2020</p>
+    </div>
+
+  </footer> 
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  
+
+</html>
