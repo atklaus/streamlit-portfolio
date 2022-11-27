@@ -90,6 +90,7 @@ yarl = "==1.7.2"
 zipp = "==3.10.0"
 opencv-python = "*"
 tensorflow = "*"
+htbuilder = "*"
 
 [dev-packages]
 

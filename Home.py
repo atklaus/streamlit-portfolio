@@ -12,28 +12,23 @@ from dateutil import tz
 import git
 import os
 import lib.st_utils as stu
+import os
+import cv2
+from tensorflow import keras
+import numpy as np
+from layout.header import page_header, set_page_container_style
 
-st.set_page_config(
-    page_title="almostdatascience"
-    , page_icon="⚙️"
-    ,layout='wide'
-    ,initial_sidebar_state="collapsed",
-    )
-no_sidebar_style = """
-    <style>
-        div[data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-# Remove defaults from sidebar
-st.markdown(no_sidebar_style, unsafe_allow_html=True)
+@st.experimental_singleton(suppress_st_warning=True, show_spinner=False)
+def init_model():
+    return keras.models.load_model('img_model')
 
-st.title('Picture Categories')
-
-uploaded_file = st.file_uploader("Choose an image")
+page_header('Almost Data Science')
+stu.get_sidebar()
+st.markdown("<h1 style='text-align: center; color: grey;'>Big headline</h1>", unsafe_allow_html=True)
 
 
-with st.expander(label='FAQs'):
-    if st.checkbox("Why am I not seeing changes I just submitted",key='expand_1'):
+with st.expander(label='Learn More'):
+    if st.checkbox("Training Performance",key='expand_1'):
         pass
         # st.write("Hello world")
     # if st.checkbox("Fake expand2",key='expand_2'):
