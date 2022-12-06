@@ -91,6 +91,8 @@ zipp = "==3.10.0"
 opencv-python = "*"
 tensorflow = "*"
 htbuilder = "*"
+st-clickable-images = "*"
+streamlit-option-menu = "*"
 
 [dev-packages]
 

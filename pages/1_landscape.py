@@ -20,19 +20,7 @@ import numpy as np
 def init_model():
     return keras.models.load_model('img_model')
 
-st.set_page_config(
-    page_title="Predict Scenery"
-    , page_icon="⚙️"
-    ,layout='wide'
-    ,initial_sidebar_state="collapsed",
-    )
-no_sidebar_style = """
-    <style>
-        div[data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-# Remove defaults from sidebar
-st.markdown(no_sidebar_style, unsafe_allow_html=True)
+page_header('Almost Data Science')
 
 model = init_model()
 
@@ -60,9 +48,8 @@ def center_crop(img, new_width=None, new_height=None):
 
     return center_cropped_img
 
-stu.get_sidebar()
 
-st.title('Picture Categories')
+st.title('Landscape Image Prediction')
 
 uploaded_file = st.file_uploader("Choose an image")
 if uploaded_file is not None:
