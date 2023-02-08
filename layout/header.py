@@ -7,7 +7,7 @@ COLOR = 'black'
 
 def set_page_container_style(
         max_width: int = 1100, max_width_100_percent: bool = False,
-        padding_top: int = 1, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = 10,
+        padding_top: int = 1, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = .1,
         color: str = COLOR, background_color: str = BACKGROUND_COLOR,
     ):
         if max_width_100_percent:
@@ -18,32 +18,9 @@ def set_page_container_style(
             f'''
             <style>
             .appview-container .main .block-container{{
-                    padding-top: {padding_top}rem;    }}
-            </style>
-            ''',
-            unsafe_allow_html=True,
-        )
-
-
-import streamlit as st
-
-BACKGROUND_COLOR = 'white'
-COLOR = 'black'
-
-def set_page_container_style(
-        max_width: int = 1100, max_width_100_percent: bool = False,
-        padding_top: int = 1, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = 10,
-        color: str = COLOR, background_color: str = BACKGROUND_COLOR,
-    ):
-        if max_width_100_percent:
-            max_width_str = f'max-width: 100%;'
-        else:
-            max_width_str = f'max-width: {max_width}px;'
-        st.markdown(
-            f'''
-            <style>
-            .appview-container .main .block-container{{
-                    padding-top: {padding_top}rem;    }}
+                    padding-top: {padding_top}rem;    
+                    padding-bottom: {padding_bottom}rem;                        
+                    }}
             </style>
             ''',
             unsafe_allow_html=True,
@@ -77,7 +54,9 @@ def switch_page(page_name: str):
 
 def get_sidebar():
     with st.sidebar:
-        st.subheader('Team Pages')
+
+
+        st.markdown('## ' + 'Almost Data Science')
 
         Home = st.button("Home")
         scenery_pred = st.button("Landscape Image Prediction")
@@ -102,62 +81,75 @@ def page_header(title):
     """
     # Remove defaults from sidebar
     st.markdown(no_sidebar_style, unsafe_allow_html=True)
-    
+
+    hide_streamlit_style = """
+                <style>
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                </style>
+                """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+
     set_page_container_style(padding_top=1)
     get_sidebar()
 
-    
-    c1,c2, c3, c4, c5, c6, c7= st.columns([1.2,1,23,1,1,1,1])
-    with c1:
-        # st.write("")
-        # st.image("static/images/ads_logo.png", width=120)
-        st.image("static/images/ads_logo.png", width=75)
-
-    with c2:
-        st.markdown('##### ' + title)
+    selected2 = option_menu(None, ["Home", "LinkedIn", "Github", 'About'], 
+        icons=['house', 'linkedin', "github", 'info-square'], 
+        menu_icon="cast", default_index=0, orientation="horizontal")
+    selected2
 
     
-    with c3:
-        pass
-        # Add Link to your repo
+    # c1,c2, c3, c4, c5, c6, c7= st.columns([1.2,1,23,1,1,1,1])
+    # with c1:
+    #     # st.write("")
+    #     # st.image("static/images/ads_logo.png", width=120)
+    #     st.image("static/images/ads_logo.png", width=75)
 
-        # Add Link to your repo
-        # st.markdown("[![Foo](https://drive.google.com/uc?export=view&id=1BWAJbKLhh9e2EsR_s8NW8LPmmMwqRRTu)](http://google.com.au/)")        
-        # st.markdown(git,unsafe_allow_html=True)
+    # with c2:
+    #     st.markdown('##### ' + title)
 
-    with c4:
-        st.write("")
-        css_example = '''                    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <a href=/"> <i class="fa-sharp fa-solid fa-house fa-2x" style="color:white"></i></a>
-        '''
-        st.write(css_example, unsafe_allow_html=True)
+    
+    # with c3:
+    #     pass
+    #     # Add Link to your repo
 
-    with c5:
-        st.write("")
-        css_example = '''                    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <a href="https://github.com/atklaus"> <i class="fa-brands fa-github fa-2x" style="color:white"></i></a>
-        '''
-        st.write(css_example, unsafe_allow_html=True)
+    #     # Add Link to your repo
+    #     # st.markdown("[![Foo](https://drive.google.com/uc?export=view&id=1BWAJbKLhh9e2EsR_s8NW8LPmmMwqRRTu)](http://google.com.au/)")        
+    #     # st.markdown(git,unsafe_allow_html=True)
 
-    with c6:
-        st.write("")
-        css_example = '''                    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <a href="https://www.linkedin.com/in/adam-klaus/"> <i class="fa-brands fa-linkedin fa-2x" style="color:white"></i></a>
-        '''
-        st.write(css_example, unsafe_allow_html=True)
+    # with c4:
+    #     st.write("")
+    #     css_example = '''                    
+    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    #     <a href=/"> <i class="fa-sharp fa-solid fa-house fa-2x" style="color:white"></i></a>
+    #     '''
+    #     st.write(css_example, unsafe_allow_html=True)
 
-    with c7:
-        st.write("")
-        css_example = '''                    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <a href="/"> <i class="fa-solid fa-info fa-2x" style="color:white"></i></a>
-        '''
-        st.write(css_example, unsafe_allow_html=True)    
+    # with c5:
+    #     st.write("")
+    #     css_example = '''                    
+    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    #     <a href="https://github.com/atklaus"> <i class="fa-brands fa-github fa-2x" style="color:white"></i></a>
+    #     '''
+    #     st.write(css_example, unsafe_allow_html=True)
 
-    st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
+    # with c6:
+    #     st.write("")
+    #     css_example = '''                    
+    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    #     <a href="https://www.linkedin.com/in/adam-klaus/"> <i class="fa-brands fa-linkedin fa-2x" style="color:white"></i></a>
+    #     '''
+    #     st.write(css_example, unsafe_allow_html=True)
+
+    # with c7:
+    #     st.write("")
+    #     css_example = '''                    
+    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    #     <a href="/"> <i class="fa-solid fa-info fa-2x" style="color:white"></i></a>
+    #     '''
+    #     st.write(css_example, unsafe_allow_html=True)    
+
+
 
     # with c7:
     #     st.write("")

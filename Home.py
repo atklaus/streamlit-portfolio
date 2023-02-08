@@ -21,12 +21,20 @@ from layout.header import page_header
 page_header('Almost Data Science')
 
 
-st.markdown("### Hi, I'm Adam!")
-st.markdown("##### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations and deployed Machine Learning models. Hope you enjoy!")
-st.write("")
-st.write("")
+# col1, col2= st.columns([.0, .95])
+# with col1:
+#     st.markdown("#")
+#     st.write('')
+#     # st.image("static/images/ads_logo.png", width=120)
+#     st.image("static/images/ads_logo.png", width=100)
 
-col1, col2, col3, col4, col5, col6, col7 = st.columns([1, .3, 1.5, .3, 1.5, .3, 2])
+# with col2:
+st.markdown("#")
+st.markdown("## Hi, I'm Adam!")
+st.caption("### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations and deployed Machine Learning models. Hope you enjoy!")
+st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5, col6, col7 = st.columns([1, .1, 1, .1, 1, .1, 1])
 
 with col1:
     landscape = st.button("🏔️  Landscape Image Prediction")
@@ -38,7 +46,7 @@ with col3:
     st.caption('### Calculator to determine whethern an integer is happy or sad')
 with col5:
     happy_prime = st.button("♾️ Random Ellipses",key='re')
-    st.caption('### Calculator to determine whethern an integer is happy or sad')
+    st.caption('### Given two ellipses, determine their overlapping area with a pseudo random number generator')
 with col7:
     happy_prime = st.button("👾 Game of Life",key='gof')
     st.caption("### Visualize preset and random simulations of Conway's game of life")
@@ -51,7 +59,7 @@ st.markdown('#')
 st.markdown('#')
 st.markdown('#')
 st.markdown('#')
-
+st.markdown('#')
 
 # with st.expander(label='Learn More'):
 #     if st.checkbox("Training Performance",key='expand_1'):
@@ -64,7 +72,7 @@ st.markdown('#')
 #     #     st.markdown("4. You can validate this update by reloading the page and seeing the values")
 
 
-col1, col2, col3, col4, col5 = st.columns([1.2, 1.2, 1.5, 8, 4])
+col1, col2, col3, col4, col5 = st.columns([1.2, 1.2, 1.6, 8, 4])
 with col1:
     st.caption('Pages')
     st.caption('[Experience](%s)' % '/')
@@ -77,7 +85,7 @@ with col2:
 
 with col3:
     st.caption('About this Page')
-    st.caption('Website coded in Python using Streamlit backed with CircleCI, Github and GCP')
+    st.caption('Website coded in Python using Streamlit')
     
 
 with col4:
@@ -88,4 +96,3 @@ with col5:
     st.markdown('#')
     st.markdown('#')
     st.caption('© 2021 Copyright, All Right Reserved. almostdatascience.com')
-
