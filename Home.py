@@ -11,7 +11,7 @@ from datetime import date, datetime
 from dateutil import tz
 import git
 import os
-import lib.st_utils as stu
+from lib.st_utils import switch_page, V_SPACE
 import os
 import cv2
 from tensorflow import keras
@@ -35,7 +35,7 @@ def make_module(mod_dict):
     clickable = st.button(mod_dict['button'],key='home_' + mod)
     st.caption(mod_dict['description'])
     if clickable:
-        stu.switch_page(mod_dict['name'])
+        switch_page(mod_dict['name'])
 
 show_mod_dict = c.MOD_ACCESS.copy()
 show_mod_dict.pop('home')
@@ -55,8 +55,8 @@ for row in range(rows_count):
                 make_module(show_mod_dict[mod])
         else:
             with cols[col_idx]:
-                stu.V_SPACE(1)
-    stu.V_SPACE(2)
+                V_SPACE(1)
+    V_SPACE(2)
 
 # Example icons (replace with your specific icons)
 icons = [
@@ -148,6 +148,6 @@ with col4:
 
 # Copyright Section
 with col5:
-    stu.V_SPACE(1)
+    V_SPACE(1)
 
     st.markdown('© 2023 Copyright, All Right Reserved. almostdatascience.com', unsafe_allow_html=True)

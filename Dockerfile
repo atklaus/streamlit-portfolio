@@ -39,23 +39,3 @@ EXPOSE 8501
 # Run the application
 ENTRYPOINT ["streamlit", "run", "Home.py"]
 
-
-# # Set the working directory in the container to the directory where the repo was cloned
-# WORKDIR /.app_platform_workspace
-
-# # Copy the current directory contents into the container
-# COPY . .
-
-# # Install any needed packages specified in requirements.txt
-# RUN pip install --no-cache-dir -r requirements.txt
-
-# # Make port 8501 available to the world outside this container
-# EXPOSE 8501
-
-# # Run streamlit when the container launches
-# HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
-
-# RUN ls
-
-# # ENTRYPOINT ["streamlit", "run", "Home.py", "--server.port=8501", "--server.address=0.0.0.0"]
-# ENTRYPOINT ["streamlit", "run", "Home.py"]
