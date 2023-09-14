@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from streamlit.runtime.scriptrunner import RerunData, RerunException
 from streamlit.source_util import get_pages
-
+import config as c
 import base64
 
 
@@ -57,12 +57,13 @@ def switch_page(page_name: str):
 def get_sidebar():
     with st.sidebar:
         st.write('## ' + 'Almost Data Science')
-        Home = st.button("Home")
-        scenery_pred = st.button("Landscape Image Prediction")
-        if Home:
-            switch_page("Home")
-        if scenery_pred:
-            switch_page("Landscape Img")
+        for module_key, module_values in c.MOD_ACCESS.items():
+            if module_key == "home":  # Special case for the home button
+                if st.button("Home"):
+                    switch_page("Home")
+            else:
+                if st.button(module_values['button']):
+                    switch_page(module_values['name'])
 
         # # Navigation bar with radio buttons
         # nav_selection = st.sidebar.radio(

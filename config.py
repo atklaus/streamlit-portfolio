@@ -22,7 +22,7 @@ MOD_ACCESS = {
     ,'wnba_success': {
     'button' : '🏀 Predicting WNBA Success'
     ,'name' : 'wnba_success'
-    ,'description':"Visualize preset and random simulations of Conway's game of life"
+    ,'description':"Using college stats to predict which players would have successful WNBA careers"
     }
 
     ,'landscape_img': {
@@ -31,17 +31,17 @@ MOD_ACCESS = {
     ,'description':'Predict the landscape of a given image using a convolutional neural network'
     }
 
-    ,'happy_prime': {
-    'button' : '🙂 Happy Prime'
-    ,'name' : 'happy_prime'
-    ,'description':'Calculator to determine whethern an integer is happy or sad'
-    }
+    # ,'happy_prime': {
+    # 'button' : '🙂 Happy Prime'
+    # ,'name' : 'happy_prime'
+    # ,'description':'Calculator to determine whethern an integer is happy or sad'
+    # }
 
-    ,'random_ellipses': {
-    'button' : '♾️ Random Ellipses'
-    ,'name' : 'random_ellipses'
-    ,'description':'Given two ellipses, determine their overlapping area with a pseudo random number generator'
-    }
+    # ,'random_ellipses': {
+    # 'button' : '♾️ Random Ellipses'
+    # ,'name' : 'random_ellipses'
+    # ,'description':'Given two ellipses, determine their overlapping area with a pseudo random number generator'
+    # }
 
     ,'game_of_life': {
     'button' : '👾 Game of Life'

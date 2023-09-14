@@ -67,7 +67,7 @@ def center_crop(img, new_width=None, new_height=None):
 
 # Usage in your Streamlit code
 
-page_header('Almost Data Science')
+page_header('Landscape Image Prediction')
 
 stu.V_SPACE(1)
 model = init_model()
