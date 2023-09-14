@@ -16,11 +16,24 @@ import numpy as np
 from layout.header import page_header
 import config as c
 import math
+import requests
+from io import BytesIO
+import base64
 
 page_header('Almost Data Science')
 
 # Add the HTML code to the Streamlit app
 # st.markdown(navbar_html, unsafe_allow_html=True)
+
+st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">', unsafe_allow_html=True)
+
+
+logo_path = "static/images/ads_logo.png"
+logo_base64 = stu.get_image_base64(logo_path)
+
+logo_path = "static/images/ads_logo.png"
+logo_base64 = stu.get_image_base64(logo_path)
+
 
 # stu.V_SPACE(1)
 st.markdown("## Hi, I'm Adam!")
@@ -55,71 +68,74 @@ for row in range(rows_count):
                 stu.V_SPACE(1)
     stu.V_SPACE(2)
 
+
 # Example icons (replace with your specific icons)
 icons = [
-    "https://image.flaticon.com/icons/png/512/147/147144.png",
+    "https://image.flaticon.com/icons/png/512/147/147146.png",
     "https://image.flaticon.com/icons/png/512/147/147146.png",
     "https://image.flaticon.com/icons/png/512/147/147148.png",
     "https://image.flaticon.com/icons/png/512/147/147141.png",
     "https://image.flaticon.com/icons/png/512/147/147140.png",
 ]
 
-# Example cards data
-cards_data = [
-    {"title": "Project 1", "description": "Description of Project 1", "link": "#"},
-    {"title": "Project 2", "description": "Description of Project 2", "link": "#"},
-    {"title": "Project 3", "description": "Description of Project 3", "link": "#"},
-    {"title": "Project 4", "description": "Description of Project 4", "link": "#"},
-    {"title": "Project 5", "description": "Description of Project 5", "link": "#"},
-]
+# # Example cards data
+# cards_data = [
+#     {"title": "Project 1", "description": "Description of Project 1", "link": "#"},
+#     {"title": "Project 2", "description": "Description of Project 2", "link": "#"},
+#     {"title": "Project 3", "description": "Description of Project 3", "link": "#"},
+#     {"title": "Project 4", "description": "Description of Project 4", "link": "#"},
+#     {"title": "Project 5", "description": "Description of Project 5", "link": "#"},
+# ]
 
-# Custom CSS for the cards
-card_style = """
-<style>
-.card {
-    border-radius: 20px;
-    background-color: #316b62;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 20px;
-    color: white;
-}
-.card a {
-    color: inherit;
-    text-decoration: none;
-    display: block;
-}
-.card img {
-    margin: 0 auto;
-    display: block;
-}
-.card h2 {
-    margin: 10px 0;
-}
-</style>
-"""
+# # Custom CSS for the cards
+# card_style = """
+# <style>
+# .card {
+#     border-radius: 20px;
+#     background-color: #316b62;
+#     padding: 15px;
+#     text-align: center;
+#     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+#     cursor: pointer;
+#     width: 100%;
+#     margin-bottom: 20px;
+#     color: white;
+# }
+# .card a {
+#     color: inherit;
+#     text-decoration: none;
+#     display: block;
+# }
+# .card img {
+#     margin: 0 auto;
+#     display: block;
+# }
+# .card h2 {
+#     margin: 10px 0;
+# }
+# </style>
+# """
 
-st.markdown(card_style, unsafe_allow_html=True)
+# st.markdown(card_style, unsafe_allow_html=True)
 
-# Create a row of cards
-cols = st.columns(5)
-for i, card in enumerate(cards_data):
-    with cols[i]:
-        icon_image = icons[i]
-        card_content = (
-            f'<div class="card">'
-            f'<a href="{card["link"]}" target="_blank">'
-            f'<img src="{icon_image}" width="100">'
-            f'<h2>{card["title"]}</h2>'
-            f"<p>{card['description']}</p>"
-            f"</a></div>"
-        )
-        st.markdown(card_content, unsafe_allow_html=True)
+# # Create a row of cards
+# cols = st.columns(5)
+# for i, card in enumerate(cards_data):
+#     with cols[i]:
+#         icon_image = icons[i]
+#         card_content = (
+#             f'<div class="card">'
+#             f'<a href="{card["link"]}" target="_blank">'
+#             f'<img src="{icon_image}" width="100">'
+#             f'<h2>{card["title"]}</h2>'
+#             f"<p>{card['description']}</p>"
+#             f"</a></div>"
+#         )
+#         st.markdown(card_content, unsafe_allow_html=True)
 
-# Define columns with appropriate widths
+stu.V_SPACE(4)
+
+# # Define columns with appropriate widths
 col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 8, 4])
 
 # Pages Section
@@ -131,7 +147,7 @@ with col1:
 # Contact Section
 with col2:
     st.markdown("**Contact**")
-    st.markdown('[atklaus@wisc.edu](%s)' % '/', unsafe_allow_html=True)
+    st.markdown('[atk14219@gmail.com](%s)' % '/', unsafe_allow_html=True)
     # st.markdown('[Resume](%s)' % '/', unsafe_allow_html=True)
 
 # About Section

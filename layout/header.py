@@ -3,6 +3,9 @@ from streamlit_option_menu import option_menu
 from streamlit.runtime.scriptrunner import RerunData, RerunException
 from streamlit.source_util import get_pages
 
+import base64
+
+
 BACKGROUND_COLOR = 'white'
 COLOR = 'black'
 
@@ -26,8 +29,6 @@ def set_page_container_style(
             ''',
             unsafe_allow_html=True,
         )
-
-
 
 def switch_page(page_name: str):
 
@@ -127,8 +128,6 @@ def page_header(title, container_style=True):
         set_page_container_style(padding_top=1)
     get_sidebar()
 
-    import base64
-
     def get_image_base64(image_path):
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
@@ -148,8 +147,8 @@ def page_header(title, container_style=True):
             <div>
                 <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
                 <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
-                <a href="https://www.linkedin.com" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.github.com" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/atklaus" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
             </div>
         </div>
     """

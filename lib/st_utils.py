@@ -1,5 +1,6 @@
 from streamlit.components.v1 import html
 import streamlit as st
+import base64
 
 def switch_page(page_name: str):
     from streamlit.runtime.scriptrunner import RerunData, RerunException
@@ -25,6 +26,10 @@ def switch_page(page_name: str):
 
     raise ValueError(f"Could not find page {page_name}. Must be one of {page_names}")
 
+
+def get_image_base64(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
 
 
 def V_SPACE(lines):

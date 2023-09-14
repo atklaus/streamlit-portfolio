@@ -16,13 +16,31 @@ import cv2
 from tensorflow import keras
 import numpy as np
 
-# @st.experimental_singleton(suppress_st_warning=True, show_spinner=False)
+@st.cache_resource(ttl=43200,show_spinner='Loading Model')
 def init_model():
     return keras.models.load_model('img_model')
 
-page_header('Almost Data Science')
 
-model = init_model()
+def image_to_tiles(img, tile_size=(150, 150), overlap=50):
+    tiles = []
+    stride = tile_size[0] - overlap
+    for x in range(0, img.shape[1] - tile_size[1] + stride, stride):
+        for y in range(0, img.shape[0] - tile_size[0] + stride, stride):
+            tile = img[y:y+tile_size[0], x:x+tile_size[1]]
+            if tile.shape[0] == tile_size[0] and tile.shape[1] == tile_size[1]:
+                tiles.append(tile)
+    return tiles
+
+def predict_tiles(tiles, model):
+    predictions = []
+    for tile in tiles:
+        prediction = model.predict(tile.reshape(-1,150,150,3))
+        predictions.append(prediction)
+    return np.array(predictions)
+
+def combine_predictions(predictions):
+    return predictions.mean(axis=0)
+
 
 def center_crop(img, new_width=None, new_height=None):        
 
@@ -48,24 +66,36 @@ def center_crop(img, new_width=None, new_height=None):
 
     return center_cropped_img
 
+# Usage in your Streamlit code
 
-st.title('Landscape Image Prediction')
+page_header('Almost Data Science')
+
+stu.V_SPACE(1)
+model = init_model()
+
+st.subheader('Landscape Image Prediction')
 
 uploaded_file = st.file_uploader("Choose an image")
 if uploaded_file is not None:
 # To read file as bytes:
-    bytes_data = uploaded_file.getvalue()
-    img = cv2.imdecode(np.fromstring(bytes_data, np.uint8), cv2.IMREAD_UNCHANGED)
-    # img = cv2.imread(bytes_data)
-    new_height = 150
-    new_width = 150
-    crop_img = center_crop(img, new_width, new_height)
-    # crop_img = img[0:150, 0:150] # Crop from {x, y, w, h } => {0, 0, 300, 400}
-    prediction = model.predict(crop_img.reshape(-1,150,150,3))
     class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
-    pred = class_names[prediction.argmax()]
-    st.image(crop_img, channels="BGR")
-    st.info('Answer: ' + pred.upper())
+
+    with st.spinner('Making prediction...'):
+        bytes_data = uploaded_file.getvalue()
+        img = cv2.imdecode(np.fromstring(bytes_data, np.uint8), cv2.IMREAD_UNCHANGED)
+        # img = cv2.imread(bytes_data)
+        # new_height = 150
+        # new_width = 150
+        # crop_img = center_crop(img, new_width, new_height)
+        # # crop_img = img[0:150, 0:150] # Crop from {x, y, w, h } => {0, 0, 300, 400}
+        # prediction = model.predict(crop_img.reshape(-1,150,150,3))
+        # pred = class_names[prediction.argmax()]
+        st.image(img, channels="BGR")
+        tiles = image_to_tiles(img,overlap=1)
+        tile_predictions = predict_tiles(tiles, model)
+        combined_prediction = combine_predictions(tile_predictions)
+        pred = class_names[combined_prediction.argmax()]
+    st.info('Answer: **' + pred.upper() + '**')
 
 with st.expander(label='Learn More'):
     if st.checkbox("Training Performance",key='expand_1'):
