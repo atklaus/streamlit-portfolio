@@ -152,17 +152,17 @@ if search:
     with st.spinner("Running model..."):
         base_df = get_player_df(search_dict)
 
-        st.dataframe(base_df)
-
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
         df= base_df[top_features] 
-        st.dataframe(df)
 
         loaded_scaler = joblib.load('scaler.pkl')
         loaded_imputer = joblib.load('imputer.pkl')
 
         # Assume new_data is the new single record you want to predict on
         df = loaded_scaler.transform([df])  # Note the [ ] to make it 2D
+
+        st.write(df)
+
 
         # Assume new_data is the new data with missing values you want to impute
         df = loaded_imputer.transform([df])
@@ -176,7 +176,6 @@ if search:
         #     if missing_values[column] > 0:
         #         case_study_df[column].fillna(case_study_df[column].median(), inplace=True)
 
-        st.write(df)
 
 
         predicted_values = model.predict(df)
