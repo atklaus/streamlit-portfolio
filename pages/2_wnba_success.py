@@ -13,6 +13,8 @@ from bs4 import BeautifulSoup
 import lib.utils as utils
 import requests
 import re
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
+
 
 @st.cache_resource(show_spinner='Loading model...')
 def init_model():
@@ -59,15 +61,77 @@ def get_player_url(search_dict):
     return link_url
     # To avoid making too many rapid requests, sleep for a few seconds between searches
 
+def get_player_df(search_dict):
+
+    # for player_url in list(wnba_df['url']):
+    player_url = get_player_url(search_dict)
+    session = requests.session()
+    user_agent = random.choice(utils.user_agents) 
+    headers = {'User-Agent': user_agent} 
+
+    response = session.get(player_url, headers = headers)
+    # response = session.get(player_url)
+    if response.status_code != 200:
+        print(response.status_code)
+    else:
+        pass
+
+    page_html = BeautifulSoup(response.text, 'html5lib')
+    awards,name,position,height = utils.extract_details_from_page(page_html)
+
+    div_class = page_html.findAll('h1')
+    player_name = div_class[0].find('span').text
+
+    prefixes = {'adv_': 'Advanced', 'pg_': 'Per Game', 'tot_': 'Totals'}
+    # Initialize an empty dictionary to hold dataframes
+    dataframes = {}
+
+    soup = BeautifulSoup(response.content, 'lxml')
+    
+    h2_tag = soup.find('h2', string='Advanced')
+    table = h2_tag.find_next('table')            
+    player_adv_df = pd.read_html(str(table))[0]
+    dataframes['adv_'] = player_adv_df.add_prefix('adv_')
+
+    h2_tag = soup.find('h2', string='Per Game')
+    table = h2_tag.find_next('table')            
+    player_pg_df = pd.read_html(str(table))[0]
+    dataframes['pg_'] = player_pg_df.add_prefix('pg_')
+
+    h2_tag = soup.find('h2', string='Totals')
+    table = h2_tag.find_next('table')            
+    player_tot_df = pd.read_html(str(table))[0]
+    dataframes['tot_'] = player_tot_df.add_prefix('tot_')
+
+    # Perform merging
+    base_df = dataframes['pg_'].merge(dataframes['adv_'], how='left', left_on='pg_Season', right_on='adv_Season')
+    base_df = base_df.merge(dataframes['tot_'], how='left', left_on='pg_Season', right_on='tot_Season')
+    base_df['player_name'] =player_name
+    base_df['position'] =position
+    base_df['height'] =height
+    base_df['awards'] =awards
+    # base_df.to_csv('ncaa_ref/' + player_name + '.csv')
+    base_df = prep_df(base_df)
+
+    return base_df
+
+def prep_df(df):
+    # Convert column names to lowercase
+    df.rename(columns={'adv_per_x': 'adv_per_college','adv_per_y':'per_pro','adv_ws/48':'ws_48_pro','player_name_x':'player_name'}, inplace=True)
+    df.columns = df.columns.str.lower()
+
+    # Remove columns with 'unnamed' in their names
+    df = df.loc[:, ~df.columns.str.contains('unnamed', case=False)]
+    df = df[df['pg_season'] == 'Career']
+
+    return df
 
 
 page_header('Predicting WNBA Success')
 
 stu.V_SPACE(1)
-model = init_model()
 
 st.subheader('Predicting WNBA Success from College Performance')
-
 model = init_model()
 
 col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
@@ -83,54 +147,34 @@ search = st.button('Predict Success', key='submit_wnba')
 
 if search:
     with st.spinner("Running model..."):
-        # for player_url in list(wnba_df['url']):
-        player_url = get_player_url(search_dict)
-        session = requests.session()
-        user_agent = random.choice(utils.user_agents) 
-        headers = {'User-Agent': user_agent} 
+        base_df = get_player_df(search_dict)
 
-        response = session.get(player_url, headers = headers)
-        # response = session.get(player_url)
-        if response.status_code != 200:
-            print(response.status_code)
-        else:
-            pass
+        st.dataframe(base_df)
 
-        page_html = BeautifulSoup(response.text, 'html5lib')
-        awards,name,position,height = utils.extract_details_from_page(page_html)
+        top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
+        df= base_df[top_features] 
+        st.dataframe(df)
 
-        div_class = page_html.findAll('h1')
-        player_name = div_class[0].find('span').text
+        # Checking for missing values in the dataset
+        # missing_values = case_study_df.isnull().sum()
 
-        prefixes = {'adv_': 'Advanced', 'pg_': 'Per Game', 'tot_': 'Totals'}
-        # Initialize an empty dictionary to hold dataframes
-        dataframes = {}
+        # # Impute missing values with median
+        # for column in missing_values.index:
+        #     if missing_values[column] > 0:
+        #         case_study_df[column].fillna(case_study_df[column].median(), inplace=True)
 
-        soup = BeautifulSoup(response.content, 'lxml')
-        
-        h2_tag = soup.find('h2', string='Advanced')
-        table = h2_tag.find_next('table')            
-        player_adv_df = pd.read_html(str(table))[0]
-        dataframes['adv_'] = player_adv_df.add_prefix('adv_')
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
 
-        h2_tag = soup.find('h2', string='Per Game')
-        table = h2_tag.find_next('table')            
-        player_pg_df = pd.read_html(str(table))[0]
-        dataframes['pg_'] = player_pg_df.add_prefix('pg_')
+        st.write(df)
 
-        h2_tag = soup.find('h2', string='Totals')
-        table = h2_tag.find_next('table')            
-        player_tot_df = pd.read_html(str(table))[0]
-        dataframes['tot_'] = player_tot_df.add_prefix('tot_')
 
-        # Perform merging
-        base_df = dataframes['pg_'].merge(dataframes['adv_'], how='left', left_on='pg_Season', right_on='adv_Season')
-        base_df = base_df.merge(dataframes['tot_'], how='left', left_on='pg_Season', right_on='tot_Season')
-        base_df['player_name'] =player_name
-        base_df['position'] =position
-        base_df['height'] =height
-        base_df['awards'] =awards
-        base_df.to_csv('ncaa_ref/' + player_name + '.csv')
-        time.sleep(10)
+        predicted_values = model.predict(df)
+        prob_values = model.predict_proba(df)
+        pred_df = base_df[["player_name"]].copy()
+        pred_df["Predicted_Value"] = predicted_values
+        pred_df["Probability_Pos"]  = prob_values[:,1]
+        pred_df["Probability_Neg"]  = prob_values[:,0]
+        pred_df.sort_values(by=['Probability_Pos'],ascending=False,inplace=True)
+        st.write(pred_df)
 
-        st.write(base_df)
