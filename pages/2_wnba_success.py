@@ -141,8 +141,9 @@ model = init_model()
 col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
 
 
-st.cache_data(ttl=42300)
+@st.cache_data(ttl=42300,show_spinner=False)
 def get_team_urls(year=2023):
+
     user_agent = random.choice(utils.user_agents) 
     headers = {'User-Agent': user_agent} 
     season_url = SEASON_URL_TEMPLATE.format(year)
@@ -154,7 +155,7 @@ def get_team_urls(year=2023):
     
     return {key: BASE_URL + val for key, val in url_dict.items() if f'/women/{year}' in val and '/cbb/schools/' in val}
 
-st.cache_data(ttl=42300)
+@st.cache_data(ttl=42300,show_spinner=False)
 def get_player_urls(team_url):
     user_agent = random.choice(utils.user_agents) 
     headers = {'User-Agent': user_agent} 
@@ -201,10 +202,20 @@ if search:
 
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
         df= base_df[top_features] 
-        st.write(df)
-
-
-
+        st.markdown("Features used in Prediction")
+        st.dataframe(df,
+        column_config={
+            'pg_2p%':st.column_config.NumberColumn(label='2-Point Field Goal Percentage',format='%.2f %%')
+            , 'adv_stl%':st.column_config.NumberColumn(label='Steal Percentage',format='%.2f %%')
+            , 'pg_fg%':st.column_config.NumberColumn(label='Field Goal Percentage',format='%.2f %%')
+            , 'pg_pts':st.column_config.NumberColumn(label='Points Per Game')
+            , 'pg_sos':st.column_config.NumberColumn(label='Strength of Schedule')
+            , 'adv_trb%':st.column_config.NumberColumn(label=' Total Rebound Percentage',format='%.2f %%')
+            , 'adv_ast%':st.column_config.NumberColumn(label='Assist Percentage',format='%.2f %%')
+            , 'pg_tov':st.column_config.NumberColumn(label='Turnovers Per Game')
+        },
+        hide_index=True
+        )
 
         loaded_scaler = joblib.load('wnba_model/scaler.pkl')
         loaded_imputer = joblib.load('wnba_model/imputer.pkl')
@@ -222,7 +233,8 @@ if search:
         player_name = base_df["player_name"].iloc[0]
         pred_prob = '{:.1%}'.format(pred_df["Probability_Pos"].iloc[0])
         result = """
-        {player_name} has the following predicted probability of being successful in the WNBA (Win Shares > 1):
+        **{player_name}** predicted probability of being successful in the WNBA (Win Shares > 0):
+
         **{pred_prob}**
         """.format(player_name=player_name, pred_prob=pred_prob)
 

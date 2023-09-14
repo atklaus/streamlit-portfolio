@@ -12,7 +12,7 @@ RUN ls
 FROM base AS python-deps
 
 RUN pip install pipenv
-RUN apt-get update && apt-get install libgl1 -y --no-install-recommends gcc
+RUN apt-get update && apt-get install -y libgl1-mesa-glx --no-install-recommends gcc
 
 # Install python dependencies in /.venv
 COPY Pipfile .
