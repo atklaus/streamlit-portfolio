@@ -11,9 +11,12 @@ RUN ls
 
 FROM base AS python-deps
 
+# Install pipenv
 RUN pip install pipenv
+
+# Update, install gcc and libgl1-mesa-glx, and clean up to minimize the layer size
 RUN apt-get update && \
-    apt-get install -y gcc --no-install-recommends && \
+    apt-get install -y gcc libgl1-mesa-glx --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -28,6 +31,7 @@ FROM base AS runtime
 COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
 
+# Create a user and set work directory
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
 USER appuser
@@ -41,4 +45,3 @@ EXPOSE 8501
 
 # Run the application
 ENTRYPOINT ["streamlit", "run", "Home.py"]
-

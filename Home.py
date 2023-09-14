@@ -155,7 +155,7 @@ with col2:
 # About Section
 with col3:
     st.markdown("**About this Page**")
-    st.caption('Website coded in Python using Streamlit')
+    st.caption('Website coded in Python using Streamlit and deployed through DigitalOcean')
 
 # Empty Space
 with col4:
