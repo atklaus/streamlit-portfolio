@@ -4,6 +4,7 @@ from streamlit.runtime.scriptrunner import RerunData, RerunException
 from streamlit.source_util import get_pages
 import config as c
 import base64
+from streamlit_option_menu import option_menu
 
 
 BACKGROUND_COLOR = 'white'
@@ -65,35 +66,6 @@ def get_sidebar():
                 if st.button(module_values['button']):
                     switch_page(module_values['name'])
 
-        # # Navigation bar with radio buttons
-        # nav_selection = st.sidebar.radio(
-        #     "Navigation",
-        #     ("Home", "Interests", "Conway's Game of Life", "About")
-        # )
-
-        # # Content for the Home section
-        # if nav_selection == "Home":
-        #     st.title("Welcome to My Website!")
-        #     st.write("Here you'll find a collection of my interactive projects and interests.")
-
-        # # Content for the Interests section
-        # elif nav_selection == "Interests":
-        #     st.title("My Interests")
-        #     st.write("Here's a collection of my favorite topics, hobbies, and pastimes.")
-
-        # # Content for Conway's Game of Life section
-        # elif nav_selection == "Conway's Game of Life":
-        #     st.title("Conway's Game of Life")
-        #     st.write("Explore the fascinating world of cellular automata with Conway's Game of Life.")
-
-        # # Content for the About section
-        # elif nav_selection == "About":
-        #     st.title("About Me")
-        #     st.write("Learn more about my background, experience, and interests.")
-
-        # You can add additional code and logic for each section, including Streamlit widgets, images, and more.
-
-
 def navigate_to_link(link):
     # Your condition to decide when to navigate
         link_url = "https://www.linkedin.com/in/adam-klaus/"  # Replace with your desired URL
@@ -135,89 +107,3 @@ def page_header(title, container_style=True):
 
     logo_path = "static/images/ads_logo.png"
     logo_base64 = get_image_base64(logo_path)
-
-    navbar_html = f"""
-        <head>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        </head>
-        <div style="display: flex; justify-content: space-between; align-items: center; background-color: #316b62; padding: 10px; border-radius: 15px;">
-            <div style="display: flex; align-items: center;">
-                <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; margin-right: 10px;">
-                <div style="line-height: 10x; font-size: 25px; color: #ffffff;">Almost<br>Data<br>Science</div>
-            </div>
-            <div>
-                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
-                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
-                <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
-                <a href="https://github.com/atklaus" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
-            </div>
-        </div>
-    """
-
-    # Embed the navbar_html into Streamlit
-    st.markdown(navbar_html, unsafe_allow_html=True)
-
-    # st.markdown(navbar_html, unsafe_allow_html=True)
-
-# Using st.experimental_memo to execute the navigation function once
-
-    
-    # c1,c2, c3, c4, c5, c6, c7= st.columns([1.2,1,23,1,1,1,1])
-    # with c1:
-    #     # st.write("")
-    #     # st.image("static/images/ads_logo.png", width=120)
-    #     st.image("static/images/ads_logo.png", width=75)
-
-    # with c2:
-    #     st.markdown('##### ' + title)
-
-    
-    # with c3:
-    #     pass
-    #     # Add Link to your repo
-
-    #     # Add Link to your repo
-    #     # st.markdown("[![Foo](https://drive.google.com/uc?export=view&id=1BWAJbKLhh9e2EsR_s8NW8LPmmMwqRRTu)](http://google.com.au/)")        
-    #     # st.markdown(git,unsafe_allow_html=True)
-
-    # with c4:
-    #     st.write("")
-    #     css_example = '''                    
-    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    #     <a href=/"> <i class="fa-sharp fa-solid fa-house fa-2x" style="color:white"></i></a>
-    #     '''
-    #     st.write(css_example, unsafe_allow_html=True)
-
-    # with c5:
-    #     st.write("")
-    #     css_example = '''                    
-    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    #     <a href="https://github.com/atklaus"> <i class="fa-brands fa-github fa-2x" style="color:white"></i></a>
-    #     '''
-    #     st.write(css_example, unsafe_allow_html=True)
-
-    # with c6:
-    #     st.write("")
-    #     css_example = '''                    
-    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    #     <a href="https://www.linkedin.com/in/adam-klaus/"> <i class="fa-brands fa-linkedin fa-2x" style="color:white"></i></a>
-    #     '''
-    #     st.write(css_example, unsafe_allow_html=True)
-
-    # with c7:
-    #     st.write("")
-    #     css_example = '''                    
-    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    #     <a href="/"> <i class="fa-solid fa-info fa-2x" style="color:white"></i></a>
-    #     '''
-    #     st.write(css_example, unsafe_allow_html=True)    
-
-
-
-    # with c7:
-    #     st.write("")
-    #     css_example = '''                    
-    #     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    #     <a href="https://twitter.com/SantaKlaus_1"> <i class="fa-brands fa-twitter fa-2x" style="color:white"></i></a>
-    #     '''
-    #     st.write(css_example, unsafe_allow_html=True)

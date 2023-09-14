@@ -31,13 +31,21 @@ st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs
 logo_path = "static/images/ads_logo.png"
 logo_base64 = stu.get_image_base64(logo_path)
 
-logo_path = "static/images/ads_logo.png"
-logo_base64 = stu.get_image_base64(logo_path)
-
-
 # stu.V_SPACE(1)
-st.markdown("## Hi, I'm Adam!")
-st.caption("### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
+
+col1, col2 = st.columns([.5, 7])
+
+test = f"""            <div style="display: flex; align-items: center;">
+                <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 120px; margin-right: 10px;">
+            </div>
+"""
+
+with col1:
+    st.markdown(test, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("## Hi, I'm Adam!")
+    st.caption("### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
 
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
