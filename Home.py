@@ -9,8 +9,9 @@ from layout.header import page_header
 from datetime import date, datetime
 from dateutil import tz
 import os
-from lib.st_utils import switch_page, V_SPACE
+import lib.st_utils as stu
 import os
+from tensorflow import keras
 import numpy as np
 from layout.header import page_header
 import config as c
@@ -31,7 +32,7 @@ def make_module(mod_dict):
     clickable = st.button(mod_dict['button'],key='home_' + mod)
     st.caption(mod_dict['description'])
     if clickable:
-        switch_page(mod_dict['name'])
+        stu.switch_page(mod_dict['name'])
 
 show_mod_dict = c.MOD_ACCESS.copy()
 show_mod_dict.pop('home')
@@ -51,8 +52,8 @@ for row in range(rows_count):
                 make_module(show_mod_dict[mod])
         else:
             with cols[col_idx]:
-                V_SPACE(1)
-    V_SPACE(2)
+                stu.V_SPACE(1)
+    stu.V_SPACE(2)
 
 # Example icons (replace with your specific icons)
 icons = [
@@ -144,6 +145,6 @@ with col4:
 
 # Copyright Section
 with col5:
-    V_SPACE(1)
+    stu.V_SPACE(1)
 
     st.markdown('© 2023 Copyright, All Right Reserved. almostdatascience.com', unsafe_allow_html=True)
