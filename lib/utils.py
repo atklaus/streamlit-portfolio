@@ -1,5 +1,7 @@
 import random
 import re
+from bs4 import BeautifulSoup
+import json
 
 user_agents = [
     "Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; Touch; MASMJS; rv:11.0) like Gecko",
@@ -87,3 +89,39 @@ def extract_details_from_page(page_html):
         # Logging the exception might be helpful for debugging purposes.
         print(f"Error occurred: {e}")
         return {}
+
+def get_url_dict(page_html):
+    '''
+    Create a dictionary of all links and their text reference
+    '''
+    href = page_html.find_all('a')
+    href_dict = {}
+    for item in href:
+        try:
+            href_dict[item.text.strip()] = item['href']
+        except:
+            pass
+    
+    return href_dict
+
+def get_html(session,url):
+    response = session.get(url, headers = dict(referer = url))
+    page_html = BeautifulSoup(response.text, 'html5lib')
+    return page_html
+
+#Write dictionary to json
+def write_dict_to_json(write_dict,filepath):
+    js = json.dumps(write_dict)
+    # Open new json file if not exist it will create
+    fp = open(filepath, 'a')
+    # write to json file
+    fp.write(js)
+    # close the connection
+    fp.close()
+
+
+def read_json(filepath):
+    with open(filepath) as f:
+        read_dict = json.load(f)
+    return read_dict
+

@@ -15,6 +15,7 @@ import requests
 import re
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
 import joblib
+import datetime
 
 @st.cache_resource(show_spinner='Loading model...')
 def init_model():
@@ -126,7 +127,6 @@ def prep_df(df):
     return df
 
 
-
 page_header('Predicting WNBA Success')
 
 stu.V_SPACE(1)
@@ -136,12 +136,61 @@ model = init_model()
 
 col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
 
+
+BASE_URL = 'https://www.sports-reference.com'
+SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
+st.cache_data(ttl=42300)
+def get_team_urls(year=2023):
+    user_agent = random.choice(utils.user_agents) 
+    headers = {'User-Agent': user_agent} 
+    season_url = SEASON_URL_TEMPLATE.format(year)
+    response = requests.get(season_url, headers=headers)
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, 'html5lib')
+    url_dict = utils.get_url_dict(soup)
+    
+    return {key: BASE_URL + val for key, val in url_dict.items() if f'/women/{year}' in val and '/cbb/schools/' in val}
+
+st.cache_data(ttl=42300)
+def get_player_urls(team_url):
+    user_agent = random.choice(utils.user_agents) 
+    headers = {'User-Agent': user_agent} 
+
+    response = requests.get(team_url, headers=headers)
+    response.raise_for_status()
+    
+    soup = BeautifulSoup(response.content, 'lxml')
+    h2_tag = soup.find('h2', string='Roster')
+    table = h2_tag.find_next('table')
+    return utils.get_url_dict(table)
+
+
+test= get_team_urls()
+college_list = list(test.keys())
+college_list.sort()
+
+
 # Pages Section
 search_dict = {}
 with col1:
-    search_dict['player'] = st.text_input(label='Type Players Name',placeholder='ex: Caitlin Clark')
+    current_year = datetime.datetime.now().year
+    past_20_years = list(range(current_year - 19, current_year + 1))
+    past_20_years.sort(reverse=True)
+
+    search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years)
+
 with col2:
-    search_dict['college'] = st.text_input(label='College Player Attended',placeholder='University of Iowa')
+    search_dict['college'] = st.selectbox(label='Select College',options=college_list)
+
+with col3:
+    test= get_team_urls(search_dict['season'])
+    player_list = list(get_player_urls(test[search_dict['college']]))
+    player_list.sort()
+    search_dict['player'] = st.selectbox(label='Select Player',options=player_list)
+
+
+col1, col2 = st.columns([1, 4])
 
 search = st.button('Predict Success', key='submit_wnba')
 
@@ -169,10 +218,9 @@ if search:
         player_name = base_df["player_name"].iloc[0]
         pred_prob = '{:.1%}'.format(pred_df["Probability_Pos"].iloc[0])
         result = """
-        {player_name} + has the following predicted probability of being successful in the WNBA:
-
+        {player_name} has the following predicted probability of being successful in the WNBA (Win Shares > 1):
         **{pred_prob}**
-        """
+        """.format(player_name=player_name, pred_prob=pred_prob)
 
-        st.info(base_df["player_name"].iloc[0] + ' has the following predicted probability of being successful in the WNBA: **' +str(pred_df["Probability_Pos"].iloc[0]) + '**')
+        st.info(result)
 

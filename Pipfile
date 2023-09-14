@@ -98,6 +98,7 @@ plotly = "*"
 scikit-learn = "*"
 html5lib = "*"
 joblib = "*"
+opencv-python-headless = "*"
 
 [dev-packages]
 

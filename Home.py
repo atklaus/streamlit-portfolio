@@ -148,7 +148,7 @@ with col1:
 with col2:
     st.markdown("**Contact**")
     st.markdown('[atk14219@gmail.com](%s)' % '/', unsafe_allow_html=True)
-    # st.markdown('[Resume](%s)' % '/', unsafe_allow_html=True)
+    st.markdown('[Resume](%s)' % 'static/resume.pdf', unsafe_allow_html=True)
 
 # About Section
 with col3:
