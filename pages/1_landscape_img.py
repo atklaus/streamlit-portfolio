@@ -89,11 +89,11 @@ if uploaded_file is not None:
         # # crop_img = img[0:150, 0:150] # Crop from {x, y, w, h } => {0, 0, 300, 400}
         # prediction = model.predict(crop_img.reshape(-1,150,150,3))
         # pred = class_names[prediction.argmax()]
-        st.image(img, channels="BGR")
         tiles = image_to_tiles(img,overlap=1)
         tile_predictions = predict_tiles(tiles, model)
         combined_prediction = combine_predictions(tile_predictions)
         pred = class_names[combined_prediction.argmax()]
+    st.image(img, channels="BGR")
     st.info('Answer: **' + pred.upper() + '**')
 
 with st.expander(label='Learn More'):
