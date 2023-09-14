@@ -97,6 +97,7 @@ watchdog = "*"
 plotly = "*"
 scikit-learn = "*"
 html5lib = "*"
+joblib = "*"
 
 [dev-packages]
 

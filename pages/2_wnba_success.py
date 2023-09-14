@@ -14,7 +14,7 @@ import lib.utils as utils
 import requests
 import re
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
-
+import joblib
 
 @st.cache_resource(show_spinner='Loading model...')
 def init_model():
@@ -122,9 +122,12 @@ def prep_df(df):
 
     # Remove columns with 'unnamed' in their names
     df = df.loc[:, ~df.columns.str.contains('unnamed', case=False)]
+    st.write(df)
     df = df[df['pg_season'] == 'Career']
 
+
     return df
+
 
 
 page_header('Predicting WNBA Success')
@@ -155,6 +158,16 @@ if search:
         df= base_df[top_features] 
         st.dataframe(df)
 
+        loaded_scaler = joblib.load('scaler.pkl')
+        loaded_imputer = joblib.load('imputer.pkl')
+
+        # Assume new_data is the new single record you want to predict on
+        df = loaded_scaler.transform([df])  # Note the [ ] to make it 2D
+
+        # Assume new_data is the new data with missing values you want to impute
+        df = loaded_imputer.transform([df])
+
+
         # Checking for missing values in the dataset
         # missing_values = case_study_df.isnull().sum()
 
@@ -162,9 +175,6 @@ if search:
         # for column in missing_values.index:
         #     if missing_values[column] > 0:
         #         case_study_df[column].fillna(case_study_df[column].median(), inplace=True)
-
-        scaler = StandardScaler()
-        df = scaler.fit_transform(df)
 
         st.write(df)
 
