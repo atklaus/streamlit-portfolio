@@ -22,7 +22,5 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-**/tecop_lib
-**/json_samples
 **/Users
 README.md
