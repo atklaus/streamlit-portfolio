@@ -69,14 +69,14 @@ for row in range(rows_count):
     stu.V_SPACE(2)
 
 
-# Example icons (replace with your specific icons)
-icons = [
-    "https://image.flaticon.com/icons/png/512/147/147146.png",
-    "https://image.flaticon.com/icons/png/512/147/147146.png",
-    "https://image.flaticon.com/icons/png/512/147/147148.png",
-    "https://image.flaticon.com/icons/png/512/147/147141.png",
-    "https://image.flaticon.com/icons/png/512/147/147140.png",
-]
+# # Example icons (replace with your specific icons)
+# icons = [
+#     "https://image.flaticon.com/icons/png/512/147/147146.png",
+#     "https://image.flaticon.com/icons/png/512/147/147146.png",
+#     "https://image.flaticon.com/icons/png/512/147/147148.png",
+#     "https://image.flaticon.com/icons/png/512/147/147141.png",
+#     "https://image.flaticon.com/icons/png/512/147/147140.png",
+# ]
 
 # # Example cards data
 # cards_data = [

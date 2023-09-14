@@ -8,7 +8,6 @@ from layout.header import page_header
 import datetime
 from datetime import date, datetime
 from dateutil import tz
-import git
 import os
 import lib.st_utils as stu
 import os

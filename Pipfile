@@ -95,6 +95,7 @@ st-clickable-images = "*"
 streamlit-option-menu = "*"
 watchdog = "*"
 plotly = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
