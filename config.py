@@ -3,8 +3,6 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import sys
-import git
-from git import Repo
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 dotenv_path = Path('/Users/adamklaus/.env')
