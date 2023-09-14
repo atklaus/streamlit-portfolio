@@ -50,23 +50,24 @@ def make_module(mod_dict):
 show_mod_dict = c.MOD_ACCESS.copy()
 show_mod_dict.pop('home')
 
-rows_count = math.ceil(len(show_mod_dict)/5)
+n_per_row = 4
+rows_count = math.ceil(len(show_mod_dict)/n_per_row)
 mod_keys = list(show_mod_dict.keys())
 
 # Divide modules into rows and columns for display
 mod_keys = list(show_mod_dict.keys())
-rows_count = math.ceil(len(show_mod_dict) / 5)
+rows_count = math.ceil(len(show_mod_dict) / n_per_row)
 for row in range(rows_count):
-    cols = st.columns(5)
-    for col_idx in range(5):
-        if row * 5 + col_idx < len(mod_keys):
-            mod = mod_keys[row * 5 + col_idx]
+    cols = st.columns(n_per_row)
+    for col_idx in range(n_per_row):
+        if row * n_per_row + col_idx < len(mod_keys):
+            mod = mod_keys[row * n_per_row + col_idx]
             with cols[col_idx]:
                 make_module(show_mod_dict[mod])
         else:
             with cols[col_idx]:
                 stu.V_SPACE(1)
-    stu.V_SPACE(2)
+    stu.V_SPACE(1)
 
 
 # # Example icons (replace with your specific icons)
@@ -134,6 +135,7 @@ for row in range(rows_count):
 #         st.markdown(card_content, unsafe_allow_html=True)
 
 stu.V_SPACE(4)
+st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
 # # Define columns with appropriate widths
 col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 8, 4])

@@ -13,7 +13,7 @@ FROM base AS python-deps
 
 RUN pip install pipenv
 RUN apt-get update && \
-    apt-get install -y libgl1-mesa-glx gcc --no-install-recommends && \
+    apt-get install -y libgl1 gcc --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

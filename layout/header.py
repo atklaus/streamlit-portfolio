@@ -153,7 +153,88 @@ def page_header(title, container_style=True):
         </div>
     """
 
+    # Separate out the CSS styles for better readability
+    styles = """
+    <style>
+        /* By default, hide the dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 150px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            text-decoration: none;
+            display: block;
+            padding: 12px 16px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .mobile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* By default, display the regular icons and hide the dropdown button */
+        .desktop-icons {
+            display: block;
+        }
+
+        .mobile-dropdown {
+            display: none;
+        }
+
+        /* On mobile view, hide the regular icons and show the dropdown button */
+        @media screen and (max-width: 768px) {
+            .desktop-icons {
+                display: none;
+            }
+
+            .mobile-dropdown {
+                display: block;
+            }
+        }
+    </style>
+    """
+
+    navbar_html = f"""
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </head>
+    {styles}
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #316b62; padding: 10px; border-radius: 15px;">
+        <div style="display: flex; align-items: center;">
+            <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; margin-right: 10px;">
+            <div style="line-height: 10x; font-size: 25px; color: #ffffff;">Almost<br>Data<br>Science</div>
+        </div>
+        <div class="desktop-icons">
+            <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
+            <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
+            <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/atklaus" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
+        </div>
+        <div class="mobile-dropdown" style="display: none;">
+            <i class="fas fa-bars" style="font-size: 30px; text-decoration: none; color: #ffffff;"></i>
+            <div class="dropdown-content">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-info-circle"></i> Info</a>
+                <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://github.com/atklaus" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+        </div>
+    </div>
+    """
+
+    # Finally, embed the navbar_html into Streamlit
     st.markdown(navbar_html, unsafe_allow_html=True)
+
+
+    # st.markdown(navbar_html, unsafe_allow_html=True)
 
 # Using st.experimental_memo to execute the navigation function once
 
