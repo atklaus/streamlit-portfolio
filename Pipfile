@@ -96,6 +96,7 @@ streamlit-option-menu = "*"
 watchdog = "*"
 plotly = "*"
 scikit-learn = "*"
+html5lib = "*"
 
 [dev-packages]
 
