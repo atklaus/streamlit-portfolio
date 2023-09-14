@@ -18,7 +18,7 @@ import joblib
 
 @st.cache_resource(show_spinner='Loading model...')
 def init_model():
-    with open('wnba_success.pkl', 'rb') as model_file:
+    with open('wnba_model/wnba_success.pkl', 'rb') as model_file:
         loaded_model = pickle.load(model_file)
     return loaded_model
 
@@ -122,10 +122,7 @@ def prep_df(df):
 
     # Remove columns with 'unnamed' in their names
     df = df.loc[:, ~df.columns.str.contains('unnamed', case=False)]
-    st.write(df)
     df = df[df['pg_season'] == 'Career']
-
-
     return df
 
 
@@ -155,35 +152,27 @@ if search:
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
         df= base_df[top_features] 
 
-        loaded_scaler = joblib.load('scaler.pkl')
-        loaded_imputer = joblib.load('imputer.pkl')
+        loaded_scaler = joblib.load('wnba_model/scaler.pkl')
+        loaded_imputer = joblib.load('wnba_model/imputer.pkl')
 
-        # Assume new_data is the new single record you want to predict on
-        df = loaded_scaler.transform([df])  # Note the [ ] to make it 2D
+        # new_data = loaded_imputer.transform(df)
+        new_data = loaded_scaler.transform(df)  # Note the [ ] to make it 2D
+        st.write(new_data)
 
-        st.write(df)
-
-
-        # Assume new_data is the new data with missing values you want to impute
-        df = loaded_imputer.transform([df])
-
-
-        # Checking for missing values in the dataset
-        # missing_values = case_study_df.isnull().sum()
-
-        # # Impute missing values with median
-        # for column in missing_values.index:
-        #     if missing_values[column] > 0:
-        #         case_study_df[column].fillna(case_study_df[column].median(), inplace=True)
-
-
-
-        predicted_values = model.predict(df)
-        prob_values = model.predict_proba(df)
+        predicted_values = model.predict(new_data)
+        prob_values = model.predict_proba(new_data)
         pred_df = base_df[["player_name"]].copy()
         pred_df["Predicted_Value"] = predicted_values
         pred_df["Probability_Pos"]  = prob_values[:,1]
         pred_df["Probability_Neg"]  = prob_values[:,0]
         pred_df.sort_values(by=['Probability_Pos'],ascending=False,inplace=True)
-        st.write(pred_df)
+        player_name = base_df["player_name"].iloc[0]
+        pred_prob = '{:.1%}'.format(pred_df["Probability_Pos"].iloc[0])
+        result = """
+        {player_name} + has the following predicted probability of being successful in the WNBA:
+
+        **{pred_prob}**
+        """
+
+        st.info(base_df["player_name"].iloc[0] + ' has the following predicted probability of being successful in the WNBA: **' +str(pred_df["Probability_Pos"].iloc[0]) + '**')
 
