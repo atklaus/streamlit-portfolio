@@ -14,7 +14,7 @@ import lib.utils as utils
 import requests
 import re
 
-@st.cache_resource('Loading model...')
+@st.cache_resource(show_spinner='Loading model...')
 def init_model():
     with open('wnba_success.pkl', 'rb') as model_file:
         loaded_model = pickle.load(model_file)
@@ -22,14 +22,12 @@ def init_model():
 
 # Load the model from the file
 
-def get_player_url(player_name_search):
+def get_player_url(search_dict):
     # Constructing the Google search URL
-    player = player_name_search
-
     user_agent = random.choice(utils.user_agents) 
     headers = {'User-Agent': user_agent} 
 
-    query = f"{player} college stats sports-reference women's basketball"
+    query = f"{search_dict['player']} college stats sports-reference women's basketball"
     # query = f"{player} college stats sports-reference women's basketball {row['college_team']}"
 
     url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
@@ -48,13 +46,15 @@ def get_player_url(player_name_search):
             match = re.search(r'(https://www.sports-reference.com/.*?\.html)', link['href'])
             if match:
                 link_url = match.group(1)
-                print(f"For {player} from {college}, stats link: {link_url}")
+                print(f"For {search_dict['player']} from {search_dict['college']}, stats link: {link_url}")
             else:
-                print(f"No desired pattern found in link for {player} from {college}")
+                print(f"No desired pattern found in link for {search_dict['player']} from {search_dict['college']}")
         else:
-            print(f"No link found for {player} from {college}")
+            print(f"No link found for {search_dict['player']} from {search_dict['college']}")
+            print(f"No link found for {search_dict['player']} from {search_dict['college']}")
+
     else:
-        print(f"Failed to fetch search results for {player} from {college}")
+        print(f"Failed to fetch search results for {search_dict['player']} from {search_dict['college']}")
     time.sleep(5)
     return link_url
     # To avoid making too many rapid requests, sleep for a few seconds between searches
@@ -70,58 +70,67 @@ st.subheader('Predicting WNBA Success from College Performance')
 
 model = init_model()
 
-player_name_search = st.text_input(placeholder='Search for a player you would like to predict')
+col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
 
-# for player_url in list(wnba_df['url']):
-try:
-    player_url = get_player_url(player_name_search)
-    session = requests.session()
-    headers, proxy_rand = utils.requst_params(utils.user_agents, utils.available_proxies)
-    response = session.get(player_url, headers = headers)
-    # response = session.get(player_url)
-    if response.status_code != 200:
-        print(response.status_code)
-    else:
-        pass
+# Pages Section
+search_dict = {}
+with col1:
+    search_dict['player'] = st.text_input(label='Type Players Name',placeholder='ex: Caitlin Clark')
+with col2:
+    search_dict['college'] = st.text_input(label='College Player Attended',placeholder='University of Iowa')
 
-    page_html = BeautifulSoup(response.text, 'html5lib')
-    awards,name,position,height = utils.extract_details_from_page(page_html)
+search = st.button('Predict Success', key='submit_wnba')
 
-    div_class = page_html.findAll('h1')
-    player_name = div_class[0].find('span').text
+if search:
+    with st.spinner("Running model..."):
+        # for player_url in list(wnba_df['url']):
+        player_url = get_player_url(search_dict)
+        session = requests.session()
+        user_agent = random.choice(utils.user_agents) 
+        headers = {'User-Agent': user_agent} 
 
-    prefixes = {'adv_': 'Advanced', 'pg_': 'Per Game', 'tot_': 'Totals'}
-    # Initialize an empty dictionary to hold dataframes
-    dataframes = {}
+        response = session.get(player_url, headers = headers)
+        # response = session.get(player_url)
+        if response.status_code != 200:
+            print(response.status_code)
+        else:
+            pass
 
-    soup = BeautifulSoup(response.content, 'lxml')
-    
-    h2_tag = soup.find('h2', string='Advanced')
-    table = h2_tag.find_next('table')            
-    player_adv_df = pd.read_html(str(table))[0]
-    dataframes['adv_'] = player_adv_df.add_prefix('adv_')
+        page_html = BeautifulSoup(response.text, 'html5lib')
+        awards,name,position,height = utils.extract_details_from_page(page_html)
 
-    h2_tag = soup.find('h2', string='Per Game')
-    table = h2_tag.find_next('table')            
-    player_pg_df = pd.read_html(str(table))[0]
-    dataframes['pg_'] = player_pg_df.add_prefix('pg_')
+        div_class = page_html.findAll('h1')
+        player_name = div_class[0].find('span').text
 
-    h2_tag = soup.find('h2', string='Totals')
-    table = h2_tag.find_next('table')            
-    player_tot_df = pd.read_html(str(table))[0]
-    dataframes['tot_'] = player_tot_df.add_prefix('tot_')
+        prefixes = {'adv_': 'Advanced', 'pg_': 'Per Game', 'tot_': 'Totals'}
+        # Initialize an empty dictionary to hold dataframes
+        dataframes = {}
 
-    # Perform merging
-    base_df = dataframes['pg_'].merge(dataframes['adv_'], how='left', left_on='pg_Season', right_on='adv_Season')
-    base_df = base_df.merge(dataframes['tot_'], how='left', left_on='pg_Season', right_on='tot_Season')
-    base_df['player_name'] =row['player_name']
-    base_df['position'] =position
-    base_df['height'] =height
-    base_df['awards'] =awards
-    base_df.to_csv('ncaa_ref/' + player_name + '.csv')
-    time.sleep(10)
+        soup = BeautifulSoup(response.content, 'lxml')
+        
+        h2_tag = soup.find('h2', string='Advanced')
+        table = h2_tag.find_next('table')            
+        player_adv_df = pd.read_html(str(table))[0]
+        dataframes['adv_'] = player_adv_df.add_prefix('adv_')
 
-except Exception as error:
-# handle the exception
-    print(row['player_name']+ "ERROR:", error)
+        h2_tag = soup.find('h2', string='Per Game')
+        table = h2_tag.find_next('table')            
+        player_pg_df = pd.read_html(str(table))[0]
+        dataframes['pg_'] = player_pg_df.add_prefix('pg_')
 
+        h2_tag = soup.find('h2', string='Totals')
+        table = h2_tag.find_next('table')            
+        player_tot_df = pd.read_html(str(table))[0]
+        dataframes['tot_'] = player_tot_df.add_prefix('tot_')
+
+        # Perform merging
+        base_df = dataframes['pg_'].merge(dataframes['adv_'], how='left', left_on='pg_Season', right_on='adv_Season')
+        base_df = base_df.merge(dataframes['tot_'], how='left', left_on='pg_Season', right_on='tot_Season')
+        base_df['player_name'] =player_name
+        base_df['position'] =position
+        base_df['height'] =height
+        base_df['awards'] =awards
+        base_df.to_csv('ncaa_ref/' + player_name + '.csv')
+        time.sleep(10)
+
+        st.write(base_df)

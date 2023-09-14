@@ -1,3 +1,5 @@
+import random
+import re
 
 user_agents = [
     "Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; Touch; MASMJS; rv:11.0) like Gecko",
@@ -26,3 +28,62 @@ user_agents = [
     "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) GSA/7.0.55539 Mobile/12H143 Safari/600.1.4"
 ]
 
+
+
+def requst_params(user_agents, available_proxies):    
+    user_agent = random.choice(user_agents) 
+    headers = {'User-Agent': user_agent} 
+    proxy = random.choice(available_proxies) 
+    proxies = {'http': 'http://{}'.format(proxy)} 
+    return headers, proxies
+
+
+def extract_awards(page_html):
+    """Extract awards from the provided HTML."""
+    html_list = []
+    try:
+        html_list = page_html.find('ul', id='bling')
+        return ','.join([li.text for li in html_list.find_all('li')])
+    except:
+        return html_list
+
+def extract_name_and_position(page_html):
+    """Extract name and position from the provided HTML."""
+    name = None
+    position = None
+    div_class = page_html.find('div', class_='nothumb')
+    try:
+        name = div_class.find('span').text
+    except:
+        pass 
+    try:
+        position = div_class.find_all('p')[0].text.split(':')[1].strip()    
+    except:
+        pass
+
+    return name, position
+
+def extract_height(page_html):
+    """Extract and format height from the provided HTML."""
+    try:
+        div_class = page_html.find('div', class_='nothumb')
+        height = div_class.find_all('p')[1].text.strip()
+        match = re.search(r'\((.*?)\)', height)
+        
+        if match:
+            height = match.group(1)  # group(1) corresponds to the first group enclosed in parentheses
+            return height.replace('cm','').strip()
+    except:
+        return None
+
+def extract_details_from_page(page_html):
+    """Extract required details from the provided HTML."""
+    try:
+        awards = extract_awards(page_html)
+        name, position = extract_name_and_position(page_html)
+        height = extract_height(page_html)
+        return awards, name,position,height
+    except Exception as e:
+        # Logging the exception might be helpful for debugging purposes.
+        print(f"Error occurred: {e}")
+        return {}
