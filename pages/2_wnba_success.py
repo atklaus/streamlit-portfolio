@@ -17,6 +17,10 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
 import joblib
 import datetime
 
+BASE_URL = 'https://www.sports-reference.com'
+SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
+
+
 @st.cache_resource(show_spinner='Loading model...')
 def init_model():
     with open('wnba_model/wnba_success.pkl', 'rb') as model_file:
@@ -63,9 +67,8 @@ def get_player_url(search_dict):
     # To avoid making too many rapid requests, sleep for a few seconds between searches
 
 def get_player_df(search_dict):
-
-    # for player_url in list(wnba_df['url']):
-    player_url = get_player_url(search_dict)
+    # player_url = get_player_url(search_dict)
+    player_url = BASE_URL + search_dict['player_url']
     session = requests.session()
     user_agent = random.choice(utils.user_agents) 
     headers = {'User-Agent': user_agent} 
@@ -76,6 +79,7 @@ def get_player_df(search_dict):
         print(response.status_code)
     else:
         pass
+
 
     page_html = BeautifulSoup(response.text, 'html5lib')
     awards,name,position,height = utils.extract_details_from_page(page_html)
@@ -137,8 +141,6 @@ model = init_model()
 col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
 
 
-BASE_URL = 'https://www.sports-reference.com'
-SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
 st.cache_data(ttl=42300)
 def get_team_urls(year=2023):
     user_agent = random.choice(utils.user_agents) 
@@ -170,7 +172,6 @@ test= get_team_urls()
 college_list = list(test.keys())
 college_list.sort()
 
-
 # Pages Section
 search_dict = {}
 with col1:
@@ -185,12 +186,12 @@ with col2:
 
 with col3:
     test= get_team_urls(search_dict['season'])
-    player_list = list(get_player_urls(test[search_dict['college']]))
+    player_dict = get_player_urls(test[search_dict['college']])
+    player_list = list(player_dict)
     player_list.sort()
     search_dict['player'] = st.selectbox(label='Select Player',options=player_list)
+    search_dict['player_url'] = player_dict[search_dict['player']]
 
-
-col1, col2 = st.columns([1, 4])
 
 search = st.button('Predict Success', key='submit_wnba')
 
@@ -200,13 +201,16 @@ if search:
 
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
         df= base_df[top_features] 
+        st.write(df)
+
+
+
 
         loaded_scaler = joblib.load('wnba_model/scaler.pkl')
         loaded_imputer = joblib.load('wnba_model/imputer.pkl')
 
         # new_data = loaded_imputer.transform(df)
         new_data = loaded_scaler.transform(df)  # Note the [ ] to make it 2D
-        st.write(new_data)
 
         predicted_values = model.predict(new_data)
         prob_values = model.predict_proba(new_data)
