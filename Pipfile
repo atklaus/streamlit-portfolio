@@ -88,7 +88,6 @@ validators = "==0.20.0"
 webencodings = "==0.5.1"
 yarl = "==1.7.2"
 zipp = "==3.10.0"
-opencv-python = "*"
 tensorflow = "*"
 htbuilder = "*"
 st-clickable-images = "*"
@@ -99,6 +98,7 @@ scikit-learn = "*"
 html5lib = "*"
 joblib = "*"
 opencv-python-headless = "*"
+opencv-contrib-python = "*"
 
 [dev-packages]
 
