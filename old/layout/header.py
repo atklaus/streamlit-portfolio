@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import lib.st_utils as stu
+from streamlit.runtime.scriptrunner import RerunData, RerunException
+from streamlit.source_util import get_pages
 
 BACKGROUND_COLOR = 'white'
 COLOR = 'black'
@@ -27,9 +29,8 @@ def set_page_container_style(
         )
 
 
+
 def switch_page(page_name: str):
-    from streamlit.runtime.scriptrunner import RerunData, RerunException
-    from streamlit.source_util import get_pages
 
     def standardize_name(name: str) -> str:
         return name.lower().replace("_", " ")
@@ -52,25 +53,58 @@ def switch_page(page_name: str):
     raise ValueError(f"Could not find page {page_name}. Must be one of {page_names}")
 
 
+
 def get_sidebar():
     with st.sidebar:
-
-
-        st.markdown('## ' + 'Almost Data Science')
-
+        st.write('## ' + 'Almost Data Science')
         Home = st.button("Home")
         scenery_pred = st.button("Landscape Image Prediction")
         if Home:
             switch_page("Home")
         if scenery_pred:
-            switch_page("Landscape")
+            switch_page("Landscape Img")
+
+        # # Navigation bar with radio buttons
+        # nav_selection = st.sidebar.radio(
+        #     "Navigation",
+        #     ("Home", "Interests", "Conway's Game of Life", "About")
+        # )
+
+        # # Content for the Home section
+        # if nav_selection == "Home":
+        #     st.title("Welcome to My Website!")
+        #     st.write("Here you'll find a collection of my interactive projects and interests.")
+
+        # # Content for the Interests section
+        # elif nav_selection == "Interests":
+        #     st.title("My Interests")
+        #     st.write("Here's a collection of my favorite topics, hobbies, and pastimes.")
+
+        # # Content for Conway's Game of Life section
+        # elif nav_selection == "Conway's Game of Life":
+        #     st.title("Conway's Game of Life")
+        #     st.write("Explore the fascinating world of cellular automata with Conway's Game of Life.")
+
+        # # Content for the About section
+        # elif nav_selection == "About":
+        #     st.title("About Me")
+        #     st.write("Learn more about my background, experience, and interests.")
+
+        # You can add additional code and logic for each section, including Streamlit widgets, images, and more.
 
 
-def page_header(title):
+def navigate_to_link(link):
+    # Your condition to decide when to navigate
+        link_url = "https://www.linkedin.com/in/adam-klaus/"  # Replace with your desired URL
+        st.write(f'<meta http-equiv="refresh" content="0; URL={link_url}" />', unsafe_allow_html=True)
+
+
+
+def page_header(title, container_style=True):
     # st.set_page_config(layout="wide", page_title=title, page_icon="static/images/ads_logo.png")
     st.set_page_config(
         page_title=title
-        , page_icon="⚙️"
+        , page_icon="static/images/favicon.ico"
         ,layout='wide'
         ,initial_sidebar_state="collapsed",
         )
@@ -90,13 +124,40 @@ def page_header(title):
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-    set_page_container_style(padding_top=1)
+    if container_style:
+        set_page_container_style(padding_top=1)
     get_sidebar()
 
-    selected2 = option_menu(None, ["Home", "LinkedIn", "Github", 'About'], 
-        icons=['house', 'linkedin', "github", 'info-square'], 
-        menu_icon="cast", default_index=0, orientation="horizontal")
-    selected2
+    import base64
+
+    def get_image_base64(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+
+    logo_path = "static/images/ads_logo.png"
+    logo_base64 = get_image_base64(logo_path)
+
+    navbar_html = f"""
+        <head>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        </head>
+        <div style="display: flex; justify-content: space-between; align-items: center; background-color: #316b62; padding: 10px; border-radius: 15px;">
+            <div style="display: flex; align-items: center;">
+                <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; margin-right: 10px;">
+                <div style="line-height: 10x; font-size: 25px; color: #ffffff;">Almost<br>Data<br>Science</div>
+            </div>
+            <div>
+                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
+                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
+                <a href="https://www.linkedin.com" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.github.com" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    """
+
+    st.markdown(navbar_html, unsafe_allow_html=True)
+
+# Using st.experimental_memo to execute the navigation function once
 
     
     # c1,c2, c3, c4, c5, c6, c7= st.columns([1.2,1,23,1,1,1,1])

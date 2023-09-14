@@ -17,82 +17,137 @@ import cv2
 from tensorflow import keras
 import numpy as np
 from layout.header import page_header
+import config as c
+import math
 
 page_header('Almost Data Science')
 
+# Add the HTML code to the Streamlit app
+# st.markdown(navbar_html, unsafe_allow_html=True)
 
-# col1, col2= st.columns([.0, .95])
-# with col1:
-#     st.markdown("#")
-#     st.write('')
-#     # st.image("static/images/ads_logo.png", width=120)
-#     st.image("static/images/ads_logo.png", width=100)
-
-# with col2:
-st.markdown("#")
+# stu.V_SPACE(1)
 st.markdown("## Hi, I'm Adam!")
-st.caption("### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations and deployed Machine Learning models. Hope you enjoy!")
+st.caption("### I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
+
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
-col1, col2, col3, col4, col5, col6, col7 = st.columns([1, .1, 1, .1, 1, .1, 1])
+def make_module(mod_dict):
+    clickable = st.button(mod_dict['button'],key='home_' + mod)
+    st.caption(mod_dict['description'])
+    if clickable:
+        stu.switch_page(mod_dict['name'])
 
+show_mod_dict = c.MOD_ACCESS.copy()
+show_mod_dict.pop('home')
+
+rows_count = math.ceil(len(show_mod_dict)/5)
+mod_keys = list(show_mod_dict.keys())
+
+# Divide modules into rows and columns for display
+mod_keys = list(show_mod_dict.keys())
+rows_count = math.ceil(len(show_mod_dict) / 5)
+for row in range(rows_count):
+    cols = st.columns(5)
+    for col_idx in range(5):
+        if row * 5 + col_idx < len(mod_keys):
+            mod = mod_keys[row * 5 + col_idx]
+            with cols[col_idx]:
+                make_module(show_mod_dict[mod])
+        else:
+            with cols[col_idx]:
+                stu.V_SPACE(1)
+    stu.V_SPACE(2)
+
+# Example icons (replace with your specific icons)
+icons = [
+    "https://image.flaticon.com/icons/png/512/147/147144.png",
+    "https://image.flaticon.com/icons/png/512/147/147146.png",
+    "https://image.flaticon.com/icons/png/512/147/147148.png",
+    "https://image.flaticon.com/icons/png/512/147/147141.png",
+    "https://image.flaticon.com/icons/png/512/147/147140.png",
+]
+
+# Example cards data
+cards_data = [
+    {"title": "Project 1", "description": "Description of Project 1", "link": "#"},
+    {"title": "Project 2", "description": "Description of Project 2", "link": "#"},
+    {"title": "Project 3", "description": "Description of Project 3", "link": "#"},
+    {"title": "Project 4", "description": "Description of Project 4", "link": "#"},
+    {"title": "Project 5", "description": "Description of Project 5", "link": "#"},
+]
+
+# Custom CSS for the cards
+card_style = """
+<style>
+.card {
+    border-radius: 20px;
+    background-color: #316b62;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+    color: white;
+}
+.card a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+.card img {
+    margin: 0 auto;
+    display: block;
+}
+.card h2 {
+    margin: 10px 0;
+}
+</style>
+"""
+
+st.markdown(card_style, unsafe_allow_html=True)
+
+# Create a row of cards
+cols = st.columns(5)
+for i, card in enumerate(cards_data):
+    with cols[i]:
+        icon_image = icons[i]
+        card_content = (
+            f'<div class="card">'
+            f'<a href="{card["link"]}" target="_blank">'
+            f'<img src="{icon_image}" width="100">'
+            f'<h2>{card["title"]}</h2>'
+            f"<p>{card['description']}</p>"
+            f"</a></div>"
+        )
+        st.markdown(card_content, unsafe_allow_html=True)
+
+# Define columns with appropriate widths
+col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 8, 4])
+
+# Pages Section
 with col1:
-    landscape = st.button("🏔️  Landscape Image Prediction")
-    st.caption('### Predict the landscape of a given image using a convolutional neural network')
-    if landscape:
-        stu.switch_page("Landscape")
-with col3:
-    happy_prime = st.button("🙂 Happy Prime",key='hp')
-    st.caption('### Calculator to determine whethern an integer is happy or sad')
-with col5:
-    happy_prime = st.button("♾️ Random Ellipses",key='re')
-    st.caption('### Given two ellipses, determine their overlapping area with a pseudo random number generator')
-with col7:
-    happy_prime = st.button("👾 Game of Life",key='gof')
-    st.caption("### Visualize preset and random simulations of Conway's game of life")
+    st.markdown("**Pages**")
+    st.markdown('[Experience](%s)' % '/', unsafe_allow_html=True)
+    st.markdown('[Interests](%s)' % '/', unsafe_allow_html=True)
 
-
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-st.markdown('#')
-
-# with st.expander(label='Learn More'):
-#     if st.checkbox("Training Performance",key='expand_1'):
-#         pass
-#         # st.write("Hello world")
-#     # if st.checkbox("Fake expand2",key='expand_2'):
-#     #     st.markdown("1. Double click into a cell to edit")
-#     #     st.markdown("2. Hit enter or click away to store the change")
-#     #     st.markdown("3. Click submit and changes will be recorded")
-#     #     st.markdown("4. You can validate this update by reloading the page and seeing the values")
-
-
-col1, col2, col3, col4, col5 = st.columns([1.2, 1.2, 1.6, 8, 4])
-with col1:
-    st.caption('Pages')
-    st.caption('[Experience](%s)' % '/')
-    st.caption('[Interests](%s)' % '/')
-    
+# Contact Section
 with col2:
-    st.caption('Contact')
-    st.caption('[atklaus@wisc.edu](%s)' % '/')
-    st.caption('[Resume](%s)' % '/')
+    st.markdown("**Contact**")
+    st.markdown('[atklaus@wisc.edu](%s)' % '/', unsafe_allow_html=True)
+    # st.markdown('[Resume](%s)' % '/', unsafe_allow_html=True)
 
+# About Section
 with col3:
-    st.caption('About this Page')
+    st.markdown("**About this Page**")
     st.caption('Website coded in Python using Streamlit')
-    
 
+# Empty Space
 with col4:
     pass
 
+# Copyright Section
 with col5:
-    st.markdown('#')
-    st.markdown('#')
-    st.markdown('#')
-    st.caption('© 2021 Copyright, All Right Reserved. almostdatascience.com')
+    stu.V_SPACE(1)
+
+    st.markdown('© 2023 Copyright, All Right Reserved. almostdatascience.com', unsafe_allow_html=True)

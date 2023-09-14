@@ -16,7 +16,7 @@ import cv2
 from tensorflow import keras
 import numpy as np
 
-@st.experimental_singleton(suppress_st_warning=True, show_spinner=False)
+# @st.experimental_singleton(suppress_st_warning=True, show_spinner=False)
 def init_model():
     return keras.models.load_model('img_model')
 
@@ -65,8 +65,7 @@ if uploaded_file is not None:
     class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
     pred = class_names[prediction.argmax()]
     st.image(crop_img, channels="BGR")
-    st.write(pred)
-
+    st.info('Answer: ' + pred.upper())
 
 with st.expander(label='Learn More'):
     if st.checkbox("Training Performance",key='expand_1'):
@@ -77,5 +76,4 @@ with st.expander(label='Learn More'):
     #     st.markdown("2. Hit enter or click away to store the change")
     #     st.markdown("3. Click submit and changes will be recorded")
     #     st.markdown("4. You can validate this update by reloading the page and seeing the values")
-
 
