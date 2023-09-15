@@ -20,11 +20,8 @@ from docx2pdf import convert
 #INPUTS
 ###################################################################
 
-working = '/Users/adamklaus/Documents/Personal/Career/Resume'
-os.chdir(working)
-
 #Create doc object
-doc = docx.Document("Adam_Klaus_Cover_Letter.docx")
+doc = docx.Document("Cover_Letter.docx")
 
 #Define unique job
 manager = 'Hiring Manager'

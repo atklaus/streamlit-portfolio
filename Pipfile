@@ -98,6 +98,9 @@ scikit-learn = "*"
 html5lib = "*"
 joblib = "*"
 opencv-contrib-python-headless = "*"
+docx = "*"
+docx2pdf = "*"
+python-docx = "*"
 
 [dev-packages]
 

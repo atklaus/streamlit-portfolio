@@ -21,10 +21,12 @@ BASE_URL = 'https://www.sports-reference.com'
 SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
 
 
-@st.cache_resource(show_spinner='Loading model...')
+# @st.cache_resource(show_spinner='Loading model...')
 def init_model():
-    with open('wnba_model/wnba_success.pkl', 'rb') as model_file:
-        loaded_model = pickle.load(model_file)
+    loaded_model = joblib.load('wnba_model/wnba_success.pkl')
+
+    # with open('wnba_model/wnba_success.pkl', 'rb') as model_file:
+    #     loaded_model = pickle.load(model_file)
     return loaded_model
 
 # Load the model from the file
@@ -200,7 +202,9 @@ if search:
     with st.spinner("Running model..."):
         base_df = get_player_df(search_dict)
 
+
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
+        
         df= base_df[top_features] 
         st.markdown("Features used in Prediction")
         st.dataframe(df,
@@ -217,14 +221,16 @@ if search:
         hide_index=True
         )
 
-        loaded_scaler = joblib.load('wnba_model/scaler.pkl')
-        loaded_imputer = joblib.load('wnba_model/imputer.pkl')
+        # loaded_scaler = joblib.load('wnba_model/scaler.pkl')
+        # # loaded_imputer = joblib.load('wnba_model/imputer.pkl')
 
-        # new_data = loaded_imputer.transform(df)
-        new_data = loaded_scaler.transform(df)  # Note the [ ] to make it 2D
+        # # new_data = loaded_imputer.transform(df)
+        # new_data = loaded_scaler.transform(df)  # Note the [ ] to make it 2D
 
-        predicted_values = model.predict(new_data)
-        prob_values = model.predict_proba(new_data)
+        # st.write(model.feature_importances_)
+
+        predicted_values = model.predict(df)
+        prob_values = model.predict_proba(df)
         pred_df = base_df[["player_name"]].copy()
         pred_df["Predicted_Value"] = predicted_values
         pred_df["Probability_Pos"]  = prob_values[:,1]
@@ -239,4 +245,3 @@ if search:
         """.format(player_name=player_name, pred_prob=pred_prob)
 
         st.info(result)
-

@@ -66,7 +66,6 @@ for para in all_paras:
         
     print(para.text)
 
-
 file_name = company + '_Cover_Letter'
 doc.save(file_name + ".docx")
 convert(file_name + ".docx")
