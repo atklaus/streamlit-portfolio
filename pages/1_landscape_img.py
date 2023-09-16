@@ -40,6 +40,17 @@ def predict_tiles(tiles, model):
 def combine_predictions(predictions):
     return predictions.mean(axis=0)
 
+import numpy as np
+
+def combine_predictions(tile_predictions):
+    # Convert list of NumPy arrays to a single NumPy array
+    all_predictions = np.array(tile_predictions)
+    
+    # Take the mean along axis 0 (assuming this is the axis you want)
+    mean_prediction = np.mean(all_predictions, axis=0)
+    
+    return mean_prediction
+
 
 def center_crop(img, new_width=None, new_height=None):        
 
@@ -70,31 +81,45 @@ def center_crop(img, new_width=None, new_height=None):
 page_header('Landscape Image Prediction')
 
 stu.V_SPACE(1)
-model = init_model()
+with st.spinner('Loading model'):
+    model = init_model()
 
 st.subheader('Landscape Image Prediction')
 
 uploaded_file = st.file_uploader("Choose an image")
+from concurrent.futures import ThreadPoolExecutor
+import numpy as np
+
+def preprocess_tile(tile):
+    # Perform any required pre-processing here.
+    # For example, resizing, normalization, etc.
+    return tile.reshape(-1, 150, 150, 3)  # Replace with your actual preprocessing steps
+
+def parallel_preprocess_tiles(tiles):
+    with ThreadPoolExecutor() as executor:
+        preprocessed_tiles = list(executor.map(preprocess_tile, tiles))
+    return preprocessed_tiles
+
 if uploaded_file is not None:
-# To read file as bytes:
     class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
 
     with st.spinner('Making prediction...'):
         bytes_data = uploaded_file.getvalue()
-        img = cv2.imdecode(np.fromstring(bytes_data, np.uint8), cv2.IMREAD_UNCHANGED)
-        # img = cv2.imread(bytes_data)
-        # new_height = 150
-        # new_width = 150
-        # crop_img = center_crop(img, new_width, new_height)
-        # # crop_img = img[0:150, 0:150] # Crop from {x, y, w, h } => {0, 0, 300, 400}
-        # prediction = model.predict(crop_img.reshape(-1,150,150,3))
-        # pred = class_names[prediction.argmax()]
-        tiles = image_to_tiles(img,overlap=1)
-        tile_predictions = predict_tiles(tiles, model)
+        img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_UNCHANGED)
+        
+        tiles = image_to_tiles(img, overlap=10)
+        
+        # Preprocess tiles in parallel
+        preprocessed_tiles = parallel_preprocess_tiles(tiles)
+        
+        # Sequentially predict for each preprocessed tile
+        tile_predictions = [model.predict(tile) for tile in preprocessed_tiles]
+        
+        # Combine predictions
         combined_prediction = combine_predictions(tile_predictions)
-        pred = class_names[combined_prediction.argmax()]
-    st.image(img, channels="BGR")
+        pred = class_names[np.argmax(combined_prediction)]
     st.info('Answer: **' + pred.upper() + '**')
+    st.image(img, channels="BGR")
 
 with st.expander(label='Learn More'):
     if st.checkbox("Training Performance",key='expand_1'):
