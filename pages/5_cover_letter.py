@@ -6,9 +6,20 @@ import os
 from pathlib import Path
 from config import BASE_DIR, CREDS
 from layout.header import page_header
+import streamlit as st
+import docx
+from docx import Document
+from docx2pdf import convert
+import os
+from io import BytesIO
+import streamlit as st
+import docx
+from docx import Document
+from weasyprint import HTML
+from io import BytesIO
 
 def generate_cover_letter(manager, industry, company, role, source, custom, skill1, skill2):
-    doc = Document("Cover_Letter.docx")
+    doc = Document("static/files/Cover_Letter.docx")
     
     manager_input = '[Hiring Manager]'
     company_input = '[Company]'
@@ -32,15 +43,23 @@ def generate_cover_letter(manager, industry, company, role, source, custom, skil
                 run.text = run.text.replace(custom_input, custom)
                 run.text = run.text.replace(skill1_input, skill1)
                 run.text = run.text.replace(skill2_input, skill2)
-    
-    file_name = f"{company}_Cover_Letter"
-    doc.save(file_name + ".docx")
-    convert(file_name + ".docx", file_name + ".pdf")
-    os.remove(file_name + ".docx")
-    
-    return file_name + ".pdf"
 
-page_header('Cover Letter Generator')
+    # Save DOCX to BytesIO object
+    docx_io = BytesIO()
+    doc.save(docx_io)
+    docx_io.seek(0)
+    docx_data = docx_io.read()
+
+    # Convert DOCX to HTML here (this is a placeholder; you'd replace this with actual conversion code)
+    html_content = "<html><body><h1>Hello World</h1></body></html>"
+    
+    # Convert HTML to PDF using WeasyPrint, stored in BytesIO object
+    pdf_io = BytesIO()
+    HTML(string=html_content).write_pdf(pdf_io)
+    pdf_io.seek(0)
+    pdf_data = pdf_io.read()
+
+    return docx_data, pdf_data
 
 st.title("Cover Letter Generator")
 
@@ -54,5 +73,20 @@ skill1 = st.text_area("Skill 1", "I have experience in each part of the tech sta
 skill2 = st.text_area("Skill 2", "I'm motivated by learning...")
 
 if st.button("Generate Cover Letter"):
-    pdf_file = generate_cover_letter(manager, industry, company, role, source, custom, skill1, skill2)
-    st.write(f"Cover letter generated: {pdf_file}")
+    docx_data, pdf_data = generate_cover_letter(manager, industry, company, role, source, custom, skill1, skill2)
+        
+    st.download_button(
+        label="Download Word",
+        data=docx_data,
+        file_name=f"{company}_Cover_Letter.docx",  # Update this line
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+        
+    st.download_button(
+        label="Download PDF",
+        data=pdf_data,
+        file_name=f"{company}_Cover_Letter.pdf",  # Update this line
+        mime="application/pdf"
+    )
+
+

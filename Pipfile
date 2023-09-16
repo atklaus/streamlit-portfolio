@@ -101,6 +101,11 @@ opencv-contrib-python-headless = "*"
 docx = "*"
 docx2pdf = "*"
 python-docx = "*"
+weasyprint = "*"
+pdfkit = "*"
+wkhtmltopdf = "*"
+pyppeteer = "*"
+pandoc = "*"
 
 [dev-packages]
 
