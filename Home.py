@@ -46,6 +46,8 @@ with col2:
     st.subheader("Hi, I'm Adam!")
     st.write("I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
 
+
+
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
 def make_module(mod_dict):

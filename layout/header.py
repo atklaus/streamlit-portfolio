@@ -126,7 +126,7 @@ def page_header(title, container_style=True):
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     if container_style:
-        set_page_container_style(padding_top=.1)
+        set_page_container_style(padding_top=.01)
     get_sidebar()
 
     def get_image_base64(image_path):

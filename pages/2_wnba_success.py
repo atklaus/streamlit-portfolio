@@ -21,7 +21,7 @@ BASE_URL = 'https://www.sports-reference.com'
 SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
 
 
-# @st.cache_resource(show_spinner='Loading model...')
+@st.cache_resource(show_spinner='Loading model...')
 def init_model():
     loaded_model = joblib.load('wnba_model/wnba_success.pkl')
 
@@ -133,15 +133,59 @@ def prep_df(df):
     return df
 
 
+import base64
+
+# Your existing imports and code here...
+
+# Function to display PDF within Streamlit app
+@st.cache_data(show_spinner='Loading pdf...')
+def displayPDF(file):
+    # Opening file from file path
+    with open(file, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+
+    # Embedding PDF in HTML
+    pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width=100% height="500" type="application/pdf">'
+
+    # Displaying File
+    st.markdown(pdf_display, unsafe_allow_html=True)
+
+# Add this function to display the detailed context of your paper
+def display_paper_context():
+    with st.expander('Learn more'):
+        # st.subheader("Explanation: Context from My Research Paper")
+        # st.write("""
+        # ### Summary of My Research Paper
+        
+        # #### Research Objective
+        # - The paper aims to predict player performance in the WNBA using various metrics. It focuses on the importance of player positions and colleges in the analysis.
+        
+        # #### Data Preprocessing
+        # - Emphasizes the importance of data preprocessing. Missing values were imputed with the median value, and the dataset was standardized. It was then partitioned into training and test subsets.
+        
+        # #### Feature Selection
+        # - Feature selection is crucial, and the paper identifies features like 'adv_ast%' as significant contributors to the model's predictive power.
+        
+        # #### Model Evaluation
+        # - Various performance metrics like Precision, Accuracy, Recall, F1-Score, and ROC-AUC are used for model evaluation. Discusses the challenges of overfitting and generalization.
+        
+        # #### Practical Insights
+        # - The model's application to specific players offers practical insights, showcasing the depth of talent in the NCAA.
+        # """)
+
+        # Display the PDF using the function
+        file_path = os.getcwd()+ '/static/files/Predicting_WNBA_Success.pdf'
+
+        displayPDF(file_path)
+
+
+# Your existing code for page_header and other parts...
 page_header('Predicting WNBA Success')
+
 
 stu.V_SPACE(1)
 
 st.subheader('Predicting WNBA Success from College Performance')
-model = init_model()
-
-col1, col2, col3, col4, col5 = st.columns([3, 3, 2, 6, 4])
-
 
 @st.cache_data(ttl=42300,show_spinner=False)
 def get_team_urls(year=2023):
@@ -174,6 +218,8 @@ def get_player_urls(team_url):
 test= get_team_urls()
 college_list = list(test.keys())
 college_list.sort()
+
+col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 
 # Pages Section
 search_dict = {}
@@ -229,6 +275,7 @@ if search:
 
         # st.write(model.feature_importances_)
 
+        model = init_model()
         predicted_values = model.predict(df)
         prob_values = model.predict_proba(df)
         pred_df = base_df[["player_name"]].copy()
@@ -245,3 +292,9 @@ if search:
         """.format(player_name=player_name, pred_prob=pred_prob)
 
         st.info(result)
+
+
+stu.V_SPACE(1)
+
+# Call the function to display the paper context
+display_paper_context()
