@@ -22,16 +22,18 @@ from streamlit.source_util import get_pages
 page_header('Game of Life',container_style=False)
 
 st.title("Conway's Game of Life")
-st.write("""
-Game of Life is a popular programming problem that can be set with unlimited initial configurations to display exciting graphics. Starting with a two-dimensional grid, the highlighted cells will change with each iteration based on the following rules:
-""")
-st.write('''
-1. Any live cell with two or three live neighbors survives. 
-2. Any dead cell with three live neighbors becomes a live cell. 
-3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
-[More details about the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
-''')
+with st.expander("See explanation"):
+    st.write("""
+    Game of Life is a popular programming problem that can be set with unlimited initial configurations to display exciting graphics. Starting with a two-dimensional grid, the highlighted cells will change with each iteration based on the following rules:
+    """)
+    st.write('''
+    1. Any live cell with two or three live neighbors survives. 
+    2. Any dead cell with three live neighbors becomes a live cell. 
+    3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
+
+    [More details about the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
+    ''')
 
 # Create columns for the inputs
 col1, col2, col3 = st.columns(3)
