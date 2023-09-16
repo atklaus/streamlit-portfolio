@@ -136,26 +136,27 @@ def page_header(title, container_style=True):
     logo_path = "static/images/ads_logo.png"
     logo_base64 = get_image_base64(logo_path)
 
-    navbar_html = f"""
-        <head>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        </head>
-        <div style="display: flex; justify-content: space-between; align-items: center; background-color: #316b62; padding: 10px; border-radius: 15px;">
-            <div style="display: flex; align-items: center;">
-                <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; margin-right: 10px;">
-                <div style="line-height: 10x; font-size: 25px; color: #ffffff;">Almost<br>Data<br>Science</div>
-            </div>
-            <div>
-                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
-                <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
-                <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
-                <a href="https://github.com/atklaus" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
-            </div>
-        </div>
-    """
 
-    # Embed the navbar_html into Streamlit
-    st.markdown(navbar_html, unsafe_allow_html=True)
+    # navbar_html = f"""
+    #     <head>
+    #         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    #     </head>
+    #     <div style="display: flex; justify-content: space-between; align-items: center; background-color: #316b62; padding: 10px; border-radius: 15px;">
+    #         <div style="display: flex; align-items: center;">
+    #             <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; margin-right: 10px;">
+    #             <div style="line-height: 10x; font-size: 25px; color: #ffffff;">Almost<br>Data<br>Science</div>
+    #         </div>
+    #         <div>
+    #             <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-home"></i></a>
+    #             <a href="#" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fas fa-info-circle"></i></a>
+    #             <a href="https://www.linkedin.com/in/adam-klaus/" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-linkedin"></i></a>
+    #             <a href="https://github.com/atklaus" target="_blank" style="margin-left: 30px; font-size: 30px; text-decoration: none; color: #ffffff;"><i class="fab fa-github"></i></a>
+    #         </div>
+    #     </div>
+    # """
+
+    # # Embed the navbar_html into Streamlit
+    # st.markdown(navbar_html, unsafe_allow_html=True)
 
     # st.markdown(navbar_html, unsafe_allow_html=True)
 
