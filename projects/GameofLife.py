@@ -205,16 +205,6 @@ class GameOfLife:
 
 
 
-GameObj = GameOfLife(6, .1)
-input6 = 'blinker'
-GameObj.b
-
-if input6 != None:
-    GameObj.set_preset(choice=input6)
-    board_size = len(GameObj.b)
-
-GameObj.b
-
 # GameObj = GameOfLife(6, .5)
 # universe = np.zeros((6, 6))
 # beacon = [[1, 1, 0, 0],

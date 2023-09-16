@@ -44,40 +44,39 @@ seed_col = st.columns(1)
 seed_options = ['None', 'Beacon', 'Blinker', 'Growth']
 # , 'Toad', 'Oscillator'
 seed_choice = seed_col[0].selectbox("Choose a popular scenario", seed_options, index=0)
-
-col1, col2, col3 = st.columns([1, 6, 1])  # Adjust the width as needed
 if st.button('Create New Board'):
-    with col2:
-        shape = None if seed_choice == 'None' else seed_choice.lower()
-        GameObj = GameOfLife(board_size, prob, shape)
-        board_size = len(GameObj.b)
-        GameObj.advance(iters)
+    shape = None if seed_choice == 'None' else seed_choice.lower()
+    GameObj = GameOfLife(board_size, prob, shape)
+    board_size = len(GameObj.b)
+    GameObj.advance(iters)
+     # Adjust the margin of the Plotly chart container
+    st.markdown('<style>#root .stPlotly > div { margin-top: 0px !important; }</style>', unsafe_allow_html=True)
+    # Create a persistent placeholder for the plot immediately after the button
+    plot = st.empty()
 
-        for k in range(iters):
-            fig = go.Figure(
-                data=[go.Heatmap(
-                    x=list(range(0, board_size)),
-                    y=list(range(0, board_size)),
-                    z=GameObj.grids[k],
-                    colorscale=[[0.0, '#D3D3D3'],
-                                [1.0, '#191970']]
-                )],
-                layout=go.Layout(
-                    xaxis=dict(range=[0, board_size], autorange=False),
-                    yaxis=dict(range=[0, board_size], autorange=False),
-                    showlegend=False
-                )
+    for k in range(iters):
+        fig = go.Figure(
+            data=[go.Heatmap(
+                x=list(range(0, board_size)),
+                y=list(range(0, board_size)),
+                z=GameObj.grids[k],
+                colorscale=[[0.0, '#D3D3D3'],
+                            [1.0, '#191970']]
+            )],
+            layout=go.Layout(
+                xaxis=dict(range=[0, board_size], autorange=False),
+                yaxis=dict(range=[0, board_size], autorange=False),
+                showlegend=False
             )
-            axis_template = dict(range=[0 - 1, board_size + 1], autorange=False,
-                                showgrid=False, zeroline=False, showticklabels=False,
-                                ticks='')
-            fig.update_layout(showlegend=False, autosize=False, xaxis=axis_template, yaxis=axis_template)
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', transition={'duration': 1000})
-            fig.update_traces(showscale=False)
-            fig.update_layout(width=800, height=800)
+        )
+        axis_template = dict(range=[0 - 1, board_size + 1], autorange=False,
+                            showgrid=False, zeroline=False, showticklabels=False,
+                            ticks='')
+        fig.update_layout(showlegend=False, autosize=False, xaxis=axis_template, yaxis=axis_template)
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', transition={'duration': 1000})
+        fig.update_traces(showscale=False)
+        fig.update_layout(width=800, height=800)
 
-            # Display the figure and clear it at each iteration to replace the image
-            plot = st.empty()
-            plot.plotly_chart(fig)
-            time.sleep(0.5)  # Adding a delay to create an animation effect
-            plot.empty()
+        # Update the plot using the persistent placeholder
+        plot.plotly_chart(fig)
+        time.sleep(0.5)  # Adding a delay to create an animation effect

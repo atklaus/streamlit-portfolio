@@ -136,6 +136,12 @@ def page_header(title, container_style=True):
     logo_path = "static/images/ads_logo.png"
     logo_base64 = get_image_base64(logo_path)
 
+    st.markdown("""
+    <style>
+        * {
+        overflow-anchor: none !important;
+        }
+    </style>""", unsafe_allow_html=True)
 
     # navbar_html = f"""
     #     <head>
