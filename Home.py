@@ -143,25 +143,24 @@ for row in range(rows_count):
 
 stu.V_SPACE(4)
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
-
-# # Define columns with appropriate widths
-col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 8, 4])
+# Adjust columns for flexibility
+col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 3])
 
 # Pages Section
 with col1:
-    st.markdown("**Pages**")
-    st.markdown('[Experience](%s)' % '/', unsafe_allow_html=True)
-    st.markdown('[Interests](%s)' % '/', unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>Pages</h4>", unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="/">Experience</a></p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="/">Interests</a></p>', unsafe_allow_html=True)
 
 # Contact Section
 with col2:
-    st.markdown("**Contact**")
-    st.markdown('[atk14219@gmail.com](%s)' % '/', unsafe_allow_html=True)
-    st.markdown('[Resume](%s)' % 'static/resume.pdf', unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>Contact</h4>", unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="/">atk14219@gmail.com</a></p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="static/resume.pdf">Resume</a></p>', unsafe_allow_html=True)
 
 # About Section
 with col3:
-    st.markdown("**About this Page**")
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>About</h4>", unsafe_allow_html=True)
     st.caption('Website coded in Python using Streamlit and hosted through DigitalOcean')
 
 # Empty Space
@@ -171,5 +170,4 @@ with col4:
 # Copyright Section
 with col5:
     stu.V_SPACE(1)
-
-    st.markdown('© 2023 Copyright, All Right Reserved. almostdatascience.com', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; font-size: small;">© 2023 Copyright, All Rights Reserved. almostdatascience.com</p>', unsafe_allow_html=True)
