@@ -148,6 +148,28 @@ st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:
 # Adjust columns for flexibility
 col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 3])
 
+
+file_path = os.getcwd()+ '/static/files/Adam_Klaus_Resume.pdf'
+pdf_path = "Adam_Klaus_Resume.pdf"
+
+with open(file_path, "rb") as f:
+    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+
+import base64
+
+def get_pdf_base64(file_path):
+    with open(file_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+    return base64_pdf
+
+# Your existing Streamlit code here...
+
+pdf_path = "static/files/Adam_Klaus_Resume.pdf"
+pdf_base64 = get_pdf_base64(pdf_path)
+
+
+
+
 # Pages Section
 with col1:
     st.markdown("<h4 style='text-align: center; color: #316b62;'>Pages</h4>", unsafe_allow_html=True)
@@ -157,8 +179,12 @@ with col1:
 # Contact Section
 with col2:
     st.markdown("<h4 style='text-align: center; color: #316b62;'>Contact</h4>", unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="/">atk14219@gmail.com</a></p>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="static/resume.pdf">Resume</a></p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="mailto:atk14219@gmail.com" target="_blank">Email</a></p>', unsafe_allow_html=True)
+
+    st.markdown(
+        f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Adam_Klaus_Resume.pdf" target="_blank">Resume</a></p>',
+        unsafe_allow_html=True
+    )
 
 # About Section
 with col3:
@@ -173,3 +199,5 @@ with col4:
 with col5:
     stu.V_SPACE(1)
     st.markdown('<p style="text-align: center; font-size: small;">© 2023 Copyright, All Rights Reserved. almostdatascience.com</p>', unsafe_allow_html=True)
+
+
