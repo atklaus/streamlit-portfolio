@@ -53,7 +53,6 @@ if st.button('Create New Board'):
     st.markdown('<style>#root .stPlotly > div { margin-top: 0px !important; }</style>', unsafe_allow_html=True)
     # Create a persistent placeholder for the plot immediately after the button
     plot = st.empty()
-
     for k in range(iters):
         fig = go.Figure(
             data=[go.Heatmap(
@@ -64,19 +63,20 @@ if st.button('Create New Board'):
                             [1.0, '#191970']]
             )],
             layout=go.Layout(
-                xaxis=dict(range=[0, board_size], autorange=False),
-                yaxis=dict(range=[0, board_size], autorange=False),
-                showlegend=False
+                xaxis=dict(range=[0, board_size], autorange=False, showgrid=False, zeroline=False),
+                yaxis=dict(range=[0, board_size], autorange=False, showgrid=False, zeroline=False),
+                showlegend=False,
+                margin=dict(t=10, b=10, l=10, r=10),  # Reducing margins
+                font=dict(size=10)  # Adjust font size if needed
             )
         )
         axis_template = dict(range=[0 - 1, board_size + 1], autorange=False,
                             showgrid=False, zeroline=False, showticklabels=False,
                             ticks='')
-        fig.update_layout(showlegend=False, autosize=False, xaxis=axis_template, yaxis=axis_template)
+        fig.update_layout(showlegend=False, autosize=True, xaxis=axis_template, yaxis=axis_template)
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', transition={'duration': 1000})
         fig.update_traces(showscale=False)
-        fig.update_layout(width=800, height=800)
-
+        
         # Update the plot using the persistent placeholder
-        plot.plotly_chart(fig)
+        plot.plotly_chart(fig, use_container_width=True)
         time.sleep(0.5)  # Adding a delay to create an animation effect
