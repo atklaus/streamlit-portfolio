@@ -143,6 +143,31 @@ def page_header(title, container_style=True):
         }
     </style>""", unsafe_allow_html=True)
 
+    # URLs for GitHub and LinkedIn logos
+    github_logo_url = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+    linkedin_logo_url = "https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg"
+
+    # Replace the following URLs with your actual GitHub and LinkedIn URLs
+    github_profile_url = "https://github.com/atklaus"
+    linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
+    navbar_html = f"""
+    <div style="background-color: #316b62; padding: 10px; border-radius: 10px; display: flex; justify-content: space-around; flex-wrap: wrap;">
+        <a href="https://www.almostdatascience.com/"><i class="fas fa-home" style="font-size:24px; color: white;"></i></a>
+        <a href="https://www.almostdatascience.com/"><i class="fas fa-star" style="font-size:24px; color: white;"></i></a>
+        <a href="https://www.almostdatascience.com/"><i class="fas fa-info-circle" style="font-size:24px; color: white;"></i></a>
+        <a href="{github_profile_url}" target="_blank"><img src="{github_logo_url}" alt="GitHub" style="height: 24px; filter: invert(1);"></a>
+        <a href="{linkedin_profile_url}" target="_blank"><img src="{linkedin_logo_url}" alt="LinkedIn" style="height: 24px; filter: invert(1) hue-rotate(180deg);"></a>
+    </div>
+    """
+
+    # Import Font Awesome
+    st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">', unsafe_allow_html=True)
+
+    # Display the navbar
+    st.markdown(navbar_html, unsafe_allow_html=True)
+
+
+
     # navbar_html = f"""
     #     <head>
     #         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
