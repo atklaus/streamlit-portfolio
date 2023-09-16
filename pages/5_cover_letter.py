@@ -18,6 +18,11 @@ from docx import Document
 from weasyprint import HTML
 from io import BytesIO
 
+#REPLACE INFO
+
+page_header('Cover Letter Generator')
+
+
 def generate_cover_letter(manager, industry, company, role, source, custom, skill1, skill2):
     doc = Document("static/files/Cover_Letter.docx")
     
