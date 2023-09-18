@@ -47,17 +47,17 @@ def store_cookies():
     while True:
         if 'cookies' not in st.session_state:
             st.session_state['cookies'] = cookie_manager.get_all()
-        else:
-            if 'lzs_userid' not in st.session_state.cookies:
-                if 'lzs_userid' not in st.session_state:
-                    st.session_state["lzs_userid"] = str(uuid.uuid4())
-                cookie_manager.set('lzs_userid', st.session_state["lzs_userid"], key="0", expires_at=datetime(year=2023, month=8, day=2))
-            if "lzs_pwd" not in st.session_state.cookies:
-                if "lzs_pwd" not in st.session_state:
-                    random_pwd = ''.join(random.choices(string.ascii_letters + string.digits,k=8))
-                    st.session_state['lzs_pwd'] = bcrypt.hashpw(random_pwd.encode(),bcrypt.gensalt(rounds=10)).decode('utf-8')
-                cookie_manager.set('lzs_pwd', st.session_state.get('lzs_pwd', ''), key="1", expires_at=datetime(year=2023, month=8, day=2))
-            break
+        # else:
+        #     if 'lzs_userid' not in st.session_state.cookies:
+        #         if 'lzs_userid' not in st.session_state:
+        #             st.session_state["lzs_userid"] = str(uuid.uuid4())
+        #         cookie_manager.set('lzs_userid', st.session_state["lzs_userid"], key="0", expires_at=datetime(year=2023, month=8, day=2))
+        #     if "lzs_pwd" not in st.session_state.cookies:
+        #         if "lzs_pwd" not in st.session_state:
+        #             random_pwd = ''.join(random.choices(string.ascii_letters + string.digits,k=8))
+        #             st.session_state['lzs_pwd'] = bcrypt.hashpw(random_pwd.encode(),bcrypt.gensalt(rounds=10)).decode('utf-8')
+        #         cookie_manager.set('lzs_pwd', st.session_state.get('lzs_pwd', ''), key="1", expires_at=datetime(year=2023, month=8, day=2))
+        #     break
 
 class CloudFunctions:
     # Snowflake Connection Config

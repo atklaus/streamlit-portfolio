@@ -154,12 +154,26 @@ def displayPDF(file):
 def display_paper_context():
     with st.expander('Learn more'):
 
-        pdf_path = "static/files/Predicting_WNBA_Success.pdf"
-        pdf_base64 = utils.get_pdf_base64(pdf_path)
+        # pdf_path = "static/files/Predicting_WNBA_Success.pdf"
+        # pdf_base64 = utils.get_pdf_base64(pdf_path)
 
-        st.markdown(
-            f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Predicting_WNBA_Success.pdf" target="_blank">Download Paper</a></p>',
-            unsafe_allow_html=True
+        # st.markdown(
+        #     f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Predicting_WNBA_Success.pdf" target="_blank">Download Paper</a></p>',
+        #     unsafe_allow_html=True
+        # )
+
+
+        pdf_path = "static/files/Predicting_WNBA_Success.pdf"
+
+        with open(pdf_path, "rb") as f:
+            pdf_bytes = f.read()
+
+        st.download_button(
+            label="Download Paper",
+            data=pdf_bytes,
+            file_name="Predicting_WNBA_Success.pdf",
+            mime="application/pdf",
+            key='submit_wnba_download'
         )
 
 

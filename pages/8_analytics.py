@@ -35,6 +35,7 @@ bucket_name = 'portfolio-website'
 prefix = 'analytics/activity/'  # Update this based on your folder structure
 response = cf.client.list_objects_v2(Bucket=bucket_name, Prefix='analytics/activity/')
 
+st.cache_data(ttl=43200)
 def fetch_data(client, bucket_name, prefix):
     response = client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
     df = pd.DataFrame()
@@ -59,7 +60,22 @@ def process_dataframe(df):
     for key in all_keys:
         df[key] = df['parsed_result'].apply(lambda x: x.get(key, None))
     df.drop(columns=['parsed_result'], inplace=True)
-    
+
+    submit_columns = [col for col in df.columns if col.startswith("submit")]
+
+    def get_submit_type(row):
+        for col in submit_columns:
+            if row[col] == True:
+                # Remove the "SUBMIT_" prefix and return
+                return col.replace("submit_", "")
+        return None
+
+
+    df['submit_type'] = df.apply(get_submit_type, axis=1)
+    df['submit_type'].fillna('None',inplace=True)
+
+    df = df[df['hostname'] != c.LOCAL_DEV]
+
     return df
 
 def generate_metrics(df):
@@ -83,33 +99,10 @@ def generate_metrics(df):
     
     return metrics
 
-
-df = pd.DataFrame()
-
-# Check if 'Contents' exists in the response
-if 'Contents' in response:
-    # Loop through each file
-    for item in response['Contents']:
-        file_name = item['Key']
-        compressed_stream = cf.client.get_object(Bucket=bucket_name, Key=file_name)['Body'].read()
-
-        # Decompress the gzip stream
-        decompressed_stream = gzip.decompress(compressed_stream)
-        
-        # Load JSON data
-        json_data = json.loads(decompressed_stream.decode('utf-8'))
-
-        # Convert the JSON to DataFrame and concatenate
-        temp_df = pd.DataFrame([json_data])
-        df = pd.concat([df, temp_df], ignore_index=True)
-else:
-    print("No objects found in the specified bucket and prefix.")
-
-
 stu.V_SPACE(1)
 
 if st.button('Refresh Data'):
-    st.cache.clear()
+    st.cache_data.clear()
 
 # Parse the JSON strings
 # if st.button('Load Report',key='submit_analytics'):
@@ -125,6 +118,8 @@ with st.spinner('Loading report...'):
     df['visit_date'] = pd.to_datetime(df['created_at'],utc=True)
     df['visit_date'] = df['visit_date'].dt.tz_convert('America/Chicago')
     df['dau_date']=df['visit_date'].dt.date
+
+    # st.write(df)
 
     metric_df = df.copy()
     # metric_df[metric_df['VISIT_DATE'].dt.dayofweek < 5]
