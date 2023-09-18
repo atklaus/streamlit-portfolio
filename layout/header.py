@@ -65,34 +65,6 @@ def get_sidebar():
                 if st.button(module_values['button']):
                     switch_page(module_values['name'])
 
-        # # Navigation bar with radio buttons
-        # nav_selection = st.sidebar.radio(
-        #     "Navigation",
-        #     ("Home", "Interests", "Conway's Game of Life", "About")
-        # )
-
-        # # Content for the Home section
-        # if nav_selection == "Home":
-        #     st.title("Welcome to My Website!")
-        #     st.write("Here you'll find a collection of my interactive projects and interests.")
-
-        # # Content for the Interests section
-        # elif nav_selection == "Interests":
-        #     st.title("My Interests")
-        #     st.write("Here's a collection of my favorite topics, hobbies, and pastimes.")
-
-        # # Content for Conway's Game of Life section
-        # elif nav_selection == "Conway's Game of Life":
-        #     st.title("Conway's Game of Life")
-        #     st.write("Explore the fascinating world of cellular automata with Conway's Game of Life.")
-
-        # # Content for the About section
-        # elif nav_selection == "About":
-        #     st.title("About Me")
-        #     st.write("Learn more about my background, experience, and interests.")
-
-        # You can add additional code and logic for each section, including Streamlit widgets, images, and more.
-
 
 def navigate_to_link(link):
     # Your condition to decide when to navigate

@@ -21,7 +21,7 @@ BASE_URL = 'https://www.sports-reference.com'
 SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
 
 
-@st.cache_resource(show_spinner='Loading model...')
+@st.cache_resource(show_spinner='Loading model...',ttl=43200)
 def init_model():
     loaded_model = joblib.load('wnba_model/wnba_success.pkl')
 
@@ -153,25 +153,15 @@ def displayPDF(file):
 # Add this function to display the detailed context of your paper
 def display_paper_context():
     with st.expander('Learn more'):
-        # st.subheader("Explanation: Context from My Research Paper")
-        # st.write("""
-        # ### Summary of My Research Paper
-        
-        # #### Research Objective
-        # - The paper aims to predict player performance in the WNBA using various metrics. It focuses on the importance of player positions and colleges in the analysis.
-        
-        # #### Data Preprocessing
-        # - Emphasizes the importance of data preprocessing. Missing values were imputed with the median value, and the dataset was standardized. It was then partitioned into training and test subsets.
-        
-        # #### Feature Selection
-        # - Feature selection is crucial, and the paper identifies features like 'adv_ast%' as significant contributors to the model's predictive power.
-        
-        # #### Model Evaluation
-        # - Various performance metrics like Precision, Accuracy, Recall, F1-Score, and ROC-AUC are used for model evaluation. Discusses the challenges of overfitting and generalization.
-        
-        # #### Practical Insights
-        # - The model's application to specific players offers practical insights, showcasing the depth of talent in the NCAA.
-        # """)
+
+        pdf_path = "static/files/Predicting_WNBA_Success.pdf"
+        pdf_base64 = utils.get_pdf_base64(pdf_path)
+
+        st.markdown(
+            f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Predicting_WNBA_Success.pdf" target="_blank">Download Paper</a></p>',
+            unsafe_allow_html=True
+        )
+
 
         # Display the PDF using the function
         file_path = os.getcwd()+ '/static/files/Predicting_WNBA_Success.pdf'
@@ -221,28 +211,29 @@ college_list.sort()
 
 col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 
-# Pages Section
-search_dict = {}
-with col1:
-    current_year = datetime.datetime.now().year
-    past_20_years = list(range(current_year - 19, current_year + 1))
-    past_20_years.sort(reverse=True)
+with st.spinner('Loading players...'):
+    # Pages Section
+    search_dict = {}
+    with col1:
+        current_year = datetime.datetime.now().year
+        past_20_years = list(range(current_year - 19, current_year + 1))
+        past_20_years.sort(reverse=True)
 
-    search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years)
+        search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years)
 
-with col2:
-    search_dict['college'] = st.selectbox(label='Select College',options=college_list)
+    with col2:
+        search_dict['college'] = st.selectbox(label='Select College',options=college_list)
 
-with col3:
-    test= get_team_urls(search_dict['season'])
-    player_dict = get_player_urls(test[search_dict['college']])
-    player_list = list(player_dict)
-    player_list.sort()
-    search_dict['player'] = st.selectbox(label='Select Player',options=player_list)
-    search_dict['player_url'] = player_dict[search_dict['player']]
+    with col3:
+        test= get_team_urls(search_dict['season'])
+        player_dict = get_player_urls(test[search_dict['college']])
+        player_list = list(player_dict)
+        player_list.sort()
+        search_dict['player'] = st.selectbox(label='Select Player',options=player_list)
+        search_dict['player_url'] = player_dict[search_dict['player']]
 
 
-search = st.button('Predict Success', key='submit_wnba')
+    search = st.button('Predict Success', key='submit_wnba')
 
 if search:
     with st.spinner("Running model..."):
@@ -295,6 +286,8 @@ if search:
 
 
 stu.V_SPACE(1)
+
+
 
 # Call the function to display the paper context
 display_paper_context()

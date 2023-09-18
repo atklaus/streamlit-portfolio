@@ -81,8 +81,6 @@ def center_crop(img, new_width=None, new_height=None):
 page_header('Landscape Image Prediction')
 
 stu.V_SPACE(1)
-with st.spinner('Loading model'):
-    model = init_model()
 
 st.subheader('Landscape Image Prediction')
 
@@ -102,6 +100,7 @@ def parallel_preprocess_tiles(tiles):
 
 if uploaded_file is not None:
     class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
+    model = init_model()
 
     with st.spinner('Making prediction...'):
         bytes_data = uploaded_file.getvalue()

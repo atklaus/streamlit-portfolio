@@ -2,6 +2,8 @@ import random
 import re
 from bs4 import BeautifulSoup
 import json
+import base64
+
 
 user_agents = [
     "Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; Touch; MASMJS; rv:11.0) like Gecko",
@@ -125,3 +127,7 @@ def read_json(filepath):
         read_dict = json.load(f)
     return read_dict
 
+def get_pdf_base64(file_path):
+    with open(file_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+    return base64_pdf

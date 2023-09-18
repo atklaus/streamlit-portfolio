@@ -31,20 +31,33 @@ logo_base64 = stu.get_image_base64(logo_path)
 
 # stu.V_SPACE(1)
 
-col1, col2 = st.columns([1, 7])
-
 header_html = f"""
 <div style="display: flex; align-items: center;">
-    <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 120px; width: 100%; max-width: 120px; margin-right: 10px;">
+    <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 120px; width: auto; max-width: 120px; margin-right: 10px;">
+    <h2 style="margin: 0;">Hi, I'm Adam!</h2>
 </div>
+<br>
+<p>I'm a data professional and below is a collection of my interactive projects. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!</p>
 """
 
-with col1:
-    st.markdown(header_html, unsafe_allow_html=True)
+st.markdown(header_html, unsafe_allow_html=True)
 
-with col2:
-    st.subheader("Hi, I'm Adam!")
-    st.write("I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
+
+# col1, col2 = st.columns([1, 10])
+
+# header_html = f"""
+# <div style="display: flex; align-items: center;">
+#     <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; width: 100%; max-width: 80px; margin-right: 10px;">
+# </div>
+# """
+
+# with col1:
+#     st.markdown(header_html, unsafe_allow_html=True)
+
+# with col2:
+#     st.subheader("Hi, I'm Adam!")
+
+# st.write("I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
 
 
 
@@ -78,17 +91,23 @@ for row in range(rows_count):
                 stu.V_SPACE(1)
     stu.V_SPACE(1)
 
+# font_awesome_link = """
+# <head>
+# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+# </head>
+# """
+# st.markdown(font_awesome_link, unsafe_allow_html=True)
 
-# # Example icons (replace with your specific icons)
+# # Example icons (replace with your specific FontAwesome icon classes)
 # icons = [
-#     "https://image.flaticon.com/icons/png/512/147/147146.png",
-#     "https://image.flaticon.com/icons/png/512/147/147146.png",
-#     "https://image.flaticon.com/icons/png/512/147/147148.png",
-#     "https://image.flaticon.com/icons/png/512/147/147141.png",
-#     "https://image.flaticon.com/icons/png/512/147/147140.png",
+#     "fas fa-home",
+#     "fas fa-user",
+#     "fas fa-cogs",
+#     "fas fa-chart-line",
+#     "fas fa-database",
 # ]
 
-# # Example cards data
+# # The rest is the same
 # cards_data = [
 #     {"title": "Project 1", "description": "Description of Project 1", "link": "#"},
 #     {"title": "Project 2", "description": "Description of Project 2", "link": "#"},
@@ -121,6 +140,7 @@ for row in range(rows_count):
 #     display: block;
 # }
 # .card h2 {
+#     font-size: 18px;  /* Smaller project name */
 #     margin: 10px 0;
 # }
 # </style>
@@ -128,21 +148,25 @@ for row in range(rows_count):
 
 # st.markdown(card_style, unsafe_allow_html=True)
 
-# # Create a row of cards
-# cols = st.columns(5)
-# for i, card in enumerate(cards_data):
-#     with cols[i]:
-#         icon_image = icons[i]
-#         card_content = (
-#             f'<div class="card">'
-#             f'<a href="{card["link"]}" target="_blank">'
-#             f'<img src="{icon_image}" width="100">'
-#             f'<h2>{card["title"]}</h2>'
-#             f"<p>{card['description']}</p>"
-#             f"</a></div>"
-#         )
-#         st.markdown(card_content, unsafe_allow_html=True)
+# chunk_size = 4
+# for i in range(0, len(cards_data), chunk_size):
+#     chunked_cards = cards_data[i:i + chunk_size]
+#     chunked_icons = icons[i:i + chunk_size]
 
+#     cols = st.columns(len(chunked_cards))
+#     for j, card in enumerate(chunked_cards):
+#         with cols[j]:
+#             icon_class = chunked_icons[j]
+#             card_content = (
+#                 f'<div class="card">'
+#                 f'<a href="{card["link"]}" target="_blank">'
+#                 f'<i class="{icon_class}" style="font-size:48px; color: white;"></i>'
+#                 f'<h2>{card["title"]}</h2>'
+#                 f"<p>{card['description']}</p>"
+#                 f"</a></div>"
+#             )
+#             st.markdown(card_content, unsafe_allow_html=True)
+        
 stu.V_SPACE(4)
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 # Adjust columns for flexibility
