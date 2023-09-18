@@ -167,7 +167,7 @@ for row in range(rows_count):
 #             )
 #             st.markdown(card_content, unsafe_allow_html=True)
         
-stu.V_SPACE(4)
+# stu.V_SPACE(4)
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 # Adjust columns for flexibility
 col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 3])

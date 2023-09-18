@@ -9,6 +9,39 @@ import base64
 BACKGROUND_COLOR = 'white'
 COLOR = 'black'
 
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+
+
 def set_page_container_style(
         max_width: int = 1100, max_width_100_percent: bool = False,
         padding_top: int = 1, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = .1,
@@ -89,13 +122,15 @@ def page_header(title, container_style=True):
     # Remove defaults from sidebar
     st.markdown(no_sidebar_style, unsafe_allow_html=True)
 
-    hide_streamlit_style = """
-                <style>
-                #MainMenu {visibility: hidden;}
-                footer {visibility: hidden;}
-                </style>
-                """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+
+    # hide_streamlit_style = """
+    #             <style>
+    #             #MainMenu {visibility: hidden;}
+    #             footer {visibility: hidden;}
+    #             </style>
+    #             """
+    # st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     if container_style:
         set_page_container_style(padding_top=.01)
