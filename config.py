@@ -3,14 +3,15 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import socket
+import streamlit as st
 
 dotenv_path = Path('/Users/adamklaus/.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 CREDS = os.environ
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
-
+LOCAL_DEV = 'C02G254GML7H'
 
 MOD_ACCESS = {
     'home': {

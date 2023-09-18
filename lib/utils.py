@@ -3,6 +3,9 @@ import re
 from bs4 import BeautifulSoup
 import json
 import base64
+import json
+import boto3
+import streamlit as st
 
 
 user_agents = [
@@ -131,3 +134,17 @@ def get_pdf_base64(file_path):
     with open(file_path, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
     return base64_pdf
+
+def add_dict_to_session(dict_add, vals='all'):
+
+    if vals == 'all':
+        keys_list = dict_add.keys()
+    else:
+        keys_list = vals
+
+    for key in keys_list:
+        try:
+            st.session_state[key] = dict_add[key]
+        except:
+            print('Error: Key not in cookies')
+

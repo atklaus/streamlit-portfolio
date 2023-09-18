@@ -19,8 +19,12 @@ import math
 import requests
 from io import BytesIO
 import base64
+from lib.cloud_functions import CloudFunctions as CF
+import socket
 
-page_header('Almost Data Science')
+page_header('Almost Data Science',page_name=os.path.basename(__file__))
+# cf = CF(bucket='analytics')
+# cf.store_session(prefix='activity/{}.json.gz')
 
 # Add the HTML code to the Streamlit app
 # st.markdown(navbar_html, unsafe_allow_html=True)
@@ -41,25 +45,6 @@ header_html = f"""
 """
 
 st.markdown(header_html, unsafe_allow_html=True)
-
-
-# col1, col2 = st.columns([1, 10])
-
-# header_html = f"""
-# <div style="display: flex; align-items: center;">
-#     <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 80px; width: 100%; max-width: 80px; margin-right: 10px;">
-# </div>
-# """
-
-# with col1:
-#     st.markdown(header_html, unsafe_allow_html=True)
-
-# with col2:
-#     st.subheader("Hi, I'm Adam!")
-
-# st.write("I'm a data professional and below is a collection of my interactive modules. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!")
-
-
 
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
@@ -90,6 +75,71 @@ for row in range(rows_count):
             with cols[col_idx]:
                 stu.V_SPACE(1)
     st.write('')
+
+
+
+# # Display data (optional)
+# data = load_data()
+# st.write(f"Total Visits: {data['visit_count']}")
+# st.write(f"Unique Sessions: {len(data['session_ids'])}")
+
+# stu.V_SPACE(4)
+st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
+# Adjust columns for flexibility
+col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 3])
+
+
+file_path = os.getcwd()+ '/static/files/Adam_Klaus_Resume.pdf'
+pdf_path = "Adam_Klaus_Resume.pdf"
+
+with open(file_path, "rb") as f:
+    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+
+import base64
+
+def get_pdf_base64(file_path):
+    with open(file_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+    return base64_pdf
+
+# Your existing Streamlit code here...
+
+pdf_path = "static/files/Adam_Klaus_Resume.pdf"
+pdf_base64 = get_pdf_base64(pdf_path)
+
+# Pages Section
+with col1:
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>Pages</h4>", unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="/">Experience</a></p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="/">Interests</a></p>', unsafe_allow_html=True)
+
+# Contact Section
+with col2:
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>Contact</h4>", unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;"><a href="mailto:atk14219@gmail.com" target="_blank">Email</a></p>', unsafe_allow_html=True)
+
+    st.markdown(
+        f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Adam_Klaus_Resume.pdf" target="_blank">Resume</a></p>',
+        unsafe_allow_html=True
+    )
+
+# About Section
+with col3:
+    st.markdown("<h4 style='text-align: center; color: #316b62;'>About</h4>", unsafe_allow_html=True)
+    st.caption('Website coded in Python using Streamlit and hosted through DigitalOcean')
+
+# Empty Space
+with col4:
+    pass
+
+# Copyright Section
+with col5:
+    stu.V_SPACE(1)
+    st.markdown('<p style="text-align: center; font-size: small;">© 2023 Copyright, All Rights Reserved. almostdatascience.com</p>', unsafe_allow_html=True)
+
+
+
+
 
 # font_awesome_link = """
 # <head>
@@ -167,61 +217,3 @@ for row in range(rows_count):
 #             )
 #             st.markdown(card_content, unsafe_allow_html=True)
         
-# stu.V_SPACE(4)
-st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
-# Adjust columns for flexibility
-col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 3])
-
-
-file_path = os.getcwd()+ '/static/files/Adam_Klaus_Resume.pdf'
-pdf_path = "Adam_Klaus_Resume.pdf"
-
-with open(file_path, "rb") as f:
-    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-
-import base64
-
-def get_pdf_base64(file_path):
-    with open(file_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-    return base64_pdf
-
-# Your existing Streamlit code here...
-
-pdf_path = "static/files/Adam_Klaus_Resume.pdf"
-pdf_base64 = get_pdf_base64(pdf_path)
-
-
-
-
-# Pages Section
-with col1:
-    st.markdown("<h4 style='text-align: center; color: #316b62;'>Pages</h4>", unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="/">Experience</a></p>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="/">Interests</a></p>', unsafe_allow_html=True)
-
-# Contact Section
-with col2:
-    st.markdown("<h4 style='text-align: center; color: #316b62;'>Contact</h4>", unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="mailto:atk14219@gmail.com" target="_blank">Email</a></p>', unsafe_allow_html=True)
-
-    st.markdown(
-        f'<p style="text-align: center;"><a href="data:application/pdf;base64,{pdf_base64}" download="Adam_Klaus_Resume.pdf" target="_blank">Resume</a></p>',
-        unsafe_allow_html=True
-    )
-
-# About Section
-with col3:
-    st.markdown("<h4 style='text-align: center; color: #316b62;'>About</h4>", unsafe_allow_html=True)
-    st.caption('Website coded in Python using Streamlit and hosted through DigitalOcean')
-
-# Empty Space
-with col4:
-    pass
-
-# Copyright Section
-with col5:
-    stu.V_SPACE(1)
-    st.markdown('<p style="text-align: center; font-size: small;">© 2023 Copyright, All Rights Reserved. almostdatascience.com</p>', unsafe_allow_html=True)
-
-

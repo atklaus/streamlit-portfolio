@@ -48,5 +48,5 @@ def app():
             hpObj = HappyPrime(user_input)
             st.write(hpObj.result)
 
-page_header('Happy Prime Calculator')
+page_header('Happy Prime Calculator',page_name=os.path.basename(__file__))
 app()

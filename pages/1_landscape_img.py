@@ -78,13 +78,13 @@ def center_crop(img, new_width=None, new_height=None):
 
 # Usage in your Streamlit code
 
-page_header('Landscape Image Prediction')
+page_header('Landscape Image Prediction',page_name=os.path.basename(__file__))
 
 stu.V_SPACE(1)
 
 st.subheader('Landscape Image Prediction')
 
-uploaded_file = st.file_uploader("Choose an image")
+uploaded_file = st.file_uploader("Choose an image",key='submit_landscape')
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
@@ -120,9 +120,10 @@ if uploaded_file is not None:
     st.info('Answer: **' + pred.upper() + '**')
     st.image(img, channels="BGR")
 
-with st.expander(label='Learn More'):
-    if st.checkbox("Training Performance",key='expand_1'):
-        pass
+# with st.expander(label='Learn More'):
+#     pass
+    # if st.checkbox("Training Performance",key='expand_1'):
+    #     pass
         # st.write("Hello world")
     # if st.checkbox("Fake expand2",key='expand_2'):
     #     st.markdown("1. Double click into a cell to edit")

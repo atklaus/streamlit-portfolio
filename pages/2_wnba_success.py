@@ -170,7 +170,7 @@ def display_paper_context():
 
 
 # Your existing code for page_header and other parts...
-page_header('Predicting WNBA Success')
+page_header('Predicting WNBA Success',page_name=os.path.basename(__file__))
 
 
 stu.V_SPACE(1)
@@ -219,17 +219,17 @@ with st.spinner('Loading players...'):
         past_20_years = list(range(current_year - 19, current_year + 1))
         past_20_years.sort(reverse=True)
 
-        search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years)
+        search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years,key='wnba_season')
 
     with col2:
-        search_dict['college'] = st.selectbox(label='Select College',options=college_list)
+        search_dict['college'] = st.selectbox(label='Select College',options=college_list,key='wnba_college')
 
     with col3:
         test= get_team_urls(search_dict['season'])
         player_dict = get_player_urls(test[search_dict['college']])
         player_list = list(player_dict)
         player_list.sort()
-        search_dict['player'] = st.selectbox(label='Select Player',options=player_list)
+        search_dict['player'] = st.selectbox(label='Select Player',options=player_list,key='wnba_player')
         search_dict['player_url'] = player_dict[search_dict['player']]
 
 

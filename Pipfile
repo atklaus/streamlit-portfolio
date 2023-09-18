@@ -106,6 +106,9 @@ pdfkit = "*"
 wkhtmltopdf = "*"
 pyppeteer = "*"
 pandoc = "*"
+s3cmd = "*"
+extra-streamlit-components = "*"
+bcrypt = "*"
 
 [dev-packages]
 

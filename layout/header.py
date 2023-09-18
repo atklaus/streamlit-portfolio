@@ -4,42 +4,50 @@ from streamlit.runtime.scriptrunner import RerunData, RerunException
 from streamlit.source_util import get_pages
 import config as c
 import base64
+from lib.cloud_functions import CloudFunctions as CF
+import extra_streamlit_components as stx
+import uuid
+import random
+import string
+import bcrypt
 
+
+cf = CF(bucket='analytics')
 
 BACKGROUND_COLOR = 'white'
 COLOR = 'black'
 
-hide_streamlit_style = """
-                <style>
-                div[data-testid="stToolbar"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                div[data-testid="stDecoration"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                div[data-testid="stStatusWidget"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                #MainMenu {
-                visibility: hidden;
-                height: 0%;
-                }
-                header {
-                visibility: hidden;
-                height: 0%;
-                }
-                footer {
-                visibility: hidden;
-                height: 0%;
-                }
-                </style>
-                """
+# hide_streamlit_style = """
+#                 <style>
+#                 div[data-testid="stToolbar"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
+#                 div[data-testid="stDecoration"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
+#                 div[data-testid="stStatusWidget"] {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 position: fixed;
+#                 }
+#                 #MainMenu {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
+#                 header {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
+#                 footer {
+#                 visibility: hidden;
+#                 height: 0%;
+#                 }
+#                 </style>
+#                 """
 
 
 def set_page_container_style(
@@ -105,9 +113,7 @@ def navigate_to_link(link):
         st.write(f'<meta http-equiv="refresh" content="0; URL={link_url}" />', unsafe_allow_html=True)
 
 
-
-def page_header(title, container_style=True):
-    # st.set_page_config(layout="wide", page_title=title, page_icon="static/images/ads_logo.png")
+def page_header(title, page_name, container_style=True):
     st.set_page_config(
         page_title=title
         , page_icon="static/images/favicon.ico"
@@ -119,18 +125,24 @@ def page_header(title, container_style=True):
             div[data-testid="stSidebarNav"] {display: none;}
         </style>
     """
+    cf.store_session(prefix='activity/{}.json.gz',page_name=page_name)
+
     # Remove defaults from sidebar
     st.markdown(no_sidebar_style, unsafe_allow_html=True)
 
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-    # hide_streamlit_style = """
-    #             <style>
-    #             #MainMenu {visibility: hidden;}
-    #             footer {visibility: hidden;}
-    #             </style>
-    #             """
-    # st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+    hide_streamlit_style = """
+                <style>
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     if container_style:
         set_page_container_style(padding_top=.01)
@@ -149,10 +161,6 @@ def page_header(title, container_style=True):
         overflow-anchor: none !important;
         }
     </style>""", unsafe_allow_html=True)
-
-    # URLs for GitHub and LinkedIn logos
-    github_logo_url = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-    linkedin_logo_url = "https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg"
 
     # Replace the following URLs with your actual GitHub and LinkedIn URLs
     github_profile_url = "https://github.com/atklaus"

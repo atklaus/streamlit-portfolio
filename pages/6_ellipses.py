@@ -31,27 +31,27 @@ def app():
     st.markdown("**<u>Enter inputs for Ellipse 1</u>**", unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     with col1:
-        focal_pt_1 = st.text_input("Focal Point 1", "1,1", key='f1')
+        focal_pt_1 = st.text_input("Focal Point 1", "1,1", key='elip_f1')
     with col2:
-        focal_pt_2 = st.text_input("Focal Point 2", "1,1", key='f2')
+        focal_pt_2 = st.text_input("Focal Point 2", "1,1", key='elip_f2')
     with col3:
-        width_1 = st.text_input("Ellipse Width", "2", key='w1')
+        width_1 = st.text_input("Ellipse Width", "2", key='elip_w1')
 
     st.markdown("**<u>Enter inputs for Ellipse 2</u>**", unsafe_allow_html=True)
     col4, col5, col6 = st.columns(3)
     with col4:
-        focal_pt_3 = st.text_input("Focal Point 1", "1,1", key='f3')
+        focal_pt_3 = st.text_input("Focal Point 1", "1,1", key='elip_f3')
     with col5:
-        focal_pt_4 = st.text_input("Focal Point 2", "1,1", key='f4')
+        focal_pt_4 = st.text_input("Focal Point 2", "1,1", key='elip_f4')
     with col6:
-        width_2 = st.text_input("Ellipse Width", "2", key='w2')
+        width_2 = st.text_input("Ellipse Width", "2", key='elip_w2')
 
     col4, col5, col6 = st.columns([1,3,3])
 
 
     with col4:
-        n_iterations = st.text_input("Random Number Iterations", "5000")
-    submit_button = st.button("Submit")
+        n_iterations = st.text_input("Random Number Iterations", "5000",key='elip_iters')
+    submit_button = st.button("Submit",key='submit_ellipses')
 
     with st.expander('See Explanation'):
         st.write("""
@@ -108,5 +108,5 @@ For demonstration, the default example uses two concentric circles, where the ov
             st.plotly_chart(ell_fig,use_container_width=True)
 
 # Your existing code for page_header and other parts...
-page_header('Overlapping Ellipses')
+page_header('Overlapping Ellipses',page_name=os.path.basename(__file__))
 app()
