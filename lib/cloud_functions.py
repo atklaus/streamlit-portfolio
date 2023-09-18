@@ -130,7 +130,7 @@ class CloudFunctions:
         json_data['created_at'] = str(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S%z"))
         return json_data
 
-    def store_session(self,prefix,page_name,test=True):
+    def store_session(self,prefix,page_name,test=False):
         if LOCAL_DEV:
             st.session_state['Test'] = True
 
