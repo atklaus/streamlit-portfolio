@@ -89,7 +89,7 @@ for row in range(rows_count):
         else:
             with cols[col_idx]:
                 stu.V_SPACE(1)
-    stu.V_SPACE(1)
+    st.write('')
 
 # font_awesome_link = """
 # <head>
