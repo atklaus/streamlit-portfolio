@@ -127,6 +127,7 @@ def page_header(title, page_name, container_style=True):
     """
     cf.store_session(prefix='activity/{}.json.gz',page_name=page_name)
 
+
     # Remove defaults from sidebar
     st.markdown(no_sidebar_style, unsafe_allow_html=True)
 

@@ -35,29 +35,8 @@ from datetime import datetime
 def get_manager():
     return stx.CookieManager(key='cookie')
 
-cookie_manager = get_manager()
-cookies = cookie_manager.get_all()
-
-
 dotenv_path = Path('/Users/adamklaus/.env')
 load_dotenv(dotenv_path=dotenv_path)
-
-def store_cookies():
-    time.sleep(.01)
-    while True:
-        if 'cookies' not in st.session_state:
-            st.session_state['cookies'] = cookie_manager.get_all()
-        # else:
-        #     if 'lzs_userid' not in st.session_state.cookies:
-        #         if 'lzs_userid' not in st.session_state:
-        #             st.session_state["lzs_userid"] = str(uuid.uuid4())
-        #         cookie_manager.set('lzs_userid', st.session_state["lzs_userid"], key="0", expires_at=datetime(year=2023, month=8, day=2))
-        #     if "lzs_pwd" not in st.session_state.cookies:
-        #         if "lzs_pwd" not in st.session_state:
-        #             random_pwd = ''.join(random.choices(string.ascii_letters + string.digits,k=8))
-        #             st.session_state['lzs_pwd'] = bcrypt.hashpw(random_pwd.encode(),bcrypt.gensalt(rounds=10)).decode('utf-8')
-        #         cookie_manager.set('lzs_pwd', st.session_state.get('lzs_pwd', ''), key="1", expires_at=datetime(year=2023, month=8, day=2))
-        #     break
 
 class CloudFunctions:
     # Snowflake Connection Config
@@ -137,18 +116,25 @@ class CloudFunctions:
         if 'session_id' not in st.session_state:
             st.session_state['session_id'] = secrets.token_urlsafe(16)
             st.session_state['first_visit'] = True
+            st.session_state['page_visits'] = []
+
+        if 'cookies' not in st.session_state:
+            time.sleep(.01)
+            cookie_manager = get_manager()
+            cookies = cookie_manager.get_all()
+            st.session_state['cookies'] = cookies
+
         else:
             st.session_state['first_visit'] = False
 
-
         st.session_state['page_name'] = page_name
+        st.session_state['page_visits'].append(page_name)
         st.session_state['hostname'] = socket.gethostname()
-        json_data = self.session_to_json(st.session_state)
         if st.session_state['first_visit'] or any('submit' in key for key in st.session_state.keys()):
-            store_cookies()
+            json_data = self.session_to_json(st.session_state)
             self.gzip_json_and_upload_to_s3(json_data, prefix.format(str(datetime.utcnow().strftime("%Y_%m_%d_%H_%M_%S_%z"))))
             # Reset first_visit flag after storing
-            st.session_state['first_visit'] = False
+            # st.session_state['first_visit'] = False
 
     def get_df(self, query, conn=None):
         """

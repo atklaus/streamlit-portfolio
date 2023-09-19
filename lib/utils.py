@@ -6,7 +6,7 @@ import base64
 import json
 import boto3
 import streamlit as st
-
+import requests
 
 user_agents = [
     "Mozilla/5.0 (Windows NT 6.3; Win64; x64; Trident/7.0; Touch; MASMJS; rv:11.0) like Gecko",
@@ -147,4 +147,3 @@ def add_dict_to_session(dict_add, vals='all'):
             st.session_state[key] = dict_add[key]
         except:
             print('Error: Key not in cookies')
-
