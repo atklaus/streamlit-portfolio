@@ -119,7 +119,7 @@ with st.spinner('Loading report...'):
     df['visit_date'] = df['visit_date'].dt.tz_convert('America/Chicago')
     df['dau_date']=df['visit_date'].dt.date
 
-    st.write(df)
+    # st.write(df)
 
     metric_df = df.copy()
     # metric_df[metric_df['VISIT_DATE'].dt.dayofweek < 5]
