@@ -130,8 +130,8 @@ with st.spinner('Loading report...'):
         st.metric(label='Total Visits',value=len(df['session_id'].unique()),help='Number of people who have visited the site')
     # # with col2:
     # #     st.metric(label='Unique Visitors',value=len(df['session_id'].unique()),help='Number of unique people to visit the site')
-    # with col3:
-    #     st.metric(label='Active Daily Users',value=adu_value,help='daily average of [unique new users] + [unique returning users]')
+    with col3:
+        st.metric(label='Active Daily Users',value=adu_value,help='daily average of [unique new users] + [unique returning users]')
     with col4:
         pass
 

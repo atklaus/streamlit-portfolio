@@ -109,6 +109,7 @@ pandoc = "*"
 s3cmd = "*"
 extra-streamlit-components = "*"
 bcrypt = "*"
+streamlit-timeline = "*"
 
 [dev-packages]
 

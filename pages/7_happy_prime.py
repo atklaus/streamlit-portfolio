@@ -44,9 +44,11 @@ def app():
     with col2:
         st.write("")  # This will add a small vertical space
         st.write("")  # This will add a small vertical space
-        if st.button("Enter", key="btn-1"):
-            hpObj = HappyPrime(user_input)
-            st.write(hpObj.result)
+        submit= st.button("Submit", key="submit_happy_prime")
+
+    if submit:
+        hpObj = HappyPrime(user_input)
+        st.write(hpObj.result)
 
 page_header('Happy Prime Calculator',page_name=os.path.basename(__file__))
 app()

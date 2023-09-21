@@ -114,12 +114,34 @@ def navigate_to_link(link):
 
 
 def page_header(title, page_name, container_style=True):
+
+
     st.set_page_config(
         page_title=title
         , page_icon="static/images/favicon.ico"
         ,layout='wide'
         ,initial_sidebar_state="collapsed",
         )
+
+
+    def get_image_base64(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+
+    logo_path = "static/images/ads_logo.png"
+    # logo_base64 = get_image_base64(logo_path)
+
+
+    tags = f"""<head>
+        <!-- Other existing tags -->
+        <meta property="og:title" content="Almost Data Science" />
+        <meta property="og:description" content="Portfolio Website by Adam Klaus" />
+        <meta property="og:image" content="{logo_path}" />
+    </head>"""
+
+    st.markdown(tags, unsafe_allow_html=True)
+
+
     no_sidebar_style = """
         <style>
             div[data-testid="stSidebarNav"] {display: none;}
@@ -149,12 +171,6 @@ def page_header(title, page_name, container_style=True):
         set_page_container_style(padding_top=.01)
     get_sidebar()
 
-    def get_image_base64(image_path):
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-
-    logo_path = "static/images/ads_logo.png"
-    logo_base64 = get_image_base64(logo_path)
 
     st.markdown("""
     <style>
