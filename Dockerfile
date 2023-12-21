@@ -24,7 +24,7 @@ COPY poetry.lock .
 
 # Install python dependencies in /.venv
 RUN poetry config virtualenvs.in-project true \
-    && poetry install --no-dev
+    && poetry install --no-dev --no-root
 
 FROM base AS runtime
 
