@@ -152,7 +152,7 @@ def displayPDF(file):
 
 # Add this function to display the detailed context of your paper
 def display_paper_context():
-    with st.expander('Learn more'):
+    with st.expander("Learn more about the predictive model and it's background"):
 
         # pdf_path = "static/files/Predicting_WNBA_Success.pdf"
         # pdf_base64 = utils.get_pdf_base64(pdf_path)
@@ -184,12 +184,14 @@ def display_paper_context():
 
 
 # Your existing code for page_header and other parts...
-page_header('Predicting WNBA Success',page_name=os.path.basename(__file__))
+page_header('Predicting WNBA Player Success',page_name=os.path.basename(__file__))
 
 
 stu.V_SPACE(1)
 
 st.subheader('Predicting WNBA Success from College Performance')
+st.write("This page provides insights into WNBA players' success, leveraging predictive modeling based on college performance.")
+
 
 @st.cache_data(ttl=42300,show_spinner=False)
 def get_team_urls(year=2023):

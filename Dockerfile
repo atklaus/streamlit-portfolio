@@ -9,19 +9,22 @@ ENV PYTHONFAULTHANDLER 1
 
 FROM base AS python-deps
 
-# Install pipenv
-RUN pip install pipenv
+# Install Poetry
+RUN pip install poetry
 
-# Update, install gcc and libgl1-mesa-glx, and clean up to minimize the layer size
+# Update, install gcc, libgl1-mesa-glx, and clean up to minimize the layer size
 RUN apt-get update && \
     apt-get install -y gcc libgl1-mesa-glx --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Copy pyproject.toml and poetry.lock files (assuming they exist)
+COPY pyproject.toml .
+COPY poetry.lock .
+
 # Install python dependencies in /.venv
-COPY Pipfile .
-COPY Pipfile.lock .
-RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
+RUN poetry config virtualenvs.in-project true \
+    && poetry install --no-dev
 
 FROM base AS runtime
 

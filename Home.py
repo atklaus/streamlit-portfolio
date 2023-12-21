@@ -137,6 +137,7 @@ with col5:
     stu.V_SPACE(1)
     st.markdown('<p style="text-align: center; font-size: small;">© 2023 Copyright, All Rights Reserved. almostdatascience.com</p>', unsafe_allow_html=True)
 
+stu.V_SPACE(1)
 
 
 

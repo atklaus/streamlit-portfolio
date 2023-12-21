@@ -4,7 +4,6 @@ import sys
 import json
 import pprint
 import requests
-import snowflake.connector
 import boto3
 import pandas as pd
 import requests
@@ -12,7 +11,6 @@ from dotenv import load_dotenv
 from pathlib import Path
 from config import CREDS, BASE_DIR, LOCAL_DEV
 from io import StringIO # python3; python2: BytesIO 
-import teradatasql
 from datetime import datetime
 import subprocess
 import json
@@ -27,7 +25,6 @@ import uuid
 import datetime
 import random
 import string
-import bcrypt
 import time
 from datetime import datetime
 

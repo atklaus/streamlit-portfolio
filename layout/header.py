@@ -9,7 +9,6 @@ import extra_streamlit_components as stx
 import uuid
 import random
 import string
-import bcrypt
 
 
 cf = CF(bucket='analytics')
