@@ -1,48 +1,49 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim as base
 
-# Setup env
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONFAULTHANDLER 1
+# Set environment variables
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONFAULTHANDLER=1
 
+# Python dependencies stage
 FROM base AS python-deps
 
-# Install Poetry
+# Install Poetry for Python dependency management
 RUN pip install poetry
 
-# Update, install gcc, libgl1-mesa-glx, and clean up to minimize the layer size
-RUN apt-get update && \
-    apt-get install -y gcc libgl1-mesa-glx --no-install-recommends && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Install necessary system dependencies (e.g., gcc for compiling Python packages)
+RUN apt-get update && apt-get install -y --no-install-recommends gcc
 
-# Copy pyproject.toml and poetry.lock files (assuming they exist)
-COPY pyproject.toml .
-COPY poetry.lock .
+# Copy pyproject.toml and poetry.lock to install Python dependencies
+COPY pyproject.toml poetry.lock ./
 
-# Install python dependencies in /.venv
+# Install Python dependencies in a virtual environment
 RUN poetry config virtualenvs.in-project true \
-    && poetry install --no-dev --no-root
+    && poetry install --no-dev
 
+# Runtime stage
 FROM base AS runtime
 
-# Copy virtual env from python-deps stage
+# Copy virtual environment from python-deps stage
 COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
 
-# Create a user and set work directory
+# Install any additional runtime dependencies, such as git
+RUN apt-get update && apt-get install -y git
+
+# Create a non-root user and set the working directory
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
 USER appuser
 
-# Install application into container
+# Copy the application files into the container
 COPY --chown=appuser . .
-RUN ls
 
-# Expose streamlit port
+# Expose the port that the application uses
 EXPOSE 8501
 
-# Run the application
+# Define the command to run the application
 ENTRYPOINT ["streamlit", "run", "Home.py"]
+
