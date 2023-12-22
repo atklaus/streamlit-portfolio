@@ -25,12 +25,13 @@ RUN apt-get update && \
 # Copy pyproject.toml and poetry.lock to install Python dependencies
 COPY pyproject.toml poetry.lock ./
 
+# Add heavy dependencies individually (as a workaround)
+# Note: This will modify pyproject.toml and poetry.lock
+RUN poetry add tensorflow keras opencv-python
+
 # Install Python dependencies in a virtual environment
-# Splitting the installation of heavy packages to reduce peak memory usage
-RUN poetry config virtualenvs.in-project true
-RUN poetry add --no-dev --no-interaction --no-ansi tensorflow keras
-RUN poetry add --no-dev --no-interaction --no-ansi opencv-python
-RUN poetry add --no-dev --no-interaction --no-ansi
+RUN poetry config virtualenvs.in-project true \
+    && poetry install --no-dev --no-interaction --no-ansi
 
 # Runtime stage
 FROM base AS runtime
