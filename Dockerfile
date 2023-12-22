@@ -1,60 +1,45 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim as base
 
-# Set environment variables to reduce installation footprint
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONFAULTHANDLER=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    POETRY_NO_INTERACTION=1
+# Setup env
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONFAULTHANDLER 1
 
-# Python dependencies stage
 FROM base AS python-deps
 
-# Install Poetry for Python dependency management
-RUN pip install poetry
+# Install pipenv
+RUN pip install pipenv
 
-# Reduce layer size and complexity by combining commands
+# Update, install gcc and libgl1-mesa-glx, and clean up to minimize the layer size
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
+    apt-get install -y gcc libgl1-mesa-glx --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy pyproject.toml and poetry.lock to install Python dependencies
-COPY pyproject.toml poetry.lock ./
+# Install python dependencies in /.venv
+COPY Pipfile .
+COPY Pipfile.lock .
+RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
-# Add heavy dependencies individually (as a workaround)
-# Note: This will modify pyproject.toml and poetry.lock
-RUN poetry add tensorflow keras opencv-python
-
-# Install Python dependencies in a virtual environment
-RUN poetry config virtualenvs.in-project true \
-    && poetry install --no-dev --no-interaction --no-ansi
-
-# Runtime stage
 FROM base AS runtime
 
-# Copy virtual environment from python-deps stage
+# Copy virtual env from python-deps stage
 COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
 
-# Install any additional runtime dependencies, such as git
-RUN apt-get update && apt-get install -y git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Create a non-root user and set the working directory
+# Create a user and set work directory
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
 USER appuser
 
-# Copy the application files into the container
+# Install application into container
 COPY --chown=appuser . .
+RUN ls
 
-# Expose the port that the application uses
+# Expose streamlit port
 EXPOSE 8501
 
-# Define the command to run the application
+# Run the application
 ENTRYPOINT ["streamlit", "run", "Home.py"]
