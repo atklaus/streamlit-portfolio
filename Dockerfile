@@ -1,11 +1,14 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim as base
 
-# Set environment variables
+# Set environment variables to reduce installation footprint
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONFAULTHANDLER=1
+    PYTHONFAULTHANDLER=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    POETRY_NO_INTERACTION=1
 
 # Python dependencies stage
 FROM base AS python-deps
@@ -13,15 +16,21 @@ FROM base AS python-deps
 # Install Poetry for Python dependency management
 RUN pip install poetry
 
-# Install necessary system dependencies (e.g., gcc for compiling Python packages)
-RUN apt-get update && apt-get install -y --no-install-recommends gcc
+# Reduce layer size and complexity by combining commands
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy pyproject.toml and poetry.lock to install Python dependencies
 COPY pyproject.toml poetry.lock ./
 
 # Install Python dependencies in a virtual environment
-RUN poetry config virtualenvs.in-project true \
-    && poetry install --no-dev
+# Splitting the installation of heavy packages to reduce peak memory usage
+RUN poetry config virtualenvs.in-project true
+RUN poetry install --no-dev --no-interaction --no-ansi tensorflow keras
+RUN poetry install --no-dev --no-interaction --no-ansi opencv-python
+RUN poetry install --no-dev --no-interaction --no-ansi
 
 # Runtime stage
 FROM base AS runtime
@@ -31,7 +40,9 @@ COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
 
 # Install any additional runtime dependencies, such as git
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user and set the working directory
 RUN useradd --create-home appuser
@@ -46,4 +57,3 @@ EXPOSE 8501
 
 # Define the command to run the application
 ENTRYPOINT ["streamlit", "run", "Home.py"]
-
