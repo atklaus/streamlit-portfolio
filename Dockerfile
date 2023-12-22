@@ -28,9 +28,9 @@ COPY pyproject.toml poetry.lock ./
 # Install Python dependencies in a virtual environment
 # Splitting the installation of heavy packages to reduce peak memory usage
 RUN poetry config virtualenvs.in-project true
-RUN poetry install --no-dev --no-interaction --no-ansi tensorflow keras
-RUN poetry install --no-dev --no-interaction --no-ansi opencv-python
-RUN poetry install --no-dev --no-interaction --no-ansi
+RUN poetry add --no-dev --no-interaction --no-ansi tensorflow keras
+RUN poetry add --no-dev --no-interaction --no-ansi opencv-python
+RUN poetry add --no-dev --no-interaction --no-ansi
 
 # Runtime stage
 FROM base AS runtime
