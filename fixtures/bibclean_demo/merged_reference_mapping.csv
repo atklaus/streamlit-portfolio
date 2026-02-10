@@ -1,0 +1,13 @@
+raw_reference,canonical_reference,cluster_id,confidence,reason
+Abramo G (2014) SCIENTOMETRICS 101 1129 DOI:10.1007/s11192-014-1269-8,"Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8",1,100,doi_exact
+"Abramo G, 2014, SCIENTOMETRICS, V101, P1129, DOI 10.1007/s11192-014-1269-8","Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8",1,100,doi_exact
+"Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8","Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8",1,100,doi_exact
+"PORTER M E, 1985, COMPETITIVE ADVANTAGE","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",2,100,fuzzy_high
+"Porter, M.E. (1985) Competitive Advantage, Free Press, New York","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",2,100,fuzzy_high
+"Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",2,98,fuzzy_high
+Sugimoto CR & Lariviere V (2018) J INFORMETR 12(3) 999-1010,"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",4,95,fuzzy_high
+"Sugimoto, C R, 2018, JOURNAL OF INFORMETRICS, V12, P999","Sugimoto, C R, 2018, JOURNAL OF INFORMETRICS, V12, P999",3,90,manual_needed
+"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010","Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",4,95,fuzzy_high
+Wang X (2020) Nat Commun 11:233,"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",6,100,fuzzy_high
+"Wang, X, 2020, NATURE COMMUNICATIONS, V11, P233","Wang, X, 2020, NATURE COMMUNICATIONS, V11, P233",5,90,manual_needed
+"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233","Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",6,100,fuzzy_high
