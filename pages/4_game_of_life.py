@@ -14,11 +14,6 @@ import os
 # Streamlit application.
 # page_header('Game of Life')
 
-import streamlit as st
-from streamlit_option_menu import option_menu
-import lib.st_utils as stu
-from streamlit.runtime.scriptrunner import RerunData, RerunException
-from streamlit.source_util import get_pages
 
 page_header('Game of Life',page_name=os.path.basename(__file__))
 

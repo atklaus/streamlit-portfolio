@@ -1,28 +1,36 @@
 from streamlit.components.v1 import html
 import streamlit as st
 import base64
+from pathlib import Path
+import re
+from streamlit.errors import StreamlitAPIException
 
 def switch_page(page_name: str):
-    from streamlit.runtime.scriptrunner import RerunData, RerunException
-    from streamlit.source_util import get_pages
-
     def standardize_name(name: str) -> str:
-        return name.lower().replace("_", " ")
+        return name.strip().lower().replace("_", " ")
 
     page_name = standardize_name(page_name)
 
-    pages = get_pages("Home.py")  # OR whatever your main page is called
+    root_dir = Path(__file__).resolve().parent.parent
 
-    for page_hash, config in pages.items():
-        if standardize_name(config["page_name"]) == page_name:
-            raise RerunException(
-                RerunData(
-                    page_script_hash=page_hash,
-                    page_name=page_name,
-                )
-            )
+    if page_name in {"", "home"}:
+        home_page = root_dir / "pages" / "0_home.py"
+        if not home_page.exists():
+            raise FileNotFoundError(f"Home page not found: {home_page}")
+        st.switch_page("pages/0_home.py")
+        return
 
-    page_names = [standardize_name(config["page_name"]) for config in pages.values()]
+    pages_dir = root_dir / "pages"
+    if not pages_dir.exists():
+        raise FileNotFoundError(f"Pages directory not found: {pages_dir}")
+
+    page_names = []
+    for path in pages_dir.glob("*.py"):
+        slug = re.sub(r"^\d+_", "", path.stem)
+        page_names.append(standardize_name(slug))
+        if standardize_name(slug) == page_name:
+            st.switch_page(f"pages/{path.name}")
+            return
 
     raise ValueError(f"Could not find page {page_name}. Must be one of {page_names}")
 
@@ -35,4 +43,3 @@ def get_image_base64(image_path):
 def V_SPACE(lines):
     for _ in range(lines):
         st.write('&nbsp;')
-

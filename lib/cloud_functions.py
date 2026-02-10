@@ -28,7 +28,7 @@ import string
 import time
 from datetime import datetime
 
-@st.cache_resource(experimental_allow_widgets=True)
+@st.cache_resource()
 def get_manager():
     return stx.CookieManager(key='cookie')
 

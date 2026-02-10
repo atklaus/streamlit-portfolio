@@ -42,4 +42,4 @@ RUN ls
 EXPOSE 8501
 
 # Run the application
-ENTRYPOINT ["streamlit", "run", "Home.py"]
+ENTRYPOINT ["streamlit", "run", "app.py"]
