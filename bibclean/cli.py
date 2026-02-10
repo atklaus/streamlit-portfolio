@@ -47,6 +47,13 @@ def _write_reference_mapping(output_dir: str, mapping_df: pd.DataFrame) -> None:
     mapping_df.to_csv(path, index=False)
 
 
+def _write_review_pairs(output_dir: str, review_pairs_df: pd.DataFrame) -> None:
+    if review_pairs_df.empty:
+        return
+    path = os.path.join(output_dir, config.review_pairs_filename)
+    review_pairs_df.to_csv(path, index=False)
+
+
 def _mode_a(input_path: str, output_dir: str) -> None:
     fmt = detect_input_format(input_path)
     logger.info("Detected format: %s", fmt)
@@ -54,7 +61,10 @@ def _mode_a(input_path: str, output_dir: str) -> None:
     if fmt == "scopus_csv":
         df, ref_col = load_scopus_csv(input_path)
         raw_refs = extract_scopus_references(df, ref_col)
-        mapping_df, summary, mapping_dict = canonicalize_references(raw_refs)
+        mapping_df, summary, mapping_dict, review_pairs_df = canonicalize_references(
+            raw_refs,
+            return_review_pairs=True,
+        )
         summary["input_format"] = "scopus_csv"
         summary["document_count"] = len(df)
         cleaned_df = apply_mapping_to_scopus(df, ref_col, mapping_dict)
@@ -64,6 +74,7 @@ def _mode_a(input_path: str, output_dir: str) -> None:
         cleaned_df.to_csv(cleaned_path, index=False)
 
         _write_reference_mapping(output_dir, mapping_df)
+        _write_review_pairs(output_dir, review_pairs_df)
         _write_summary(output_dir, summary)
         logger.info("Wrote cleaned Scopus CSV to %s", cleaned_path)
         return
@@ -71,7 +82,10 @@ def _mode_a(input_path: str, output_dir: str) -> None:
     if fmt == "wos_plaintext":
         wos_file = parse_wos_plaintext(input_path)
         raw_refs = extract_wos_references(wos_file.records)
-        mapping_df, summary, mapping_dict = canonicalize_references(raw_refs)
+        mapping_df, summary, mapping_dict, review_pairs_df = canonicalize_references(
+            raw_refs,
+            return_review_pairs=True,
+        )
         summary["input_format"] = "wos_plaintext"
         summary["document_count"] = len(wos_file.records)
         updated_records = apply_mapping_to_wos_records(wos_file.records, mapping_dict)
@@ -82,6 +96,7 @@ def _mode_a(input_path: str, output_dir: str) -> None:
         write_wos_plaintext(cleaned_path, wos_file)
 
         _write_reference_mapping(output_dir, mapping_df)
+        _write_review_pairs(output_dir, review_pairs_df)
         _write_summary(output_dir, summary)
         logger.info("Wrote cleaned WoS plaintext to %s", cleaned_path)
         return
@@ -125,7 +140,11 @@ def _mode_b(input_paths: List[str], output_dir: str) -> None:
     for doc in canonical_docs:
         raw_refs.extend(doc.references)
 
-    mapping_df, summary, mapping_dict = canonicalize_references(raw_refs)
+    mapping_df, summary, mapping_dict, review_pairs_df = canonicalize_references(
+        raw_refs,
+        auto_merge_threshold=config.merged_auto_merge_threshold,
+        return_review_pairs=True,
+    )
     summary["document_merge"] = {
         "doc_merge_threshold": config.doc_merge_threshold,
         "total_documents": len(documents),
@@ -150,6 +169,7 @@ def _mode_b(input_paths: List[str], output_dir: str) -> None:
     merged_df.to_csv(merged_path, index=False)
 
     _write_reference_mapping(output_dir, mapping_df)
+    _write_review_pairs(output_dir, review_pairs_df)
     _write_summary(output_dir, summary)
 
     logger.info("Wrote merged CSV to %s", merged_path)

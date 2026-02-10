@@ -9,6 +9,7 @@ import pandas as pd
 from bibclean.apply.scopus_apply import apply_mapping_to_scopus
 from bibclean.apply.wos_apply import apply_mapping_to_wos_records
 from bibclean.canonicalize import canonicalize_references
+from bibclean import config
 from bibclean.io.detect import detect_input_format
 from bibclean.io.scopus_csv import extract_scopus_references, load_scopus_csv
 from bibclean.io.wos_plaintext import extract_wos_references, parse_wos_plaintext, write_wos_plaintext
@@ -31,7 +32,10 @@ print("Scopus format:", fmt_scopus)
 df_scopus, ref_col = load_scopus_csv(str(SCOPUS_PATH))
 raw_refs_scopus = extract_scopus_references(df_scopus, ref_col)
 
-mapping_df_scopus, summary_scopus, mapping_dict_scopus = canonicalize_references(raw_refs_scopus)
+mapping_df_scopus, summary_scopus, mapping_dict_scopus, review_pairs_scopus = canonicalize_references(
+    raw_refs_scopus,
+    return_review_pairs=True,
+)
 print("Scopus summary:", summary_scopus)
 
 cleaned_scopus = apply_mapping_to_scopus(df_scopus, ref_col, mapping_dict_scopus)
@@ -40,6 +44,8 @@ cleaned_scopus.to_csv(scopus_out, index=False)
 
 mapping_out_scopus = OUTPUT_DIR / "scopus_reference_mapping.csv"
 mapping_df_scopus.to_csv(mapping_out_scopus, index=False)
+review_out_scopus = OUTPUT_DIR / "scopus_review_pairs.csv"
+review_pairs_scopus.to_csv(review_out_scopus, index=False)
 
 
 # --- Mode A: WoS ---
@@ -49,7 +55,10 @@ print("WoS format:", fmt_wos)
 wos_file = parse_wos_plaintext(str(WOS_PATH))
 raw_refs_wos = extract_wos_references(wos_file.records)
 
-mapping_df_wos, summary_wos, mapping_dict_wos = canonicalize_references(raw_refs_wos)
+mapping_df_wos, summary_wos, mapping_dict_wos, review_pairs_wos = canonicalize_references(
+    raw_refs_wos,
+    return_review_pairs=True,
+)
 print("WoS summary:", summary_wos)
 
 updated_records = apply_mapping_to_wos_records(wos_file.records, mapping_dict_wos)
@@ -60,6 +69,8 @@ write_wos_plaintext(str(wos_out), wos_file)
 
 mapping_out_wos = OUTPUT_DIR / "wos_reference_mapping.csv"
 mapping_df_wos.to_csv(mapping_out_wos, index=False)
+review_out_wos = OUTPUT_DIR / "wos_review_pairs.csv"
+review_pairs_wos.to_csv(review_out_wos, index=False)
 
 
 # --- Mode B: Merge + clean ---
@@ -92,7 +103,11 @@ merged_raw_refs = []
 for doc in canonical_docs:
     merged_raw_refs.extend(doc.references)
 
-merged_mapping_df, merged_summary, merged_mapping_dict = canonicalize_references(merged_raw_refs)
+merged_mapping_df, merged_summary, merged_mapping_dict, merged_review_pairs = canonicalize_references(
+    merged_raw_refs,
+    auto_merge_threshold=config.merged_auto_merge_threshold,
+    return_review_pairs=True,
+)
 print("Mode B summary:", merged_summary)
 
 # Emit merged Scopus-like CSV
@@ -115,5 +130,7 @@ merged_df.to_csv(merged_out, index=False)
 
 merged_ref_map_out = OUTPUT_DIR / "merged_reference_mapping.csv"
 merged_mapping_df.to_csv(merged_ref_map_out, index=False)
+merged_review_out = OUTPUT_DIR / "merged_review_pairs.csv"
+merged_review_pairs.to_csv(merged_review_out, index=False)
 
 print("Wrote outputs to", OUTPUT_DIR)

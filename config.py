@@ -51,5 +51,10 @@ MOD_ACCESS = {
     ,'description':'Calculator to determine whether an integer is happy or sad'
     }
 
+    ,'bibliometrix_reference_cleaner': {
+    'button' : '📚 Bibliometrix Reference Cleaner'
+    ,'name' : 'bibliometrix_reference_cleaner'
+    ,'description':'Canonicalize cited references for bibliometrix/Biblioshiny'
     }
 
+    }

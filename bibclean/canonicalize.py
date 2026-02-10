@@ -9,7 +9,13 @@ from bibclean.match.blocking import build_block_key
 from bibclean.match.cluster import build_clusters
 from bibclean.match.scoring import score_pair
 from bibclean.models import Reference
-from bibclean.normalize.parse import extract_doi, extract_first_author, extract_year
+from bibclean.normalize.parse import (
+    extract_doi,
+    extract_first_author,
+    extract_page_or_article,
+    extract_volume,
+    extract_year,
+)
 from bibclean.normalize.text import normalize_text
 
 
@@ -18,7 +24,18 @@ def _build_reference(raw: str) -> Reference:
     doi = extract_doi(raw)
     year = extract_year(raw)
     first_author = extract_first_author(raw)
-    temp = Reference(raw=raw, norm=norm, doi=doi, year=year, first_author=first_author, block_key="")
+    volume = extract_volume(norm)
+    page = extract_page_or_article(norm, year, volume)
+    temp = Reference(
+        raw=raw,
+        norm=norm,
+        doi=doi,
+        year=year,
+        first_author=first_author,
+        volume=volume,
+        page=page,
+        block_key="",
+    )
     block_key = build_block_key(temp)
     return Reference(
         raw=raw,
@@ -26,13 +43,19 @@ def _build_reference(raw: str) -> Reference:
         doi=doi,
         year=year,
         first_author=first_author,
+        volume=volume,
+        page=page,
         block_key=block_key,
     )
 
 
 def canonicalize_references(
     raw_references: Iterable[str],
-) -> Tuple[pd.DataFrame, Dict, Dict[str, str]]:
+    *,
+    auto_merge_threshold: int | None = None,
+    review_threshold: int | None = None,
+    return_review_pairs: bool = False,
+) -> Tuple[pd.DataFrame, Dict, Dict[str, str]] | Tuple[pd.DataFrame, Dict, Dict[str, str], pd.DataFrame]:
     raw_list = [r.strip() for r in raw_references if r and str(r).strip()]
     if not raw_list:
         mapping_df = pd.DataFrame(
@@ -51,13 +74,24 @@ def canonicalize_references(
             "auto_merged_clusters": 0,
             "manual_review_count": 0,
             "thresholds": {
-                "auto_merge_threshold": config.auto_merge_threshold,
-                "review_threshold": config.review_threshold,
+                "auto_merge_threshold": auto_merge_threshold or config.auto_merge_threshold,
+                "review_threshold": review_threshold or config.review_threshold,
                 "max_candidates_per_ref": config.max_candidates_per_ref,
             },
         }
+        if return_review_pairs:
+            review_pairs_df = pd.DataFrame(
+                columns=[
+                    "raw_reference_a",
+                    "raw_reference_b",
+                    "confidence",
+                ]
+            )
+            return mapping_df, summary, {}, review_pairs_df
         return mapping_df, summary, {}
     unique_raws = sorted(set(raw_list))
+    auto_merge_threshold = auto_merge_threshold or config.auto_merge_threshold
+    review_threshold = review_threshold or config.review_threshold
 
     refs: List[Reference] = [_build_reference(raw) for raw in unique_raws]
     index_by_raw = {ref.raw: idx for idx, ref in enumerate(refs)}
@@ -70,6 +104,7 @@ def canonicalize_references(
     best_score: Dict[int, int] = {idx: 0 for idx in range(len(refs))}
     doi_match: Dict[int, bool] = {idx: False for idx in range(len(refs))}
     edge_confidence: Dict[int, int] = {idx: 0 for idx in range(len(refs))}
+    review_pairs: List[Dict[str, str | int]] = []
 
     for indices in blocks.values():
         indices.sort(key=lambda i: refs[i].raw)
@@ -84,12 +119,20 @@ def canonicalize_references(
                 if reason == "doi_exact":
                     doi_match[i] = True
                     doi_match[j] = True
-                if confidence >= config.auto_merge_threshold:
+                if confidence >= auto_merge_threshold:
                     edges.append((i, j, confidence))
                     if confidence > edge_confidence[i]:
                         edge_confidence[i] = confidence
                     if confidence > edge_confidence[j]:
                         edge_confidence[j] = confidence
+                elif confidence >= review_threshold:
+                    review_pairs.append(
+                        {
+                            "raw_reference_a": refs[i].raw,
+                            "raw_reference_b": refs[j].raw,
+                            "confidence": confidence,
+                        }
+                    )
 
     clusters, canonical_by_root = build_clusters(refs, edges)
 
@@ -125,7 +168,7 @@ def canonicalize_references(
             canonical_reference = canonical_ref
         else:
             confidence = best_score[idx]
-            if confidence >= config.review_threshold:
+            if confidence >= review_threshold:
                 reason = "manual_needed"
                 manual_needed_count += 1
             else:
@@ -157,10 +200,14 @@ def canonicalize_references(
         "auto_merged_clusters": auto_merged_clusters,
         "manual_review_count": manual_needed_count,
         "thresholds": {
-            "auto_merge_threshold": config.auto_merge_threshold,
-            "review_threshold": config.review_threshold,
+            "auto_merge_threshold": auto_merge_threshold,
+            "review_threshold": review_threshold,
             "max_candidates_per_ref": config.max_candidates_per_ref,
         },
+        "review_pair_count": len(review_pairs),
     }
 
+    if return_review_pairs:
+        review_pairs_df = pd.DataFrame(review_pairs)
+        return mapping_df, summary, mapping_dict, review_pairs_df
     return mapping_df, summary, mapping_dict

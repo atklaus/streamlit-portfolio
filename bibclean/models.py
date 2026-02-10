@@ -9,6 +9,8 @@ class Reference:
     doi: Optional[str]
     year: Optional[str]
     first_author: Optional[str]
+    volume: Optional[str]
+    page: Optional[str]
     block_key: str
 
 

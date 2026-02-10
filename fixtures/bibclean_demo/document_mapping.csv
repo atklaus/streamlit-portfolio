@@ -1,5 +1,10 @@
 raw_doc_id,canonical_doc_id,match_reason,confidence
 bfe47a8fc843,doi:10.1016/j.joi.2021.101234,new,100
 3b8096effc5d,hash:cfb20a2b200f,new,100
+9b3d88cd3894,hash:6a590871e2c3,new,100
+1fad07e3bcf7,doi:10.1140/epjb/e2013-40829-0,new,100
+3292b9ce76e2,doi:10.1002/asi.23019,new,100
 d9cd92e3e719,doi:10.1093/scipol/scu086,new,100
 cfb20a2b200f,hash:cfb20a2b200f,title_year_author_fuzzy,100
+6a590871e2c3,hash:6a590871e2c3,title_year_author_fuzzy,100
+db333c2785cf,doi:10.1140/epjb/e2013-40829-0,doi_exact,100

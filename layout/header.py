@@ -5,6 +5,7 @@ import re
 from streamlit.errors import StreamlitAPIException
 import config as c
 import base64
+import textwrap
 from lib.cloud_functions import CloudFunctions as CF
 import extra_streamlit_components as stx
 import uuid
@@ -52,24 +53,27 @@ COLOR = 'black'
 
 def set_page_container_style(
         max_width: int = 1100, max_width_100_percent: bool = False,
-        padding_top: int = 1, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = .1,
+        padding_top: int = 0, padding_right: int = 10, padding_left: int = 1, padding_bottom: int = .1,
         color: str = COLOR, background_color: str = BACKGROUND_COLOR,
+        apply: bool = True,
     ):
         if max_width_100_percent:
             max_width_str = f'max-width: 100%;'
         else:
             max_width_str = f'max-width: {max_width}px;'
-        st.markdown(
-            f'''
+        css = f'''
             <style>
             .appview-container .main .block-container{{
-                    padding-top: {padding_top}rem;    
-                    padding-bottom: {padding_bottom}rem;                        
+                    padding-top: {padding_top}rem !important;    
+                    padding-bottom: {padding_bottom}rem !important;                        
+                    padding-left: {padding_left}rem !important;
+                    padding-right: {padding_right}rem !important;
                     }}
             </style>
-            ''',
-            unsafe_allow_html=True,
-        )
+            '''
+        if apply:
+            st.markdown(css, unsafe_allow_html=True)
+        return css
 
 def switch_page(page_name: str):
 
@@ -125,67 +129,62 @@ def page_header(title, page_name, container_style=True):
 
 
     st.set_page_config(
-        page_title=title
-        , page_icon="static/images/favicon.ico"
-        ,layout='wide'
-        ,initial_sidebar_state="collapsed",
-        )
-
-
-    def get_image_base64(image_path):
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
+        page_title=title,
+        page_icon="static/images/favicon.ico",
+        layout="wide",
+        initial_sidebar_state="collapsed",
+    )
 
     logo_path = "static/images/ads_logo.png"
     # logo_base64 = get_image_base64(logo_path)
 
 
     tags = f"""<head>
-        <!-- Other existing tags -->
-        <meta property="og:title" content="Almost Data Science" />
-        <meta property="og:description" content="Portfolio Website by Adam Klaus" />
-        <meta property="og:image" content="{logo_path}" />
+    <!-- Other existing tags -->
+    <meta property="og:title" content="Almost Data Science" />
+    <meta property="og:description" content="Portfolio Website by Adam Klaus" />
+    <meta property="og:image" content="{logo_path}" />
     </head>"""
 
-    st.markdown(tags, unsafe_allow_html=True)
-
-
-    no_sidebar_style = """
-        <style>
-            div[data-testid="stSidebarNav"] {display: none;}
-        </style>
-    """
+    no_sidebar_style = ""
     # cf.store_session(prefix='activity/{}.json.gz',page_name=page_name)
 
 
-    # Remove defaults from sidebar
-    st.markdown(no_sidebar_style, unsafe_allow_html=True)
-
-
     hide_streamlit_style = """
-                <style>
-                #MainMenu {visibility: hidden;}
-                footer {visibility: hidden;}
-                }
-                header {
-                visibility: hidden;
-                height: 0%;
-                }
-                </style>
-                """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
-
-    if container_style:
-        set_page_container_style(padding_top=.01)
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden; height: 0 !important; padding: 0 !important; margin: 0 !important;}
+    div[data-testid="stFooter"] {display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;}
+    .stApp > footer {display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;}
+    header {visibility: visible; height: auto; padding: 0; margin: 0;}
+    div[data-testid="stHeader"] {height: auto !important; min-height: 2.5rem !important;}
+    div[data-testid="stToolbar"] {visibility: visible; height: auto !important; padding: 0.25rem !important;}
+    .stAppViewContainer {padding-top: 0 !important;}
+    .appview-container .main .block-container {margin-top: 0 !important; padding-top: 0 !important;}
+    .block-container > div:first-child {margin-top: 0 !important; padding-top: 0 !important;}
+    .stElementContainer:first-child {margin-top: 0 !important;}
+    .element-container:first-child {margin-top: 0 !important;}
+    .stApp > header {height: 0 !important;}
+    .stApp {margin-top: 0 !important; padding-top: 0 !important;}
+    section[data-testid="stSidebar"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    div[data-testid="stSidebarNav"] {display: block !important;}
+    button[data-testid="collapsedControl"] {display: flex !important;}
+    </style>
+    """
+    container_style_css = set_page_container_style(padding_top=0, apply=False) if container_style else ""
     get_sidebar()
 
-
-    st.markdown("""
+    overflow_anchor_style = """
     <style>
-        * {
+    * {
         overflow-anchor: none !important;
-        }
-    </style>""", unsafe_allow_html=True)
+    }
+    </style>
+    """
 
     # Replace the following URLs with your actual GitHub and LinkedIn URLs
     github_profile_url = "https://github.com/atklaus"
@@ -200,8 +199,21 @@ def page_header(title, page_name, container_style=True):
     </div>
     """
 
-    # Import Font Awesome
-    st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">', unsafe_allow_html=True)
+    font_awesome = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">'
 
-    # Display the navbar
-    st.markdown(navbar_html, unsafe_allow_html=True)
+    def _clean_html(text: str) -> str:
+        return textwrap.dedent(text).strip()
+
+    combined = "\n".join(
+        [
+            _clean_html(tags),
+            _clean_html(no_sidebar_style),
+            _clean_html(hide_streamlit_style),
+            _clean_html(container_style_css) if container_style_css else "",
+            _clean_html(overflow_anchor_style),
+            _clean_html(font_awesome),
+            _clean_html(navbar_html),
+        ]
+    )
+
+    st.markdown(combined, unsafe_allow_html=True)

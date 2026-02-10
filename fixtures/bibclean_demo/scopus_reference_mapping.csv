@@ -1,9 +1,20 @@
 raw_reference,canonical_reference,cluster_id,confidence,reason
 Abramo G (2014) SCIENTOMETRICS 101 1129 DOI:10.1007/s11192-014-1269-8,"Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8",1,100,doi_exact
 "Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8","Abramo, G.; D'Angelo, C.A. (2014) Scientometrics, 101(2), 1129-1141, https://doi.org/10.1007/s11192-014-1269-8",1,100,doi_exact
-"Porter, M.E. (1985) Competitive Advantage, Free Press, New York","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",2,98,fuzzy_high
-"Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",2,98,fuzzy_high
-Sugimoto CR & Lariviere V (2018) J INFORMETR 12(3) 999-1010,"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",3,95,fuzzy_high
-"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010","Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",3,95,fuzzy_high
-Wang X (2020) Nat Commun 11:233,"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",4,100,fuzzy_high
-"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233","Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",4,100,fuzzy_high
+"Blondel, V.D. et al. (2008) J Stat Mech P10008","Blondel, V.D. et al. (2008) J Stat Mech P10008",2,0,identity
+"Kuhn, T.S. (1962) The Structure of Scientific Revolutions, University of Chicago Press","Kuhn, T.S. (1962) The Structure of Scientific Revolutions, University of Chicago Press",3,0,identity
+"Merton, R.K. (1968) Social Theory and Social Structure, Free Press","Merton, R.K. (1968) Social Theory and Social Structure, Free Press",4,0,identity
+Newman MEJ (2006) Phys Rev E 74 036104,Newman MEJ (2006) Phys Rev E 74 036104,5,0,identity
+"Newman, M.E.J. (2004) Physical Review E, 69, 066133","Newman, M.E.J. (2004) Physical Review E, 69, 066133",6,0,identity
+"Porter AL, Rafols I (2009) Res Policy 38 719","Porter AL, Rafols I (2009) Res Policy 38 719",7,0,identity
+"Porter, M.E. (1985) Competitive Advantage, Free Press, New York","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",8,97,fuzzy_high
+"Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press","Porter, Michael E. (1985) Competitive advantage: creating and sustaining superior performance. New York: Free Press",8,97,fuzzy_high
+"Price, D.J. de Solla (1963) Little Science, Big Science, Columbia University Press","Price, D.J. de Solla (1963) Little Science, Big Science, Columbia University Press",9,0,identity
+"Rafols I, Meyer M (2010) Scientometrics 82 263","Rafols I, Meyer M (2010) Scientometrics 82 263",10,0,identity
+Sugimoto CR & Lariviere V (2018) J INFORMETR 12(3) 999-1010,"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",11,100,fuzzy_high
+"Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010","Sugimoto, C.R.; Lariviere, V. (2018) The Journal of Informetrics, 12(3), 999-1010",11,100,fuzzy_high
+Uzzi B et al (2013) Science 342 468,Uzzi B et al (2013) Science 342 468,12,0,identity
+Wang X (2020) Nat Commun 11:233,"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",13,100,fuzzy_high
+"Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233","Wang, X.; Chen, Y. (2020) Nature Communications, 11, 233",13,100,fuzzy_high
+"van Eck NJ, Waltman L (2010) SCIENTOMETRICS V84 P523","van Eck, N.J.; Waltman, L. (2010) Scientometrics, 84(2), 523-538",14,92,fuzzy_high
+"van Eck, N.J.; Waltman, L. (2010) Scientometrics, 84(2), 523-538","van Eck, N.J.; Waltman, L. (2010) Scientometrics, 84(2), 523-538",14,92,fuzzy_high

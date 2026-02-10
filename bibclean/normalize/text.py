@@ -33,6 +33,25 @@ def _remove_boilerplate_tokens(text: str) -> str:
     return re.sub(pattern, " ", text)
 
 
+def _merge_initials_tokens(text: str) -> str:
+    if not text:
+        return ""
+    tokens = text.split()
+    merged = []
+    buffer = ""
+    for tok in tokens:
+        if len(tok) == 1 and tok.isalpha():
+            buffer += tok
+            continue
+        if buffer:
+            merged.append(buffer)
+            buffer = ""
+        merged.append(tok)
+    if buffer:
+        merged.append(buffer)
+    return " ".join(merged)
+
+
 def normalize_text(text: str) -> str:
     if text is None:
         return ""
@@ -42,6 +61,8 @@ def normalize_text(text: str) -> str:
     text = _punct_re.sub(" ", text)
     text = _normalize_journal_abbrev(text)
     text = _remove_boilerplate_tokens(text)
+    if config.enable_initials_normalization:
+        text = _merge_initials_tokens(text)
     text = _ws_re.sub(" ", text).strip()
     return text
 

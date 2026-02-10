@@ -37,3 +37,31 @@ def extract_first_author(text: str) -> Optional[str]:
     if not match:
         return None
     return match.group(0).lower()
+
+
+def extract_volume(norm_text: str) -> Optional[str]:
+    if not norm_text:
+        return None
+    text = norm_text.lower()
+    match = re.search(r"\b(?:v|vol|volume)\s*(\d+)\b", text)
+    if match:
+        return match.group(1)
+    return None
+
+
+def extract_page_or_article(norm_text: str, year: Optional[str], volume: Optional[str]) -> Optional[str]:
+    if not norm_text:
+        return None
+    text = norm_text.lower()
+    match = re.search(r"\b(?:p|pp)\s*(\d{3,})\b", text)
+    if match:
+        return match.group(1)
+
+    tokens = [tok for tok in re.split(r"\s+", text) if tok.isdigit() and len(tok) >= 5]
+    for tok in tokens:
+        if year and tok == year:
+            continue
+        if volume and tok == volume:
+            continue
+        return tok
+    return None

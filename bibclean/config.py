@@ -3,11 +3,16 @@
 Keep values here hardcoded for now; Streamlit can later surface them.
 """
 
-auto_merge_threshold = 95
+auto_merge_threshold = 90
 review_threshold = 88
 max_candidates_per_ref = 50
 
-doc_merge_threshold = 95
+doc_merge_threshold = 90
+merged_auto_merge_threshold = 85
+
+journal_match_bonus = 3
+enable_structured_override = True
+enable_initials_normalization = True
 
 # Journal abbreviations to normalize (lowercase keys)
 journal_abbrev_map = {
@@ -27,6 +32,7 @@ boilerplate_tokens = [
 ]
 
 # Output file name suffixes
+review_pairs_filename = "review_pairs.csv"
 scopus_clean_suffix = "_cleaned.csv"
 wos_clean_suffix = "_cleaned.txt"
 merged_scopus_filename = "merged_scopus.csv"
