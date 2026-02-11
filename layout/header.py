@@ -44,10 +44,10 @@ COLOR = "black"
 def set_page_container_style(
     max_width: int = 1100,
     max_width_100_percent: bool = False,
-    padding_top: int = 0,
+    padding_top: float = 0.25,
     padding_right: int = 10,
     padding_left: int = 1,
-    padding_bottom: int = 0.1,
+    padding_bottom: float = 0.25,
     color: str = COLOR,
     background_color: str = BACKGROUND_COLOR,
     apply: bool = True,
@@ -105,7 +105,9 @@ def render_sidebar_nav():
                 target = page_index.get(slug)
             if not target:
                 continue
-            st.page_link(target, label=module_values["button"] or "Home")
+            label = module_values["button"] or "Home"
+            if st.button(label, use_container_width=True, type="secondary"):
+                st.switch_page(target)
 
 
 def page_header(title, page_name, container_style=True):
@@ -117,4 +119,17 @@ def page_header(title, page_name, container_style=True):
     )
     render_sidebar_nav()
     if container_style:
-        set_page_container_style(padding_top=0, apply=True)
+        set_page_container_style(padding_top=0.25, padding_bottom=0.25, apply=True)
+
+    github_profile_url = "https://github.com/atklaus"
+    linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
+    navbar_html = f"""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <div style="background-color: #316b62; padding: 10px; border-radius: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; margin: 0.25rem 0 0.75rem 0;">
+        <a href="/"><i class="fas fa-home" style="font-size:24px; color: white;"></i></a>
+        <a href="{github_profile_url}"><i class="fas fa-code" style="font-size:24px; color: white;"></i></a>
+        <a href="{linkedin_profile_url}"><i class="fab fa-linkedin" style="font-size:24px; color: white;"></i></a>
+    </div>
+    """
+
+    st.markdown(navbar_html, unsafe_allow_html=True)
