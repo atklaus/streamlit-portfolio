@@ -21,14 +21,4 @@ This repo is a small monorepo: one Streamlit shell plus multiple self-contained 
 4. Add a new Streamlit page in `pages/` named like `N_<slug>.py`.
 5. Register the page in `app/config.py` under `MOD_ACCESS`.
 
-**Migration Notes**
-- `bibclean/` moved to `projects/bibclean/` (fixtures/tests live alongside it).
-- `fixtures/` and `tests/` moved to `projects/bibclean/fixtures` and `projects/bibclean/tests`.
-- `layout/` moved to `app/layout/`.
-- `lib/` split into `app/shared_ui/` (UI helpers) and `shared/` (non-UI helpers).
-- `config.py` moved to `app/config.py`.
-- Models moved to `projects/landscape_img/model` and `projects/wnba_success/model`.
-- WNBA PDF moved to `projects/wnba_success/assets/`.
-- Cover letter template moved to `projects/job_prep/assets/`.
-
 See `projects/README.md` for per-project conventions.
