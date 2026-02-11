@@ -1,6 +1,6 @@
-# Streamlit Portfolio Monorepo
+# Streamlit Portfolio
 
-This repo is a small monorepo: one Streamlit shell plus multiple self-contained projects/tools.
+This repo is one Streamlit shell plus multiple self-contained projects/tools.
 
 **Run Locally**
 1. Install dependencies: `poetry install`
