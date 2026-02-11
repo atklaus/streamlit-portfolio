@@ -29,13 +29,16 @@ import time
 
 # Initialize boto3 client
 page_header('Analytics',page_name=os.path.basename(__file__))
-cf = CF(bucket='portfolio-website')
+try:
+    cf = CF(bucket='portfolio-website')
+except RuntimeError as exc:
+    st.error(str(exc))
+    st.stop()
 
 bucket_name = 'portfolio-website'
 prefix = 'analytics/activity/'  # Update this based on your folder structure
-response = cf.client.list_objects_v2(Bucket=bucket_name, Prefix='analytics/activity/')
 
-st.cache_data(ttl=43200)
+@st.cache_data(ttl=43200, show_spinner=False)
 def fetch_data(client, bucket_name, prefix):
     response = client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
     df = pd.DataFrame()
@@ -159,5 +162,4 @@ with st.spinner('Loading report...'):
             hide_index=True,
             use_container_width=True
             )
-
 

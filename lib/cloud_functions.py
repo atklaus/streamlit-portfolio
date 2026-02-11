@@ -1,39 +1,41 @@
-import io
-import os
-import sys
-import json
-import pprint
-import requests
-import boto3
-import pandas as pd
-import requests
-from dotenv import load_dotenv
-from pathlib import Path
-from config import CREDS, BASE_DIR, LOCAL_DEV
-from io import StringIO # python3; python2: BytesIO 
-from datetime import datetime
-import subprocess
-import json
 import gzip
 import io
-import streamlit as st
+import json
+import os
 import secrets
 import socket
-import botocore.config
-import extra_streamlit_components as stx
-import uuid
-import datetime
-import random
-import string
+import subprocess
 import time
 from datetime import datetime
+from io import StringIO  # python3; python2: BytesIO
+
+import boto3
+import botocore.config
+import pandas as pd
+import streamlit as st
+import extra_streamlit_components as stx
+from dotenv import load_dotenv
+
+from config import LOCAL_DEV
+
+load_dotenv()
 
 @st.cache_resource()
 def get_manager():
     return stx.CookieManager(key='cookie')
 
-dotenv_path = Path('/Users/adamklaus/.env')
-load_dotenv(dotenv_path=dotenv_path)
+def _get_secret_value(key, required=True, default=None):
+    value = None
+    try:
+        if key in st.secrets:
+            value = st.secrets[key]
+    except Exception:
+        value = None
+    if value is None:
+        value = os.environ.get(key, default)
+    if required and not value:
+        raise RuntimeError(f"Missing required secret: {key}")
+    return value
 
 class CloudFunctions:
     # Snowflake Connection Config
@@ -57,13 +59,23 @@ class CloudFunctions:
         self.webhook_id = webhook_id
 
 
+        access_key = _get_secret_value("DO_SPACES_KEY")
+        secret_key = _get_secret_value("DO_SPACES_SECRET")
+        region = os.environ.get("DO_SPACES_REGION", "nyc3")
+        endpoint_url = os.environ.get(
+            "DO_SPACES_ENDPOINT", f"https://{region}.digitaloceanspaces.com"
+        )
+        bucket_endpoint_url = os.environ.get(
+            "DO_SPACES_BUCKET_ENDPOINT", f"https://{bucket}.{region}.digitaloceanspaces.com"
+        )
+
         self.client = boto3.client(
-            's3',
-            config=botocore.config.Config(s3={'addressing_style': 'virtual'}),
-            region_name='nyc3',
-            endpoint_url='https://nyc3.digitaloceanspaces.com',
-            aws_access_key_id='DO00MPUJA2J6ZA6ND34G',
-            aws_secret_access_key='Ne5aQh4nnaPnlxSTr76Re/bYVTd8zMpJ1LZXsX/ki+k',
+            "s3",
+            config=botocore.config.Config(s3={"addressing_style": "virtual"}),
+            region_name=region,
+            endpoint_url=endpoint_url,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
         )
 
         # if '/Users/adamklaus/' in BASE_DIR: 
@@ -77,18 +89,22 @@ class CloudFunctions:
         #     self.region = boto3.Session().region_name
         session = boto3.session.Session()
 
-        self.s3_client = session.client('s3',
-                                region_name='nyc3',
-                                endpoint_url='https://portfolio-website.nyc3.digitaloceanspaces.com',
-                                aws_access_key_id='DO00MPUJA2J6ZA6ND34G',
-                                aws_secret_access_key='Ne5aQh4nnaPnlxSTr76Re/bYVTd8zMpJ1LZXsX/ki+k')
+        self.s3_client = session.client(
+            "s3",
+            region_name=region,
+            endpoint_url=bucket_endpoint_url,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
+        )
 
 
-        self.s3_resource = session.resource('s3',
-                                region_name='nyc3',
-                                endpoint_url='https://portfolio-website.nyc3.digitaloceanspaces.com',
-                                aws_access_key_id='DO00MPUJA2J6ZA6ND34G',
-                                aws_secret_access_key='Ne5aQh4nnaPnlxSTr76Re/bYVTd8zMpJ1LZXsX/ki+k')
+        self.s3_resource = session.resource(
+            "s3",
+            region_name=region,
+            endpoint_url=bucket_endpoint_url,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
+        )
 
         # self.s3_resource = session.resource('s3')
         # self.s3_client = session.client('s3')
@@ -318,8 +334,6 @@ class CloudFunctions:
         data['result'] = df.to_dict('records')
         data['created_at'] = str(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S%z"))
         return data
-
-
 
 
 

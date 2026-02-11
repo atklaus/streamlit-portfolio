@@ -1,13 +1,11 @@
-import streamlit as st
-import numpy as np
-import plotly.graph_objects as go
+import os
 import time
-from projects.GameofLife import GameOfLife
+
+import plotly.graph_objects as go
+import streamlit as st
 
 from layout.header import page_header, set_page_container_style
-import config as c
-import math
-import os
+from projects.GameofLife import GameOfLife
 
 # The `page_header('Game of Life')` function is likely a custom function defined in the
 # `layout.header` module. It is used to display a header or title for the Game of Life page in the
@@ -31,18 +29,19 @@ with st.expander("See explanation"):
     [More details about the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
     ''')
 
-# Create columns for the inputs
-col1, col2, col3 = st.columns(3)
-prob = col1.number_input("Start Probability", min_value=0.0, max_value=1.0, value=0.1,key='gof_prob')
-board_size = col2.number_input("Board Size", min_value=5, max_value=100, value=30,key='gof_board_size')
-iters = col3.number_input("Iterations", min_value=1, max_value=100, value=10,key='gof_iters')
+with st.form("gof_form"):
+    col1, col2, col3 = st.columns(3)
+    prob = col1.number_input("Start Probability", min_value=0.0, max_value=1.0, value=0.1, key="gof_prob")
+    board_size = col2.number_input("Board Size", min_value=5, max_value=100, value=30, key="gof_board_size")
+    iters = col3.number_input("Iterations", min_value=1, max_value=100, value=10, key="gof_iters")
 
-# Create a row for the seed selection
-seed_col = st.columns(1)
-seed_options = ['None', 'Beacon', 'Blinker', 'Growth']
-# , 'Toad', 'Oscillator'
-seed_choice = seed_col[0].selectbox("Choose a popular scenario", seed_options, index=0)
-if st.button('Create New Board',key='submit_gof'):
+    seed_col = st.columns(1)
+    seed_options = ["None", "Beacon", "Blinker", "Growth"]
+    seed_choice = seed_col[0].selectbox("Choose a popular scenario", seed_options, index=0)
+
+    create_board = st.form_submit_button("Create New Board", type="primary")
+
+if create_board:
     shape = None if seed_choice == 'None' else seed_choice.lower()
     GameObj = GameOfLife(board_size, prob, shape)
     board_size = len(GameObj.b)

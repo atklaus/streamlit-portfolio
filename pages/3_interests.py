@@ -1,4 +1,8 @@
+import os
+
 import streamlit as st
+
+from layout.header import page_header
 
 def display_podcast(title, image, links):
     st.image(image, use_column_width=True)
@@ -8,6 +12,8 @@ def display_podcast(title, image, links):
 def display_book(title, image, author_link, author_name):
     st.image(image, use_column_width=True)
     st.markdown(f"[By: {author_name}]({author_link})")
+
+page_header("Interests", page_name=os.path.basename(__file__))
 
 # Favorite Podcasts
 st.header("My Favorite Podcasts")

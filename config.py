@@ -1,17 +1,13 @@
-import sys
 import os
 from dotenv import load_dotenv
-from pathlib import Path
-import sys
-import socket
-import streamlit as st
 
-dotenv_path = Path('/Users/adamklaus/.env')
-load_dotenv(dotenv_path=dotenv_path)
+load_dotenv()
 
 CREDS = os.environ
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))  
-LOCAL_DEV = 'C02G254GML7H'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Set this in your local environment to filter local analytics:
+# export LOCAL_DEV_HOSTNAME="$(hostname)"
+LOCAL_DEV = os.environ.get("LOCAL_DEV_HOSTNAME", "")
 
 MOD_ACCESS = {
     'home': {

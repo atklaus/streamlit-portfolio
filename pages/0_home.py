@@ -1,28 +1,14 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import sys
-import os
-from pathlib import Path
-from config import BASE_DIR, CREDS
-from layout.header import page_header
-from datetime import date, datetime
-from dateutil import tz
-import os
-import lib.st_utils as stu
-import os
-from tensorflow import keras
-import numpy as np
-from layout.header import page_header
-import config as c
-import math
-import requests
-from io import BytesIO
 import base64
-from lib.cloud_functions import CloudFunctions as CF
-import socket
+import math
+import os
 
-page_header('Almost Data Science',page_name=os.path.basename(__file__))
+import streamlit as st
+
+import config as c
+import lib.st_utils as stu
+import layout.header as header
+
+header.page_header('Almost Data Science',page_name=os.path.basename(__file__))
 # cf = CF(bucket='analytics')
 # cf.store_session(prefix='activity/{}.json.gz')
 
@@ -41,40 +27,34 @@ header_html = f"""
     <h2 style="margin: 0;">Hi, I'm Adam!</h2>
 </div>
 <br>
-<p>I'm a data professional and below is a collection of my interactive projects. These contain programming challenges, data visualizations, and deployed Machine Learning models. Hope you enjoy!</p>
+<p>I’m a data engineer, and this is a collection of interactive builds I’ve worked on, from data pipelines and applied ML tools to exploratory visualizations and engineering experiments. Hope you enjoy!</p>
 """
 
 st.markdown(header_html, unsafe_allow_html=True)
 
 st.markdown("""<hr style="height:3px;border:none;color:#316b62;background-color:#316b62;" /> """, unsafe_allow_html=True)
 
-def make_module(mod_dict):
-    clickable = st.button(mod_dict['button'],key='home_' + mod)
-    st.caption(mod_dict['description'])
-    if clickable:
-        stu.switch_page(mod_dict['name'])
-
 show_mod_dict = c.MOD_ACCESS.copy()
-show_mod_dict.pop('home')
+show_mod_dict.pop("home")
 
 n_per_row = 4
-rows_count = math.ceil(len(show_mod_dict)/n_per_row)
 mod_keys = list(show_mod_dict.keys())
-
-# Divide modules into rows and columns for display
-mod_keys = list(show_mod_dict.keys())
-rows_count = math.ceil(len(show_mod_dict) / n_per_row)
+rows_count = math.ceil(len(mod_keys) / n_per_row)
 for row in range(rows_count):
     cols = st.columns(n_per_row)
     for col_idx in range(n_per_row):
-        if row * n_per_row + col_idx < len(mod_keys):
-            mod = mod_keys[row * n_per_row + col_idx]
+        idx = row * n_per_row + col_idx
+        if idx < len(mod_keys):
+            mod = mod_keys[idx]
+            mod_entry = show_mod_dict[mod]
+            target = header.get_page_path(mod_entry["name"])
             with cols[col_idx]:
-                make_module(show_mod_dict[mod])
+                st.page_link(target, label=mod_entry["button"])
+                st.caption(mod_entry["description"])
         else:
             with cols[col_idx]:
                 stu.V_SPACE(1)
-    st.write('')
+    st.write("")
 
 
 
@@ -95,8 +75,6 @@ pdf_path = "Adam_Klaus_Resume.pdf"
 with open(file_path, "rb") as f:
     base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
-import base64
-
 def get_pdf_base64(file_path):
     with open(file_path, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
@@ -110,8 +88,7 @@ pdf_base64 = get_pdf_base64(pdf_path)
 # Pages Section
 with col1:
     st.markdown("<h4 style='text-align: center; color: #316b62;'>Pages</h4>", unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="/">Experience</a></p>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center;"><a href="/">Interests</a></p>', unsafe_allow_html=True)
+    st.page_link("pages/3_interests.py", label="Interests")
 
 # Contact Section
 with col2:

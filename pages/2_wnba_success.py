@@ -225,31 +225,34 @@ test= get_team_urls()
 college_list = list(test.keys())
 college_list.sort()
 
-col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
-
-with st.spinner('Loading players...'):
-    # Pages Section
+with st.form("wnba_form"):
     search_dict = {}
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
+
     with col1:
         current_year = datetime.datetime.now().year
         past_20_years = list(range(current_year - 19, current_year + 1))
         past_20_years.sort(reverse=True)
-
-        search_dict['season'] = st.selectbox(label='Select Season',options=past_20_years,key='wnba_season')
+        search_dict["season"] = st.selectbox(
+            label="Select Season", options=past_20_years, key="wnba_season"
+        )
 
     with col2:
-        search_dict['college'] = st.selectbox(label='Select College',options=college_list,key='wnba_college')
+        search_dict["college"] = st.selectbox(
+            label="Select College", options=college_list, key="wnba_college"
+        )
 
     with col3:
-        test= get_team_urls(search_dict['season'])
-        player_dict = get_player_urls(test[search_dict['college']])
+        test = get_team_urls(search_dict["season"])
+        player_dict = get_player_urls(test[search_dict["college"]])
         player_list = list(player_dict)
         player_list.sort()
-        search_dict['player'] = st.selectbox(label='Select Player',options=player_list,key='wnba_player')
-        search_dict['player_url'] = player_dict[search_dict['player']]
+        search_dict["player"] = st.selectbox(
+            label="Select Player", options=player_list, key="wnba_player"
+        )
+        search_dict["player_url"] = player_dict[search_dict["player"]]
 
-
-    search = st.button('Predict Success', key='submit_wnba')
+    search = st.form_submit_button("Predict Success", type="primary")
 
 if search:
     with st.spinner("Running model..."):
