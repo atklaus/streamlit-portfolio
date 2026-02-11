@@ -286,7 +286,7 @@ def _apply_review_merges(mapping_df: pd.DataFrame, review_df: pd.DataFrame) -> p
         row = mapping_df.loc[mapping_df["raw_reference"] == ref].iloc[0].to_dict()
         row["canonical_reference"] = canonical
         row["cluster_id"] = cluster_id
-        if row["reason"] == "identity" and canonical != ref:
+        if row["reason"] == "unique" and canonical != ref:
             row["reason"] = "manual_needed"
         rows.append(row)
 

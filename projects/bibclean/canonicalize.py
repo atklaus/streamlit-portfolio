@@ -172,7 +172,7 @@ def canonicalize_references(
                 reason = "manual_needed"
                 manual_needed_count += 1
             else:
-                reason = "identity"
+                reason = "unique"
             canonical_reference = ref.raw
 
         rows.append(
