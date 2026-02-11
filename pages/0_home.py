@@ -1,5 +1,4 @@
 import base64
-import math
 import os
 
 import streamlit as st
@@ -7,8 +6,9 @@ import streamlit as st
 from app import config as c
 from app.shared_ui import st_utils as stu
 from app.layout import header
+from app.ui.cards import ProjectCard, render_project_cards
 
-header.page_header('Almost Data Science',page_name=os.path.basename(__file__))
+header.page_header('DataEngBuilds',page_name=os.path.basename(__file__))
 # cf = CF(bucket='analytics')
 # cf.store_session(prefix='activity/{}.json.gz')
 
@@ -38,34 +38,38 @@ st.markdown(
 )
 
 stu.V_SPACE(1)
+def _split_label(label: str) -> tuple[str, str]:
+    icon = "◆"
+    title = label
+    parts = label.split(" ", 1)
+    if len(parts) == 2 and not any(ch.isalnum() for ch in parts[0]):
+        icon = parts[0]
+        title = parts[1].strip()
+    return icon, title
+
 
 show_mod_dict = c.MOD_ACCESS.copy()
 show_mod_dict.pop("home")
+ICON_OVERRIDES = {
+    "ellipses": "🫧",
+}
 
-n_per_row = 4
-mod_keys = list(show_mod_dict.keys())
-rows_count = math.ceil(len(mod_keys) / n_per_row)
-for row in range(rows_count):
-    cols = st.columns(n_per_row)
-    for col_idx in range(n_per_row):
-        idx = row * n_per_row + col_idx
-        if idx < len(mod_keys):
-            mod = mod_keys[idx]
-            mod_entry = show_mod_dict[mod]
-            target = header.get_page_path(mod_entry["name"])
-            with cols[col_idx]:
-                if st.button(
-                    mod_entry["button"],
-                    key=f"home_{mod}",
-                    use_container_width=True,
-                    type="secondary",
-                ):
-                    st.switch_page(target)
-                st.caption(mod_entry["description"])
-        else:
-            with cols[col_idx]:
-                stu.V_SPACE(1)
-    st.write("")
+cards = []
+for mod in show_mod_dict.keys():
+    mod_entry = show_mod_dict[mod]
+    icon, title = _split_label(mod_entry["button"])
+    icon = ICON_OVERRIDES.get(mod_entry["name"], icon)
+    cards.append(
+        ProjectCard(
+            title=title,
+            description=mod_entry["description"],
+            icon=icon,
+            destination=header.get_page_path(mod_entry["name"]),
+        )
+    )
+
+render_project_cards(cards)
+stu.V_SPACE(1)
 
 st.markdown(
     """<hr style="height:2px;border:none;color:#316b62;background-color:#316b62;margin: 0.75rem 0;" /> """,
@@ -114,99 +118,17 @@ footer_html = f"""
     <div>
       <h4>Contact</h4>
       <div><a href="mailto:atk14219@gmail.com" target="_blank">Email</a></div>
-      <div style="margin-top: 0.35rem;">
-        <a href="data:application/pdf;base64,{pdf_base64}" download="Adam_Klaus_Resume.pdf" target="_blank">Resume</a>
-      </div>
     </div>
     <div>
       <h4>About</h4>
       <div>Website coded in Python using Streamlit and hosted through DigitalOcean</div>
     </div>
+      <h4></h4>
     <div class="ads-footer-meta">
-      © 2023 Copyright, All Rights Reserved. almostdatascience.com
+      © 2026 Copyright, All Rights Reserved. dataengbuilds.com
     </div>
   </div>
 </div>
 """
 
 st.markdown(footer_html, unsafe_allow_html=True)
-
-
-
-
-# font_awesome_link = """
-# <head>
-# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-# </head>
-# """
-# st.markdown(font_awesome_link, unsafe_allow_html=True)
-
-# # Example icons (replace with your specific FontAwesome icon classes)
-# icons = [
-#     "fas fa-home",
-#     "fas fa-user",
-#     "fas fa-cogs",
-#     "fas fa-chart-line",
-#     "fas fa-database",
-# ]
-
-# # The rest is the same
-# cards_data = [
-#     {"title": "Project 1", "description": "Description of Project 1", "link": "#"},
-#     {"title": "Project 2", "description": "Description of Project 2", "link": "#"},
-#     {"title": "Project 3", "description": "Description of Project 3", "link": "#"},
-#     {"title": "Project 4", "description": "Description of Project 4", "link": "#"},
-#     {"title": "Project 5", "description": "Description of Project 5", "link": "#"},
-# ]
-
-# # Custom CSS for the cards
-# card_style = """
-# <style>
-# .card {
-#     border-radius: 20px;
-#     background-color: #316b62;
-#     padding: 15px;
-#     text-align: center;
-#     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-#     cursor: pointer;
-#     width: 100%;
-#     margin-bottom: 20px;
-#     color: white;
-# }
-# .card a {
-#     color: inherit;
-#     text-decoration: none;
-#     display: block;
-# }
-# .card img {
-#     margin: 0 auto;
-#     display: block;
-# }
-# .card h2 {
-#     font-size: 18px;  /* Smaller project name */
-#     margin: 10px 0;
-# }
-# </style>
-# """
-
-# st.markdown(card_style, unsafe_allow_html=True)
-
-# chunk_size = 4
-# for i in range(0, len(cards_data), chunk_size):
-#     chunked_cards = cards_data[i:i + chunk_size]
-#     chunked_icons = icons[i:i + chunk_size]
-
-#     cols = st.columns(len(chunked_cards))
-#     for j, card in enumerate(chunked_cards):
-#         with cols[j]:
-#             icon_class = chunked_icons[j]
-#             card_content = (
-#                 f'<div class="card">'
-#                 f'<a href="{card["link"]}" target="_blank">'
-#                 f'<i class="{icon_class}" style="font-size:48px; color: white;"></i>'
-#                 f'<h2>{card["title"]}</h2>'
-#                 f"<p>{card['description']}</p>"
-#                 f"</a></div>"
-#             )
-#             st.markdown(card_content, unsafe_allow_html=True)
-        

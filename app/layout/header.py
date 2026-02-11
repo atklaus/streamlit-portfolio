@@ -95,7 +95,6 @@ def get_page_path(name: str) -> str:
 
 def render_sidebar_nav():
     with st.sidebar:
-        st.write("## Almost Data Science")
         if st.button("Home", use_container_width=True, type="secondary"):
             st.switch_page("pages/0_home.py")
 
