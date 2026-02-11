@@ -36,7 +36,15 @@ with st.form("gof_form"):
     iters = col3.number_input("Iterations", min_value=1, max_value=100, value=10, key="gof_iters")
 
     seed_col = st.columns(1)
-    seed_options = ["None", "Beacon", "Blinker", "Growth"]
+    seed_options = [
+        "None",
+        "Beacon",
+        "Blinker",
+        "Growth",
+        "Glider Gun",
+        "Acorn",
+        "R-pentomino",
+    ]
     seed_choice = seed_col[0].selectbox("Choose a popular scenario", seed_options, index=0)
 
     create_board = st.form_submit_button("Create New Board", type="primary")

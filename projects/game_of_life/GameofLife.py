@@ -201,6 +201,56 @@ class GameOfLife:
             universe[15:20, 18:23] = unbounded
             self.b = universe
             self.s = 40
+
+        elif choice == 'glider gun':
+            # Gosper glider gun
+            universe = np.zeros((50, 50))
+            gun_cells = [
+                (5, 1), (5, 2), (6, 1), (6, 2),
+                (3, 13), (3, 14), (4, 12), (4, 16), (5, 11), (5, 17),
+                (6, 11), (6, 15), (6, 17), (6, 18), (7, 11), (7, 17),
+                (8, 12), (8, 16), (9, 13), (9, 14),
+                (1, 25), (2, 23), (2, 25), (3, 21), (3, 22),
+                (4, 21), (4, 22), (5, 21), (5, 22), (6, 23),
+                (6, 25), (7, 25),
+                (3, 35), (3, 36), (4, 35), (4, 36),
+            ]
+            row_offset = 5
+            col_offset = 5
+            for r, c in gun_cells:
+                universe[r + row_offset, c + col_offset] = 1
+            self.b = universe
+            self.s = 50
+
+        elif choice == 'acorn':
+            # Acorn (methuselah)
+            universe = np.zeros((40, 40))
+            acorn_cells = [
+                (0, 1),
+                (1, 3),
+                (2, 0), (2, 1), (2, 4), (2, 5), (2, 6),
+            ]
+            row_offset = 18
+            col_offset = 15
+            for r, c in acorn_cells:
+                universe[r + row_offset, c + col_offset] = 1
+            self.b = universe
+            self.s = 40
+
+        elif choice == 'r-pentomino':
+            # R-pentomino (methuselah)
+            universe = np.zeros((40, 40))
+            r_pentomino = [
+                (0, 1), (0, 2),
+                (1, 0), (1, 1),
+                (2, 1),
+            ]
+            row_offset = 18
+            col_offset = 18
+            for r, c in r_pentomino:
+                universe[r + row_offset, c + col_offset] = 1
+            self.b = universe
+            self.s = 40
         
 
 
@@ -227,6 +277,5 @@ class GameOfLife:
 #     temp_df = pd.DataFrame(data=GameObj.grids[i])
 #     temp_df['step'] = i
 #     df = pd.concat([df,temp_df])
-
 
 
