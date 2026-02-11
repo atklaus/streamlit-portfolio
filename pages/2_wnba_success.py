@@ -9,7 +9,7 @@ import numpy as np
 import pickle
 import time
 import random
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from shared import utils
 import requests
 import re
@@ -18,6 +18,7 @@ import joblib
 import datetime
 
 MODEL_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "wnba_success.pkl")
+IMPUTER_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "imputer.pkl")
 PDF_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "assets", "Predicting_WNBA_Success.pdf")
 
 BASE_URL = 'https://www.sports-reference.com'
@@ -31,6 +32,23 @@ def init_model():
     # with open(MODEL_PATH, 'rb') as model_file:
     #     loaded_model = pickle.load(model_file)
     return loaded_model
+
+@st.cache_resource(show_spinner=False, ttl=43200)
+def init_imputer():
+    return joblib.load(IMPUTER_PATH)
+
+def get_pg_sos_fallback():
+    try:
+        imputer = init_imputer()
+    except Exception:
+        return None
+    if not hasattr(imputer, "feature_names_in_") or not hasattr(imputer, "statistics_"):
+        return None
+    try:
+        idx = list(imputer.feature_names_in_).index("pg_sos")
+    except ValueError:
+        return None
+    return imputer.statistics_[idx]
 
 # Load the model from the file
 
@@ -71,6 +89,58 @@ def get_player_url(search_dict):
     return link_url
     # To avoid making too many rapid requests, sleep for a few seconds between searches
 
+def _find_table_in_comments(soup, table_ids, header_text):
+    header_text = (header_text or "").lower()
+    table_ids = table_ids or []
+    for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
+        comment_text = str(comment).lower()
+        if header_text and header_text not in comment_text and not any(tid in comment_text for tid in table_ids):
+            continue
+        comment_soup = BeautifulSoup(comment, "lxml")
+        for table_id in table_ids:
+            table = comment_soup.find("table", id=table_id)
+            if table is not None:
+                return table
+        table = comment_soup.find("table")
+        if table is not None:
+            return table
+    return None
+
+def _find_stats_table(soup, header_text, table_ids=None):
+    header_text = (header_text or "").strip()
+    header_text_lower = header_text.lower()
+
+    h2_tag = soup.find(
+        lambda tag: tag.name in ("h2", "h3")
+        and tag.get_text(strip=True).lower() == header_text_lower
+    )
+    if h2_tag is None:
+        h2_tag = soup.find(
+            lambda tag: tag.name in ("h2", "h3")
+            and header_text_lower in tag.get_text(strip=True).lower()
+        )
+
+    table = h2_tag.find_next("table") if h2_tag is not None else None
+
+    if table is None and table_ids:
+        for table_id in table_ids:
+            table = soup.find("table", id=table_id)
+            if table is not None:
+                break
+
+    if table is None:
+        table = _find_table_in_comments(soup, table_ids, header_text_lower)
+
+    return table
+
+def _table_to_df(table):
+    if table is None:
+        return None
+    try:
+        return pd.read_html(str(table))[0]
+    except ValueError:
+        return None
+
 def get_player_df(search_dict):
     # player_url = get_player_url(search_dict)
     player_url = BASE_URL + search_dict['player_url']
@@ -98,20 +168,36 @@ def get_player_df(search_dict):
 
     soup = BeautifulSoup(response.content, 'lxml')
     
-    h2_tag = soup.find('h2', string='Advanced')
-    table = h2_tag.find_next('table')            
-    player_adv_df = pd.read_html(str(table))[0]
-    dataframes['adv_'] = player_adv_df.add_prefix('adv_')
+    missing_sections = []
+    adv_table = _find_stats_table(soup, "Advanced", table_ids=["players_advanced", "advanced"])
+    player_adv_df = _table_to_df(adv_table)
+    if player_adv_df is None:
+        missing_sections.append("Advanced")
+    else:
+        dataframes["adv_"] = player_adv_df.add_prefix("adv_")
 
-    h2_tag = soup.find('h2', string='Per Game')
-    table = h2_tag.find_next('table')            
-    player_pg_df = pd.read_html(str(table))[0]
-    dataframes['pg_'] = player_pg_df.add_prefix('pg_')
+    pg_table = _find_stats_table(soup, "Per Game", table_ids=["players_per_game", "per_game"])
+    player_pg_df = _table_to_df(pg_table)
+    if player_pg_df is None:
+        missing_sections.append("Per Game")
+    else:
+        dataframes["pg_"] = player_pg_df.add_prefix("pg_")
 
-    h2_tag = soup.find('h2', string='Totals')
-    table = h2_tag.find_next('table')            
-    player_tot_df = pd.read_html(str(table))[0]
-    dataframes['tot_'] = player_tot_df.add_prefix('tot_')
+    tot_table = _find_stats_table(soup, "Totals", table_ids=["players_totals", "totals"])
+    player_tot_df = _table_to_df(tot_table)
+    if player_tot_df is None:
+        missing_sections.append("Totals")
+    else:
+        dataframes["tot_"] = player_tot_df.add_prefix("tot_")
+
+    if missing_sections:
+        st.error(
+            "Stats tables missing on Sports-Reference for "
+            f"{search_dict.get('player', 'this player')}: "
+            + ", ".join(missing_sections)
+            + ". Try a different player or season."
+        )
+        return None
 
     # Perform merging
     base_df = dataframes['pg_'].merge(dataframes['adv_'], how='left', left_on='pg_Season', right_on='adv_Season')
@@ -228,41 +314,59 @@ test= get_team_urls()
 college_list = list(test.keys())
 college_list.sort()
 
-with st.form("wnba_form"):
-    search_dict = {}
-    col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
+search_dict = {}
+col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 
-    with col1:
-        current_year = datetime.datetime.now().year
-        past_20_years = list(range(current_year - 19, current_year + 1))
-        past_20_years.sort(reverse=True)
-        search_dict["season"] = st.selectbox(
-            label="Select Season", options=past_20_years, key="wnba_season"
-        )
+with col1:
+    current_year = datetime.datetime.now().year
+    past_20_years = list(range(current_year - 19, current_year + 1))
+    past_20_years.sort(reverse=True)
+    search_dict["season"] = st.selectbox(
+        label="Select Season", options=past_20_years, key="wnba_season"
+    )
 
-    with col2:
-        search_dict["college"] = st.selectbox(
-            label="Select College", options=college_list, key="wnba_college"
-        )
+with col2:
+    search_dict["college"] = st.selectbox(
+        label="Select College", options=college_list, key="wnba_college"
+    )
 
-    with col3:
-        test = get_team_urls(search_dict["season"])
-        player_dict = get_player_urls(test[search_dict["college"]])
-        player_list = list(player_dict)
-        player_list.sort()
-        search_dict["player"] = st.selectbox(
-            label="Select Player", options=player_list, key="wnba_player"
-        )
-        search_dict["player_url"] = player_dict[search_dict["player"]]
+with col3:
+    test = get_team_urls(search_dict["season"])
+    player_dict = get_player_urls(test[search_dict["college"]])
+    player_list = list(player_dict)
+    player_list.sort()
+    search_dict["player"] = st.selectbox(
+        label="Select Player", options=player_list, key="wnba_player"
+    )
+    search_dict["player_url"] = player_dict[search_dict["player"]]
 
-    search = st.form_submit_button("Predict Success", type="primary")
+search = st.button("Predict Success", type="primary")
 
 if search:
     with st.spinner("Running model..."):
         base_df = get_player_df(search_dict)
-
+        if base_df is None or base_df.empty:
+            st.stop()
 
         top_features = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
+        if "pg_sos" not in base_df.columns or base_df["pg_sos"].isna().all():
+            fallback = get_pg_sos_fallback()
+            if fallback is not None:
+                base_df["pg_sos"] = fallback
+                # st.warning(
+                #     "Strength of Schedule (pg_sos) not found. "
+                #     "Using training mean as fallback."
+                # )
+
+        missing_features = [col for col in top_features if col not in base_df.columns]
+        if missing_features:
+            st.error(
+                "Missing required stats for prediction: "
+                + ", ".join(missing_features)
+                + ". The Sports-Reference page may not include these columns."
+            )
+            st.write("Available columns:", sorted(base_df.columns))
+            st.stop()
         
         df= base_df[top_features] 
         st.markdown("Features used in Prediction")
