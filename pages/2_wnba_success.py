@@ -1,21 +1,24 @@
 import streamlit as st
 import pandas as pd
-from config import BASE_DIR, CREDS
-from layout.header import page_header
+from app.config import BASE_DIR, CREDS
+from app.layout.header import page_header
 import os
-import lib.st_utils as stu
+from app.shared_ui import st_utils as stu
 import os
 import numpy as np
 import pickle
 import time
 import random
 from bs4 import BeautifulSoup
-import lib.utils as utils
+from shared import utils
 import requests
 import re
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
 import joblib
 import datetime
+
+MODEL_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "wnba_success.pkl")
+PDF_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "assets", "Predicting_WNBA_Success.pdf")
 
 BASE_URL = 'https://www.sports-reference.com'
 SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
@@ -23,9 +26,9 @@ SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-sch
 
 @st.cache_resource(show_spinner='Loading model...',ttl=43200)
 def init_model():
-    loaded_model = joblib.load('wnba_model/wnba_success.pkl')
+    loaded_model = joblib.load(MODEL_PATH)
 
-    # with open('wnba_model/wnba_success.pkl', 'rb') as model_file:
+    # with open(MODEL_PATH, 'rb') as model_file:
     #     loaded_model = pickle.load(model_file)
     return loaded_model
 
@@ -163,7 +166,7 @@ def display_paper_context():
         # )
 
 
-        pdf_path = "static/files/Predicting_WNBA_Success.pdf"
+        pdf_path = PDF_PATH
 
         with open(pdf_path, "rb") as f:
             pdf_bytes = f.read()
@@ -178,7 +181,7 @@ def display_paper_context():
 
 
         # Display the PDF using the function
-        file_path = os.getcwd()+ '/static/files/Predicting_WNBA_Success.pdf'
+        file_path = PDF_PATH
 
         displayPDF(file_path)
 

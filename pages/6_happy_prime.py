@@ -14,10 +14,10 @@ import streamlit as st
 from bs4 import BeautifulSoup
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
 
-import lib.st_utils as stu
-import lib.utils as utils
-from config import BASE_DIR, CREDS
-from layout.header import page_header
+from app.shared_ui import st_utils as stu
+from shared import utils
+from app.config import BASE_DIR, CREDS
+from app.layout.header import page_header
 from projects.happy_prime import HappyPrime
 
 

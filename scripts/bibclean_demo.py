@@ -6,22 +6,23 @@ from pathlib import Path
 
 import pandas as pd
 
-from bibclean.apply.scopus_apply import apply_mapping_to_scopus
-from bibclean.apply.wos_apply import apply_mapping_to_wos_records
-from bibclean.canonicalize import canonicalize_references
-from bibclean import config
-from bibclean.io.detect import detect_input_format
-from bibclean.io.scopus_csv import extract_scopus_references, load_scopus_csv
-from bibclean.io.wos_plaintext import extract_wos_references, parse_wos_plaintext, write_wos_plaintext
-from bibclean.merge import compute_canonical_doc_id, merge_documents
-from bibclean.io.scopus_csv import build_documents_from_scopus
-from bibclean.io.wos_plaintext import build_documents_from_wos
+from projects.bibclean.apply.scopus_apply import apply_mapping_to_scopus
+from projects.bibclean.apply.wos_apply import apply_mapping_to_wos_records
+from projects.bibclean.canonicalize import canonicalize_references
+from projects.bibclean import config
+from projects.bibclean.io.detect import detect_input_format
+from projects.bibclean.io.scopus_csv import extract_scopus_references, load_scopus_csv
+from projects.bibclean.io.wos_plaintext import extract_wos_references, parse_wos_plaintext, write_wos_plaintext
+from projects.bibclean.merge import compute_canonical_doc_id, merge_documents
+from projects.bibclean.io.scopus_csv import build_documents_from_scopus
+from projects.bibclean.io.wos_plaintext import build_documents_from_wos
 
 
 # --- Inputs (hardcoded) ---
-SCOPUS_PATH = Path("fixtures/scopus_sample.csv")
-WOS_PATH = Path("fixtures/wos_sample.txt")
-OUTPUT_DIR = Path("fixtures/bibclean_demo")
+FIXTURES_DIR = Path(__file__).resolve().parents[1] / "projects" / "bibclean" / "fixtures"
+SCOPUS_PATH = FIXTURES_DIR / "scopus_sample.csv"
+WOS_PATH = FIXTURES_DIR / "wos_sample.txt"
+OUTPUT_DIR = FIXTURES_DIR / "bibclean_demo"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 

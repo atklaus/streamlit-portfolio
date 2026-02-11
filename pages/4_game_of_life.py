@@ -4,8 +4,8 @@ import time
 import plotly.graph_objects as go
 import streamlit as st
 
-from layout.header import page_header, set_page_container_style
-from projects.GameofLife import GameOfLife
+from app.layout.header import page_header, set_page_container_style
+from projects.game_of_life import GameOfLife
 
 # The `page_header('Game of Life')` function is likely a custom function defined in the
 # `layout.header` module. It is used to display a header or title for the Game of Life page in the

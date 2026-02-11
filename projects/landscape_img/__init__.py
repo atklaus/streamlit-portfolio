@@ -1,0 +1,1 @@
+"""Landscape image prediction project."""

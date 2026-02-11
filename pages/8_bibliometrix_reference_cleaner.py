@@ -7,29 +7,29 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from layout.header import page_header
-import lib.st_utils as stu
+from app.layout.header import page_header
+from app.shared_ui import st_utils as stu
 
-from bibclean import config as bc_config
-from bibclean.apply.scopus_apply import apply_mapping_to_scopus
-from bibclean.apply.wos_apply import apply_mapping_to_wos_records
-from bibclean.canonicalize import canonicalize_references
-from bibclean.io.detect import detect_input_format
-from bibclean.io.scopus_csv import (
+from projects.bibclean import config as bc_config
+from projects.bibclean.apply.scopus_apply import apply_mapping_to_scopus
+from projects.bibclean.apply.wos_apply import apply_mapping_to_wos_records
+from projects.bibclean.canonicalize import canonicalize_references
+from projects.bibclean.io.detect import detect_input_format
+from projects.bibclean.io.scopus_csv import (
     build_documents_from_scopus,
     extract_scopus_references,
     load_scopus_csv,
 )
-from bibclean.io.wos_plaintext import (
+from projects.bibclean.io.wos_plaintext import (
     WosFile,
     build_documents_from_wos,
     extract_wos_references,
     parse_wos_plaintext,
     write_wos_plaintext,
 )
-from bibclean.match.cluster import UnionFind
-from bibclean.merge import compute_canonical_doc_id, merge_documents
-from bibclean.normalize.parse import extract_doi
+from projects.bibclean.match.cluster import UnionFind
+from projects.bibclean.merge import compute_canonical_doc_id, merge_documents
+from projects.bibclean.normalize.parse import extract_doi
 
 
 
@@ -108,7 +108,8 @@ def _get_sample_upload():
     sample_type = st.session_state.get("bibclean_sample")
     if not sample_type:
         return None
-    fixtures_dir = Path(__file__).resolve().parent.parent / "fixtures"
+    root_dir = Path(__file__).resolve().parents[1]
+    fixtures_dir = root_dir / "projects" / "bibclean" / "fixtures"
     if sample_type == "scopus":
         path = fixtures_dir / "scopus_sample.csv"
     else:

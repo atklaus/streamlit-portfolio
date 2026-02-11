@@ -2,9 +2,9 @@ import boto3
 import pandas as pd
 from io import BytesIO
 import json
-from lib.cloud_functions import CloudFunctions as CF
-from layout.header import page_header
-import config as c
+from shared.cloud_functions import CloudFunctions as CF
+from app.layout.header import page_header
+from app import config as c
 import gzip
 import io
 import streamlit as st
@@ -18,7 +18,7 @@ import os
 import boto3
 import botocore.config
 import pandas as pd
-import lib.st_utils as stu
+from app.shared_ui import st_utils as stu
 import extra_streamlit_components as stx
 import uuid
 import datetime
@@ -162,4 +162,3 @@ with st.spinner('Loading report...'):
             hide_index=True,
             use_container_width=True
             )
-

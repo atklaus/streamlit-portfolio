@@ -4,9 +4,9 @@ import os
 
 import streamlit as st
 
-import config as c
-import lib.st_utils as stu
-import layout.header as header
+from app import config as c
+from app.shared_ui import st_utils as stu
+from app.layout import header
 
 header.page_header('Almost Data Science',page_name=os.path.basename(__file__))
 # cf = CF(bucket='analytics')
@@ -37,6 +37,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+stu.V_SPACE(1)
+
 show_mod_dict = c.MOD_ACCESS.copy()
 show_mod_dict.pop("home")
 
@@ -65,14 +67,11 @@ for row in range(rows_count):
                 stu.V_SPACE(1)
     st.write("")
 
+st.markdown(
+    """<hr style="height:2px;border:none;color:#316b62;background-color:#316b62;margin: 0.75rem 0;" /> """,
+    unsafe_allow_html=True,
+)
 
-
-# # Display data (optional)
-# data = load_data()
-# st.write(f"Total Visits: {data['visit_count']}")
-# st.write(f"Unique Sessions: {len(data['session_ids'])}")
-
-# stu.V_SPACE(4)
 file_path = os.getcwd()+ '/static/files/Adam_Klaus_Resume.pdf'
 pdf_path = "Adam_Klaus_Resume.pdf"
 
@@ -91,11 +90,6 @@ pdf_base64 = get_pdf_base64(pdf_path)
 
 footer_html = f"""
 <style>
-.ads-footer {{
-    border-top: 1px solid rgba(49, 107, 98, 0.5);
-    padding: 1rem 0.5rem 0.25rem 0.5rem;
-    margin-top: 0.5rem;
-}}
 .ads-footer-grid {{
     display: flex;
     flex-wrap: wrap;

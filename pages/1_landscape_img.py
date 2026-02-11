@@ -3,21 +3,24 @@ import pandas as pd
 import sys
 import os
 from pathlib import Path
-from config import BASE_DIR, CREDS
-from layout.header import page_header
+from app.config import BASE_DIR, CREDS
+from app.layout.header import page_header
 import datetime
 from datetime import date, datetime
 from dateutil import tz
 import os
-import lib.st_utils as stu
+from app.shared_ui import st_utils as stu
 import os
 import cv2
 from tensorflow import keras
 import numpy as np
 
+ROOT_DIR = Path(__file__).resolve().parents[1]
+MODEL_DIR = ROOT_DIR / "projects" / "landscape_img" / "model"
+
 @st.cache_resource(ttl=43200,show_spinner='Loading Model')
 def init_model():
-    return keras.models.load_model('img_model')
+    return keras.models.load_model(str(MODEL_DIR))
 
 
 def image_to_tiles(img, tile_size=(150, 150), overlap=50):
@@ -130,4 +133,3 @@ if uploaded_file is not None:
     #     st.markdown("2. Hit enter or click away to store the change")
     #     st.markdown("3. Click submit and changes will be recorded")
     #     st.markdown("4. You can validate this update by reloading the page and seeing the values")
-
