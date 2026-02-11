@@ -46,10 +46,14 @@ if create_board:
     GameObj = GameOfLife(board_size, prob, shape)
     board_size = len(GameObj.b)
     GameObj.advance(iters)
+    square_size = min(900, max(560, int(board_size * 16)))
      # Adjust the margin of the Plotly chart container
     st.markdown('<style>#root .stPlotly > div { margin-top: 0px !important; }</style>', unsafe_allow_html=True)
     # Create a persistent placeholder for the plot immediately after the button
-    plot = st.empty()
+    plot_container = st.container()
+    with plot_container:
+        center_col = st.columns([1, 2, 1])[1]
+        plot = center_col.empty()
     for k in range(iters):
         fig = go.Figure(
             data=[go.Heatmap(
@@ -64,6 +68,8 @@ if create_board:
                 yaxis=dict(range=[0, board_size], autorange=False, showgrid=False, zeroline=False),
                 showlegend=False,
                 margin=dict(t=10, b=10, l=10, r=10),  # Reducing margins
+                width=square_size,
+                height=square_size,
                 font=dict(size=10)  # Adjust font size if needed
             )
         )
@@ -71,9 +77,10 @@ if create_board:
                             showgrid=False, zeroline=False, showticklabels=False,
                             ticks='')
         fig.update_layout(showlegend=False, autosize=True, xaxis=axis_template, yaxis=axis_template)
+        fig.update_yaxes(scaleanchor="x", scaleratio=1)
         fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', transition={'duration': 1000})
         fig.update_traces(showscale=False)
         
-        # Update the plot using the persistent placeholder
-        plot.plotly_chart(fig, use_container_width=True, key=f"gof_chart_{k}")
+        # Update the plot centered
+        plot.plotly_chart(fig, use_container_width=False, key=f"gof_chart_{k}")
         time.sleep(0.5)  # Adding a delay to create an animation effect
