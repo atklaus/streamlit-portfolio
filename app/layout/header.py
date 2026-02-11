@@ -94,21 +94,20 @@ def get_page_path(name: str) -> str:
 
 
 def render_sidebar_nav():
-    page_index = _page_index()
     with st.sidebar:
         st.write("## Almost Data Science")
-        for module_key, module_values in c.MOD_ACCESS.items():
-            raw_name = module_values.get("name", module_key)
-            slug = _standardize_name(raw_name)
-            if slug in {"", "home"}:
-                target = page_index["home"]
-            else:
-                target = page_index.get(slug)
-            if not target:
-                continue
-            label = module_values["button"] or "Home"
-            if st.button(label, use_container_width=True, type="secondary"):
-                st.switch_page(target)
+        if st.button("Home", use_container_width=True, type="secondary"):
+            st.switch_page("pages/0_home.py")
+
+def _hide_streamlit_sidebar_nav():
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebarNav"] { display: none; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def page_header(title, page_name, container_style=True):
@@ -118,6 +117,7 @@ def page_header(title, page_name, container_style=True):
         layout="wide",
         initial_sidebar_state="expanded",
     )
+    _hide_streamlit_sidebar_nav()
     render_sidebar_nav()
     if container_style:
         set_page_container_style(padding_top=0.25, padding_bottom=0.25, apply=True)

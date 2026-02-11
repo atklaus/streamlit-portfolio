@@ -19,6 +19,7 @@ import datetime
 
 MODEL_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "wnba_success.pkl")
 IMPUTER_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "imputer.pkl")
+SCALER_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "scaler.pkl")
 PDF_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "assets", "Predicting_WNBA_Success.pdf")
 
 BASE_URL = 'https://www.sports-reference.com'
@@ -37,6 +38,19 @@ def init_model():
 def init_imputer():
     return joblib.load(IMPUTER_PATH)
 
+@st.cache_resource(show_spinner=False, ttl=43200)
+def init_scaler():
+    return joblib.load(SCALER_PATH)
+
+def get_imputer_stats():
+    try:
+        imputer = init_imputer()
+    except Exception:
+        return {}
+    if not hasattr(imputer, "feature_names_in_") or not hasattr(imputer, "statistics_"):
+        return {}
+    return dict(zip(imputer.feature_names_in_, imputer.statistics_))
+
 def get_pg_sos_fallback():
     try:
         imputer = init_imputer()
@@ -49,6 +63,40 @@ def get_pg_sos_fallback():
     except ValueError:
         return None
     return imputer.statistics_[idx]
+
+def prepare_features_for_model(base_df, feature_cols):
+    if base_df is None or base_df.empty:
+        return None
+
+    missing_cols = [col for col in feature_cols if col not in base_df.columns]
+    if missing_cols:
+        st.error(
+            "Missing required stats for prediction: "
+            + ", ".join(missing_cols)
+            + ". The Sports-Reference page may not include these columns."
+        )
+        st.write("Available columns:", sorted(base_df.columns))
+        return None
+
+    features = base_df[feature_cols].copy()
+    stats = get_imputer_stats()
+    for col in features.columns:
+        if features[col].isna().any() and col in stats:
+            features[col] = features[col].fillna(stats[col])
+
+    if features.isna().any().any():
+        st.error("Some required stats are missing and could not be imputed.")
+        st.write("Missing columns:", list(features.columns[features.isna().any()]))
+        return None
+
+    try:
+        scaler = init_scaler()
+        if hasattr(scaler, "feature_names_in_"):
+            features = features[list(scaler.feature_names_in_)]
+        return scaler.transform(features)
+    except Exception as exc:
+        st.error(f"Failed to apply scaler: {exc}")
+        return None
 
 # Load the model from the file
 
@@ -358,16 +406,6 @@ if search:
                 #     "Using training mean as fallback."
                 # )
 
-        missing_features = [col for col in top_features if col not in base_df.columns]
-        if missing_features:
-            st.error(
-                "Missing required stats for prediction: "
-                + ", ".join(missing_features)
-                + ". The Sports-Reference page may not include these columns."
-            )
-            st.write("Available columns:", sorted(base_df.columns))
-            st.stop()
-        
         df= base_df[top_features] 
         st.markdown("Features used in Prediction")
         st.dataframe(df,
@@ -393,8 +431,11 @@ if search:
         # st.write(model.feature_importances_)
 
         model = init_model()
-        predicted_values = model.predict(df)
-        prob_values = model.predict_proba(df)
+        features = prepare_features_for_model(base_df, top_features)
+        if features is None:
+            st.stop()
+        predicted_values = model.predict(features)
+        prob_values = model.predict_proba(features)
         pred_df = base_df[["player_name"]].copy()
         pred_df["Predicted_Value"] = predicted_values
         pred_df["Probability_Pos"]  = prob_values[:,1]
