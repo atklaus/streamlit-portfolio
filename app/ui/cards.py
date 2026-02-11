@@ -218,7 +218,7 @@ def render_project_cards(cards: list[ProjectCard]) -> None:
             target = ' target="_blank" rel="noopener"'
         else:
             href = f"?go={quote(card.destination)}"
-            target = ""
+            target = ' target="_self"'
 
         icon_html = _icon_html(card.icon)
         tags_html = ""

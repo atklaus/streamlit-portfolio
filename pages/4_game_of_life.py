@@ -75,5 +75,5 @@ if create_board:
         fig.update_traces(showscale=False)
         
         # Update the plot using the persistent placeholder
-        plot.plotly_chart(fig, use_container_width=True)
+        plot.plotly_chart(fig, use_container_width=True, key=f"gof_chart_{k}")
         time.sleep(0.5)  # Adding a delay to create an animation effect
