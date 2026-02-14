@@ -1,7 +1,11 @@
 import streamlit as st
 
+from shared.settings import get_settings
+
+settings = get_settings()
+
 st.set_page_config(
-    page_title="DataEngBuilds",
+    page_title=settings.app_name,
     page_icon="static/images/favicon.ico",
     layout="wide",
     initial_sidebar_state="collapsed",

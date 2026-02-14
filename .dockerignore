@@ -22,5 +22,8 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/.streamlit/*.toml
+!**/.streamlit/config.toml
+!**/.streamlit/secrets.example.toml
 **/Users
 README.md

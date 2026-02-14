@@ -34,6 +34,56 @@ Links: `pages/8_bibliometrix_reference_cleaner.py` (open in app) | `projects/bib
 **Poetry**: `poetry install` then `poetry run streamlit run app.py`
 **Docker**: `docker build -t dataengbuilds .` then `docker run -p 8501:8501 --env-file .env dataengbuilds`
 
+## Secrets
+Create a local secrets file and keep it out of version control.
+1. Copy `.streamlit/secrets.example.toml` to `.streamlit/secrets.toml`.
+2. Update the values for your environment.
+
+Example:
+```toml
+[app]
+name = "DataEngBuilds"
+
+[links]
+github = "https://github.com/youruser"
+linkedin = "https://linkedin.com/in/youruser"
+email = "you@example.com"
+
+[logging]
+level = "INFO"
+```
+
+Docker secrets: mount `.streamlit/secrets.toml` into the container or set env vars such as `GITHUB_URL` and `CONTACT_EMAIL` at runtime. Never bake secrets into the image.
+
+## Telemetry Logging (DigitalOcean Spaces)
+Telemetry is shipped to Spaces as JSONL event logs and optional Parquet session rollups.
+
+**Env vars**
+- `LOGGING_ENABLED=true|false`
+- `LOG_SINK=stdout|spaces|stdout+spaces`
+- `LOG_FLUSH_EVENTS=25`
+- `LOG_FLUSH_SECONDS=5`
+- `LOG_SESSION_FLUSH_SECONDS=60`
+- `APP_VERSION=dev`
+- `SPACES_BUCKET=your-bucket`
+- `SPACES_REGION=nyc3`
+- `SPACES_ENDPOINT=https://nyc3.digitaloceanspaces.com`
+- `SPACES_ACCESS_KEY_ID=...`
+- `SPACES_SECRET_ACCESS_KEY=...`
+- `SPACES_PREFIX=telemetry/`
+
+**DuckDB queries**
+```sql
+SELECT COUNT(*)
+FROM read_json_auto('s3://your-bucket/telemetry/events/date=*/events_*.jsonl');
+
+SELECT COUNT(*)
+FROM read_parquet('s3://your-bucket/telemetry/sessions/date=*/sessions_*.parquet');
+```
+
+**Admin page**
+Open `pages/9_telemetry_admin.py` to view sessions, page views, and errors using DuckDB.
+
 ## Architecture (High Level)
 User -> Streamlit UI (`app.py`, `pages/*`) -> project modules (`projects/*`) -> data sources and model artifacts.
 Optional storage and analytics use DigitalOcean Spaces. More detail in `docs/PORTFOLIO.md`.
@@ -46,11 +96,6 @@ Optional storage and analytics use DigitalOcean Spaces. More detail in `docs/POR
 - `shared/` - utilities and services
 - `static/` - assets
 - `docs/` - portfolio narrative
-
-## Telemetry Logging
-Logs are JSONL events and Parquet session snapshots for DuckDB analysis.
-Default paths: `data/logs/` (local) or `/app/data/logs` (Docker).
-Admin page: `pages/9_telemetry_admin.py`.
 
 ## Tests
 Run: `poetry run pytest projects/bibclean/tests` and `python -m compileall app pages projects shared`.

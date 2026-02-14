@@ -5,7 +5,8 @@ import streamlit as st
 
 from .. import config as c
 from app.shared_ui import theme
-from shared.logging import instrument_page
+from shared.telemetry import instrument_page
+from shared.settings import email_href, get_settings
 
 BACKGROUND_COLOR = "white"
 COLOR = "black"
@@ -97,9 +98,10 @@ def get_page_path(name: str) -> str:
 
 def render_sidebar_nav(page_name: str):
     with st.sidebar:
-        github_profile_url = "https://github.com/atklaus"
-        linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
-        email_address = "mailto:atk14219@gmail.com"
+        settings = get_settings()
+        github_profile_url = settings.github_url
+        linkedin_profile_url = settings.linkedin_url
+        email_address = email_href(settings.contact_email)
 
         try:
             section = st.query_params.get("section")
@@ -201,13 +203,15 @@ def page_header(title, page_name, container_style=True):
             apply=True,
         )
 
-    github_profile_url = "https://github.com/atklaus"
-    linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
+    settings = get_settings()
+    github_profile_url = settings.github_url
+    linkedin_profile_url = settings.linkedin_url
+    brand_name = settings.app_name
     navbar_html = f"""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <div class="ads-nav">
       <div class="content-shell ads-nav-inner">
-        <div class="ads-nav-brand">DataEngBuilds</div>
+        <div class="ads-nav-brand">{brand_name}</div>
         <div class="ads-nav-actions">
           <a class="ads-icon-btn" href="/" target="_self" rel="noopener" aria-label="Home"><i class="fas fa-home"></i></a>
           <a class="ads-icon-btn" href="{github_profile_url}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fas fa-code"></i></a>

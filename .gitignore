@@ -125,7 +125,9 @@ celerybeat.pid
 # Environments
 .env
 .s3cfg
-.streamlit/secrets.toml
+.streamlit/*.toml
+!.streamlit/config.toml
+!.streamlit/secrets.example.toml
 .venv
 data/
 env/
