@@ -17,6 +17,9 @@ _BASE_CSS = """
 html, body, [class*="css"] {
   font-family: 'Manrope', sans-serif;
 }
+html {
+  scroll-behavior: smooth;
+}
 .content-shell,
 .ads-shell {
   max-width: 1240px;

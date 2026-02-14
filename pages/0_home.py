@@ -28,6 +28,7 @@ linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
 email_address = "mailto:atk14219@gmail.com"
 
 hero_html = f"""
+<div id="home"></div>
 <div class="content-shell ads-section hero-section">
   <section class="ads-hero">
     <div class="ads-hero-text">
@@ -86,16 +87,18 @@ for mod in show_mod_dict.keys():
         fun_cards.append(card)
 
 if featured_cards:
-    st.markdown('<div class="content-shell ads-section-tight"><h3 class="section-title">Featured</h3>', unsafe_allow_html=True)
+    st.markdown('<div id="featured"></div><div class="content-shell ads-section-tight"><h3 class="section-title">Featured</h3>', unsafe_allow_html=True)
     render_project_cards(featured_cards)
     st.markdown('</div>', unsafe_allow_html=True)
 
 if fun_cards:
+    st.markdown('<div id="fun"></div><div class="content-shell ads-section-tight ads-labs">', unsafe_allow_html=True)
     with st.expander("Other fun projects"):
         render_project_cards(fun_cards)
     st.markdown('</div>', unsafe_allow_html=True)
 
 footer_html = f"""
+<div id="contact"></div>
 <div class="ads-footer">
   <div class="content-shell">
     <div class="ads-footer-grid">

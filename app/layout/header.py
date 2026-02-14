@@ -1,3 +1,4 @@
+import base64
 import re
 from pathlib import Path
 
@@ -94,14 +95,116 @@ def get_page_path(name: str) -> str:
     return index.get(_standardize_name(name), index["home"])
 
 
-def render_sidebar_nav():
+def _get_resume_data_url() -> str:
+    cache_key = "resume_data_url"
+    if cache_key in st.session_state:
+        return st.session_state[cache_key]
+    repo_root = Path(__file__).resolve().parents[2]
+    pdf_path = repo_root / "static" / "files" / "Adam_Klaus_Resume.pdf"
+    try:
+        data = pdf_path.read_bytes()
+        b64 = base64.b64encode(data).decode("utf-8")
+        url = f"data:application/pdf;base64,{b64}"
+    except Exception:
+        url = ""
+    st.session_state[cache_key] = url
+    return url
+
+
+def render_sidebar_nav(page_name: str):
     with st.sidebar:
-        if st.button("Home", use_container_width=True, type="secondary"):
-            st.switch_page("pages/0_home.py")
+        resume_url = _get_resume_data_url()
+        github_profile_url = "https://github.com/atklaus"
+        linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
+        email_address = "mailto:atk14219@gmail.com"
+
+        try:
+            section = st.query_params.get("section")
+        except Exception:
+            section = None
+        if isinstance(section, list):
+            section = section[0]
+        if not section:
+            section = "home"
+
+        nav_items = [
+            ("Home", "home"),
+            ("Contact", "contact"),
+        ]
+
+        nav_links = []
+        for label, anchor in nav_items:
+            href = f"/?section={anchor}#{anchor}"
+            active = " active" if section == anchor else ""
+            nav_links.append(
+                f'<a class="ads-nav-item{active}" href="{href}" target="_self" rel="noopener">{label}</a>'
+            )
+
+        sidebar_html = f"""
+<style>
+.ads-sidebar {{
+  padding-top: 0.5rem;
+}}
+.ads-sidebar h4 {{
+  margin: 0 0 0.6rem 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(241, 251, 249, 0.65);
+}}
+.ads-nav-list {{
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}}
+.ads-nav-item {{
+  padding: 0.45rem 0.65rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: rgba(241, 251, 249, 0.85);
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}}
+.ads-nav-item:hover {{
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
+}}
+.ads-nav-item.active {{
+  background: rgba(155, 231, 216, 0.08);
+  border-color: rgba(155, 231, 216, 0.2);
+  color: rgba(241, 251, 249, 0.95);
+}}
+.ads-sidebar-links {{
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}}
+.ads-sidebar-links a {{
+  text-decoration: none;
+  color: rgba(178, 200, 195, 0.9);
+  font-size: 0.85rem;
+}}
+</style>
+<div class="ads-sidebar">
+  <h4>Sections</h4>
+  <div class="ads-nav-list">
+    {''.join(nav_links)}
+  </div>
+  <div class="ads-sidebar-links">
+    <h4>Quick links</h4>
+    <a href="{github_profile_url}" target="_blank" rel="noopener">GitHub</a>
+    <a href="{linkedin_profile_url}" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="{resume_url}" target="_blank" rel="noopener">Resume</a>
+    <a href="{email_address}" target="_blank" rel="noopener">Email</a>
+  </div>
+</div>
+"""
+        st.markdown(sidebar_html, unsafe_allow_html=True)
 
 def page_header(title, page_name, container_style=True):
     theme.inject_base_styles()
-    render_sidebar_nav()
+    render_sidebar_nav(page_name)
     if container_style:
         set_page_container_style(
             max_width_100_percent=True,

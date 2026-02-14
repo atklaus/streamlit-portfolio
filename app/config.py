@@ -21,7 +21,7 @@ MOD_ACCESS = {
     ,'name' : 'wnba_success'
     ,'description':"Predict WNBA success from college stats with live scraping and a cached model."
     ,'group': 'featured'
-    ,'tags': ('Featured', 'ML', 'Web scrape')
+    ,'tags': ('Machine Learning', 'Classification', 'Data Pipeline', 'Web Scraping')
     }
 
     ,'landscape_img': {
@@ -29,7 +29,7 @@ MOD_ACCESS = {
     ,'name' : 'landscape_img'
     ,'description':'Classify landscape images with a tiled CNN inference pipeline.'
     ,'group': 'featured'
-    ,'tags': ('Featured', 'Vision', 'Inference')
+    ,'tags': ('Computer Vision', 'Deep Learning', 'Model Inference', 'ML Pipeline')
     }
 
     ,'random_ellipses': {
@@ -37,7 +37,8 @@ MOD_ACCESS = {
     ,'name' : 'ellipses'
     ,'description':'Monte Carlo overlap estimator for two ellipses.'
     ,'group': 'fun'
-    ,'tags': ('Fun', 'Simulation')
+    ,'tags': ('Simulation', 'Monte Carlo', 'Numerical Methods')
+
     }
 
     ,'game_of_life': {
@@ -45,7 +46,7 @@ MOD_ACCESS = {
     ,'name' : 'game_of_life'
     ,'description':"Visualize Conway's Game of Life."
     ,'group': 'fun'
-    ,'tags': ('Fun', 'Simulation')
+    ,'tags': ('Simulation', 'Algorithm Design', 'Visualization')
     }
 
 
@@ -54,7 +55,7 @@ MOD_ACCESS = {
     ,'name' : 'happy_prime'
     ,'description':'Determine whether a number is happy and prime.'
     ,'group': 'fun'
-    ,'tags': ('Fun', 'Math')
+    ,'tags': ('Algorithms', 'Number Theory', 'Problem Solving')
     }
 
     ,'bibliometrix_reference_cleaner': {
@@ -62,7 +63,7 @@ MOD_ACCESS = {
     ,'name' : 'bibliometrix_reference_cleaner'
     ,'description':'Canonicalize Scopus/WoS references for bibliometrix/Biblioshiny.'
     ,'group': 'featured'
-    ,'tags': ('Featured', 'ETL', 'Dedup')
+    ,'tags': ('Data Engineering', 'ETL', 'Fuzzy Matching', 'Record Linkage')
     }
 
     }

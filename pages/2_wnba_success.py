@@ -16,9 +16,12 @@ import joblib
 import datetime
 import html as html_lib
 
-MODEL_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "wnba_success.pkl")
-IMPUTER_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "imputer.pkl")
-SCALER_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "model", "scaler.pkl")
+MODEL_PATH = os.path.join(
+    BASE_DIR, "projects", "wnba_success", "model", "wnba_success_model.joblib"
+)
+FEATURE_SCHEMA_PATH = os.path.join(
+    BASE_DIR, "projects", "wnba_success", "model", "feature_schema.json"
+)
 PDF_PATH = os.path.join(BASE_DIR, "projects", "wnba_success", "assets", "Predicting_WNBA_Success.pdf")
 ROOT_DIR = Path(__file__).resolve().parents[1]
 FIXTURES_DIR = ROOT_DIR / "projects" / "wnba_success" / "fixtures"
@@ -28,7 +31,23 @@ REQUEST_TIMEOUT = 10
 
 BASE_URL = 'https://www.sports-reference.com'
 SEASON_URL_TEMPLATE = 'https://www.sports-reference.com/cbb/seasons/women/{}-school-stats.html'
-TOP_FEATURES = ['pg_2p%', 'adv_stl%', 'pg_fg%', 'pg_pts', 'pg_sos', 'adv_trb%', 'adv_ast%', 'pg_tov']
+MODEL_FEATURES_FALLBACK = [
+    "pg_2p_pct",
+    "adv_stl_pct",
+    "pg_fg_pct",
+    "pg_pts",
+    "pg_sos",
+    "adv_trb_pct",
+    "adv_ast_pct",
+    "pg_tov",
+]
+FEATURE_NAME_MAP = {
+    "pg_2p%": "pg_2p_pct",
+    "adv_stl%": "adv_stl_pct",
+    "pg_fg%": "pg_fg_pct",
+    "adv_trb%": "adv_trb_pct",
+    "adv_ast%": "adv_ast_pct",
+}
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -98,35 +117,33 @@ def init_model():
     #     loaded_model = pickle.load(model_file)
     return loaded_model
 
-@st.cache_resource(show_spinner=False, ttl=43200)
-def init_imputer():
-    return joblib.load(IMPUTER_PATH)
-
-@st.cache_resource(show_spinner=False, ttl=43200)
-def init_scaler():
-    return joblib.load(SCALER_PATH)
-
-def get_imputer_stats():
-    try:
-        imputer = init_imputer()
-    except Exception:
-        return {}
-    if not hasattr(imputer, "feature_names_in_") or not hasattr(imputer, "statistics_"):
-        return {}
-    return dict(zip(imputer.feature_names_in_, imputer.statistics_))
-
-def get_pg_sos_fallback():
-    try:
-        imputer = init_imputer()
-    except Exception:
-        return None
-    if not hasattr(imputer, "feature_names_in_") or not hasattr(imputer, "statistics_"):
+def _load_feature_schema():
+    if not os.path.exists(FEATURE_SCHEMA_PATH):
         return None
     try:
-        idx = list(imputer.feature_names_in_).index("pg_sos")
-    except ValueError:
+        with open(FEATURE_SCHEMA_PATH, "r") as handle:
+            data = json.load(handle)
+    except (OSError, json.JSONDecodeError):
         return None
-    return imputer.statistics_[idx]
+    if isinstance(data, list):
+        return [str(item) for item in data]
+    if isinstance(data, dict):
+        for key in ("columns", "features", "feature_names", "model_features"):
+            if key in data and isinstance(data[key], list):
+                return [str(item) for item in data[key]]
+    return None
+
+def get_model_feature_names(model):
+    schema = _load_feature_schema()
+    if schema:
+        return schema
+    if hasattr(model, "feature_names_in_"):
+        return list(model.feature_names_in_)
+    named_steps = getattr(model, "named_steps", {})
+    for step in named_steps.values():
+        if hasattr(step, "feature_names_in_"):
+            return list(step.feature_names_in_)
+    return list(MODEL_FEATURES_FALLBACK)
 
 def _normalize_team_name(name):
     if name is None:
@@ -420,39 +437,21 @@ def get_team_sos(season, college, team_url=None):
         return None
     return float(value)
 
-def prepare_features_for_model(base_df, feature_cols):
+def build_model_input(base_df, model):
     if base_df is None or base_df.empty:
         return None
-
-    missing_cols = [col for col in feature_cols if col not in base_df.columns]
+    feature_cols = get_model_feature_names(model)
+    features = base_df.rename(columns=FEATURE_NAME_MAP)
+    missing_cols = [col for col in feature_cols if col not in features.columns]
     if missing_cols:
         st.error(
             "Missing required stats for prediction: "
             + ", ".join(missing_cols)
             + ". The Sports-Reference page may not include these columns."
         )
-        st.write("Available columns:", sorted(base_df.columns))
+        st.write("Available columns:", sorted(features.columns))
         return None
-
-    features = base_df[feature_cols].copy()
-    stats = get_imputer_stats()
-    for col in features.columns:
-        if features[col].isna().any() and col in stats:
-            features[col] = features[col].fillna(stats[col])
-
-    if features.isna().any().any():
-        st.error("Some required stats are missing and could not be imputed.")
-        st.write("Missing columns:", list(features.columns[features.isna().any()]))
-        return None
-
-    try:
-        scaler = init_scaler()
-        if hasattr(scaler, "feature_names_in_"):
-            features = features[list(scaler.feature_names_in_)]
-        return scaler.transform(features)
-    except Exception as exc:
-        st.error(f"Failed to apply scaler: {exc}")
-        return None
+    return features[feature_cols].copy()
 
 
 # Load the model from the file
@@ -822,8 +821,8 @@ if show_validation:
                 f"Using {used_features} features."
             )
         st.caption(
-            "Note: pg_*% columns are decimals (e.g., 0.55 = 55%), while "
-            "adv_stl%/adv_trb%/adv_ast% are percent points (e.g., 2.3 = 2.3%)."
+            "Note: pg_*_pct columns are decimals (e.g., 0.55 = 55%), while "
+            "adv_stl_pct/adv_trb_pct/adv_ast_pct are percent points (e.g., 2.3 = 2.3%)."
         )
 
 if search:
@@ -840,71 +839,52 @@ if search:
             )
             if sos_value is not None:
                 base_df["pg_sos"] = sos_value
-            else:
-                fallback = get_pg_sos_fallback()
-                if fallback is not None:
-                    base_df["pg_sos"] = fallback
-
-        df= base_df[TOP_FEATURES] 
-        st.markdown("Features used in Prediction")
-        st.dataframe(df,
-        column_config={
-            'pg_2p%':st.column_config.NumberColumn(label='2-Point Field Goal Percentage',format='%.2f %%')
-            , 'adv_stl%':st.column_config.NumberColumn(label='Steal Percentage',format='%.2f %%')
-            , 'pg_fg%':st.column_config.NumberColumn(label='Field Goal Percentage',format='%.2f %%')
-            , 'pg_pts':st.column_config.NumberColumn(label='Points Per Game')
-            , 'pg_sos':st.column_config.NumberColumn(label='Strength of Schedule')
-            , 'adv_trb%':st.column_config.NumberColumn(label=' Total Rebound Percentage',format='%.2f %%')
-            , 'adv_ast%':st.column_config.NumberColumn(label='Assist Percentage',format='%.2f %%')
-            , 'pg_tov':st.column_config.NumberColumn(label='Turnovers Per Game')
-        },
-        hide_index=True
-        )
-
-        # loaded_scaler = joblib.load('wnba_model/scaler.pkl')
-        # # loaded_imputer = joblib.load('wnba_model/imputer.pkl')
-
-        # # new_data = loaded_imputer.transform(df)
-        # new_data = loaded_scaler.transform(df)  # Note the [ ] to make it 2D
-
-        # st.write(model.feature_importances_)
+            elif "pg_sos" not in base_df.columns:
+                base_df["pg_sos"] = pd.NA
 
         model = init_model()
-        features = prepare_features_for_model(base_df, TOP_FEATURES)
-        if features is None:
+        model_input = build_model_input(base_df, model)
+        if model_input is None:
             st.stop()
 
-        scaler = init_scaler()
-        feature_order = (
-            list(scaler.feature_names_in_)
-            if hasattr(scaler, "feature_names_in_")
-            else list(TOP_FEATURES)
+        st.markdown("Features used in Prediction")
+        st.dataframe(
+            model_input,
+            column_config={
+                "pg_2p_pct": st.column_config.NumberColumn(
+                    label="2-Point Field Goal Percentage", format="%.2f %%"
+                ),
+                "adv_stl_pct": st.column_config.NumberColumn(
+                    label="Steal Percentage", format="%.2f %%"
+                ),
+                "pg_fg_pct": st.column_config.NumberColumn(
+                    label="Field Goal Percentage", format="%.2f %%"
+                ),
+                "pg_pts": st.column_config.NumberColumn(label="Points Per Game"),
+                "pg_sos": st.column_config.NumberColumn(label="Strength of Schedule"),
+                "adv_trb_pct": st.column_config.NumberColumn(
+                    label="Total Rebound Percentage", format="%.2f %%"
+                ),
+                "adv_ast_pct": st.column_config.NumberColumn(
+                    label="Assist Percentage", format="%.2f %%"
+                ),
+                "pg_tov": st.column_config.NumberColumn(label="Turnovers Per Game"),
+            },
+            hide_index=True,
         )
-        missing_for_validation = [c for c in feature_order if c not in base_df.columns]
-        if missing_for_validation:
-            st.session_state["validation_df"] = None
-            st.session_state["validation_meta"] = {
-                "model_features": getattr(model, "n_features_in_", None),
-                "used_features": len(feature_order),
-                "missing": missing_for_validation,
-            }
-        else:
-            raw_row = base_df[feature_order].iloc[0]
-            scaled_row = pd.Series(features[0], index=feature_order)
-            validation_df = pd.DataFrame(
-                {
-                    "feature": feature_order,
-                    "raw_value": raw_row.values,
-                    "scaled_value": scaled_row.values,
-                }
-            )
-            st.session_state["validation_df"] = validation_df
-            st.session_state["validation_meta"] = {
-                "model_features": getattr(model, "n_features_in_", None),
-                "used_features": len(feature_order),
-            }
-        predicted_values = model.predict(features)
-        prob_values = model.predict_proba(features)
+
+        feature_cols = list(model_input.columns)
+        validation_df = pd.DataFrame(
+            {"feature": feature_cols, "raw_value": model_input.iloc[0].values}
+        )
+        st.session_state["validation_df"] = validation_df
+        st.session_state["validation_meta"] = {
+            "model_features": len(get_model_feature_names(model)),
+            "used_features": len(feature_cols),
+        }
+
+        predicted_values = model.predict(model_input)
+        prob_values = model.predict_proba(model_input)
         pred_df = base_df[["player_name"]].copy()
         pred_df["Predicted_Value"] = predicted_values
         pred_df["Probability_Pos"]  = prob_values[:,1]
