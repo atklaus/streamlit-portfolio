@@ -12,32 +12,43 @@ header.page_header('DataEngBuilds',page_name=os.path.basename(__file__))
 # cf = CF(bucket='analytics')
 # cf.store_session(prefix='activity/{}.json.gz')
 
-# Add the HTML code to the Streamlit app
-# st.markdown(navbar_html, unsafe_allow_html=True)
-
 st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">', unsafe_allow_html=True)
 logo_path = "static/images/ads_logo.png"
 logo_base64 = stu.get_image_base64(logo_path)
 
-# stu.V_SPACE(1)
+def get_pdf_base64(file_path):
+    with open(file_path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
 
-header_html = f"""
-<div style="display: flex; align-items: center;">
-    <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 120px; width: auto; max-width: 120px; margin-right: 10px;">
-    <h2 style="margin: 0;">Hi, I'm Adam!</h2>
+resume_path = "static/files/Adam_Klaus_Resume.pdf"
+resume_base64 = get_pdf_base64(resume_path)
+
+github_profile_url = "https://github.com/atklaus"
+linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
+email_address = "mailto:atk14219@gmail.com"
+
+hero_html = f"""
+<div class="content-shell ads-section hero-section">
+  <section class="ads-hero">
+    <div class="ads-hero-text">
+      <div class="ads-hero-title">Hi, I'm Adam.</div>
+      <p class="ads-hero-body">
+        Below is a collection of things I've built, interactive tools, data pipelines, and applied ML experiments. Hope you enjoy!
+      </p>
+      <div class="ads-cta-row">
+        <a class="ads-pill" href="{github_profile_url}" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+        <a class="ads-pill" href="{linkedin_profile_url}" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        <a class="ads-pill" href="data:application/pdf;base64,{resume_base64}" target="_blank" rel="noopener"><i class="fas fa-file-pdf"></i> Resume</a>
+        <a class="ads-pill" href="{email_address}" target="_blank" rel="noopener"><i class="fas fa-envelope"></i> Email</a>
+      </div>
+    </div>
+    <div class="hero-media">
+      <img class="hero-avatar" src="data:image/png;base64,{logo_base64}" alt="Adam portrait">
+    </div>
+  </section>
 </div>
-<br>
-<p>I'm a data engineer, and below is a collection of things I've built, interactive tools, data pipelines, and applied ML experiments. Hope you enjoy!</p>
 """
-
-st.markdown(header_html, unsafe_allow_html=True)
-
-st.markdown(
-    """<hr style="height:2px;border:none;color:#316b62;background-color:#316b62;margin: 0.75rem 0;" /> """,
-    unsafe_allow_html=True,
-)
-
-stu.V_SPACE(1)
+st.markdown(hero_html, unsafe_allow_html=True)
 def _split_label(label: str) -> tuple[str, str]:
     icon = "◆"
     title = label
@@ -54,79 +65,53 @@ ICON_OVERRIDES = {
     "ellipses": "🫧",
 }
 
-cards = []
+featured_cards = []
+fun_cards = []
 for mod in show_mod_dict.keys():
     mod_entry = show_mod_dict[mod]
     icon, title = _split_label(mod_entry["button"])
     icon = ICON_OVERRIDES.get(mod_entry["name"], icon)
-    cards.append(
-        ProjectCard(
-            title=title,
-            description=mod_entry["description"],
-            icon=icon,
-            destination=header.get_page_path(mod_entry["name"]),
-        )
+    tags = tuple(mod_entry.get("tags", ()))
+    group = (mod_entry.get("group") or "fun").lower()
+    card = ProjectCard(
+        title=title,
+        description=mod_entry["description"],
+        icon=icon,
+        destination=header.get_page_path(mod_entry["name"]),
+        tags=tags,
     )
+    if group == "featured":
+        featured_cards.append(card)
+    else:
+        fun_cards.append(card)
 
-render_project_cards(cards)
-stu.V_SPACE(1)
+if featured_cards:
+    st.markdown('<div class="content-shell ads-section-tight"><h3 class="section-title">Featured</h3>', unsafe_allow_html=True)
+    render_project_cards(featured_cards)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown(
-    """<hr style="height:2px;border:none;color:#316b62;background-color:#316b62;margin: 0.75rem 0;" /> """,
-    unsafe_allow_html=True,
-)
-
-file_path = os.getcwd()+ '/static/files/Adam_Klaus_Resume.pdf'
-pdf_path = "Adam_Klaus_Resume.pdf"
-
-with open(file_path, "rb") as f:
-    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-
-def get_pdf_base64(file_path):
-    with open(file_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-    return base64_pdf
-
-# Your existing Streamlit code here...
-
-pdf_path = "static/files/Adam_Klaus_Resume.pdf"
-pdf_base64 = get_pdf_base64(pdf_path)
+if fun_cards:
+    with st.expander("Other fun projects"):
+        render_project_cards(fun_cards)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 footer_html = f"""
-<style>
-.ads-footer-grid {{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: space-between;
-}}
-.ads-footer h4 {{
-    margin: 0 0 0.5rem 0;
-    color: #316b62;
-}}
-.ads-footer a {{
-    text-decoration: none;
-}}
-.ads-footer-meta {{
-    font-size: 0.85rem;
-    opacity: 0.75;
-    margin-top: 0.5rem;
-}}
-</style>
 <div class="ads-footer">
-  <div class="ads-footer-grid">
-    <div>
-      <h4>Contact</h4>
-      <div><a href="mailto:atk14219@gmail.com" target="_blank">Email</a></div>
-    </div>
-    <div>
-      <h4>About</h4>
-      <div>Website coded in Python using Streamlit and hosted through DigitalOcean</div>
-    </div>
-      <h4></h4>
-    <div class="ads-footer-meta">
-      © 2026 Copyright, All Rights Reserved. dataengbuilds.com
-    </div>
+  <div class="content-shell">
+    <div class="ads-footer-grid">
+      <div>
+        <div class="ads-footer-title">Contact</div>
+        <a class="ads-footer-link" href="{email_address}" target="_blank" rel="noopener">Email</a>
+      </div>
+      <div>
+        <div class="ads-footer-title">About</div>
+        <div class="ads-footer-text">Built with Streamlit and hosted on DigitalOcean.</div>
+      </div>
+      <div class="ads-footer-right">
+        <div class="ads-footer-title">© 2026</div>
+        <div class="ads-footer-meta">dataengbuilds.com</div>
+      </div>
+  </div>
   </div>
 </div>
 """

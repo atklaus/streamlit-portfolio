@@ -4,6 +4,7 @@ from pathlib import Path
 import streamlit as st
 
 from .. import config as c
+from app.shared_ui import theme
 
 BACKGROUND_COLOR = "white"
 COLOR = "black"
@@ -98,37 +99,32 @@ def render_sidebar_nav():
         if st.button("Home", use_container_width=True, type="secondary"):
             st.switch_page("pages/0_home.py")
 
-def _hide_streamlit_sidebar_nav():
-    st.markdown(
-        """
-        <style>
-        [data-testid="stSidebarNav"] { display: none; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
 def page_header(title, page_name, container_style=True):
-    st.set_page_config(
-        page_title=title,
-        page_icon="static/images/favicon.ico",
-        layout="wide",
-        initial_sidebar_state="expanded",
-    )
-    _hide_streamlit_sidebar_nav()
+    theme.inject_base_styles()
     render_sidebar_nav()
     if container_style:
-        set_page_container_style(padding_top=0.25, padding_bottom=0.25, apply=True)
+        set_page_container_style(
+            max_width_100_percent=True,
+            padding_top=0.0,
+            padding_bottom=0.25,
+            padding_left=1.25,
+            padding_right=1.25,
+            apply=True,
+        )
 
     github_profile_url = "https://github.com/atklaus"
     linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
     navbar_html = f"""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div style="background-color: #316b62; padding: 10px; border-radius: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; margin: 0.25rem 0 0.75rem 0;">
-        <a href="/"><i class="fas fa-home" style="font-size:24px; color: white;"></i></a>
-        <a href="{github_profile_url}"><i class="fas fa-code" style="font-size:24px; color: white;"></i></a>
-        <a href="{linkedin_profile_url}"><i class="fab fa-linkedin" style="font-size:24px; color: white;"></i></a>
+    <div class="ads-nav">
+      <div class="content-shell ads-nav-inner">
+        <div class="ads-nav-brand">DataEngBuilds</div>
+        <div class="ads-nav-actions">
+          <a class="ads-icon-btn" href="/" target="_self" rel="noopener" aria-label="Home"><i class="fas fa-home"></i></a>
+          <a class="ads-icon-btn" href="{github_profile_url}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fas fa-code"></i></a>
+          <a class="ads-icon-btn" href="{linkedin_profile_url}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
     </div>
     """
 

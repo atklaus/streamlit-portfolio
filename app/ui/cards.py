@@ -50,7 +50,7 @@ html, body, [class*="css"] {
 @media (max-width: 1100px) {
   .ads-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .ads-card-grid { grid-template-columns: 1fr; }
 }
 .ads-card {
@@ -58,12 +58,13 @@ html, body, [class*="css"] {
     flex-direction: column;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
     border-radius: 22px;
     overflow: hidden;
     border: 1px solid var(--ads-border);
     background: radial-gradient(circle at top left, rgba(155, 231, 216, 0.12), transparent 55%),
                 linear-gradient(160deg, #203635, #1b2626 55%);
-    min-height: 190px;
+    min-height: 175px;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
 }
@@ -77,6 +78,7 @@ html, body, [class*="css"] {
 .ads-card:focus-visible {
     outline: 3px solid var(--ads-focus);
     outline-offset: 4px;
+    text-decoration: none;
 }
 .ads-card:hover {
     transform: translateY(-3px);
@@ -87,7 +89,7 @@ html, body, [class*="css"] {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.85rem 1.1rem;
+    padding: 0.5rem 0.9rem;
     background: linear-gradient(120deg, rgba(155, 231, 216, 0.28), rgba(49, 107, 98, 0.35));
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -111,7 +113,7 @@ html, body, [class*="css"] {
     transform: translateX(3px);
 }
 .ads-card-body {
-    padding: 0.85rem 1.1rem 1.1rem 1.1rem;
+    padding: 0.7rem 1rem 0.95rem 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -140,17 +142,19 @@ html, body, [class*="css"] {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: 2.4rem;
+    text-decoration: none;
 }
 .ads-card-tags {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     margin-top: 0.35rem;
 }
 .ads-card-tag {
     font-size: 0.72rem;
     letter-spacing: 0.02em;
-    padding: 0.18rem 0.5rem;
+    padding: 0.18rem 0.65rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--ads-ink);

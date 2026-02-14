@@ -19,38 +19,50 @@ MOD_ACCESS = {
     ,'wnba_success': {
     'button' : '🏀 Predicting WNBA Success'
     ,'name' : 'wnba_success'
-    ,'description':"Using college stats to predict which players would have successful WNBA careers"
+    ,'description':"Predict WNBA success from college stats with live scraping and a cached model."
+    ,'group': 'featured'
+    ,'tags': ('Featured', 'ML', 'Web scrape')
     }
 
     ,'landscape_img': {
     'button' : '🏔️  Landscape Image Prediction'
     ,'name' : 'landscape_img'
-    ,'description':'Predict the landscape of a given image using a convolutional neural network'
+    ,'description':'Classify landscape images with a tiled CNN inference pipeline.'
+    ,'group': 'featured'
+    ,'tags': ('Featured', 'Vision', 'Inference')
     }
 
     ,'random_ellipses': {
     'button' : '♾️ Random Ellipses'
     ,'name' : 'ellipses'
-    ,'description':'Given two ellipses, determine their overlapping area with a pseudo random number generator'
+    ,'description':'Monte Carlo overlap estimator for two ellipses.'
+    ,'group': 'fun'
+    ,'tags': ('Fun', 'Simulation')
     }
 
     ,'game_of_life': {
     'button' : '👾 Game of Life'
     ,'name' : 'game_of_life'
-    ,'description':"Visualize preset and random simulations of Conway's game of life"
+    ,'description':"Visualize Conway's Game of Life."
+    ,'group': 'fun'
+    ,'tags': ('Fun', 'Simulation')
     }
 
 
     ,'happy_prime': {
     'button' : '🙂 Happy Prime'
     ,'name' : 'happy_prime'
-    ,'description':'Calculator to determine whether an integer is happy or sad'
+    ,'description':'Determine whether a number is happy and prime.'
+    ,'group': 'fun'
+    ,'tags': ('Fun', 'Math')
     }
 
     ,'bibliometrix_reference_cleaner': {
     'button' : '📚 Bibliometrix Reference Cleaner'
     ,'name' : 'bibliometrix_reference_cleaner'
-    ,'description':'Canonicalize cited references for bibliometrix/Biblioshiny'
+    ,'description':'Canonicalize Scopus/WoS references for bibliometrix/Biblioshiny.'
+    ,'group': 'featured'
+    ,'tags': ('Featured', 'ETL', 'Dedup')
     }
 
     }

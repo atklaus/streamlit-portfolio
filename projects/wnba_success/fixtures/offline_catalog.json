@@ -1,0 +1,69 @@
+{
+  "season": 2023,
+  "colleges": {
+    "UConn": {
+      "team_url": "offline://uconn",
+      "team_sos": 9.8,
+      "players": {
+        "Breanna Stewart": {
+          "player_url": "offline://breanna-stewart",
+          "features": {
+            "pg_2p%": 0.56,
+            "adv_stl%": 2.4,
+            "pg_fg%": 0.52,
+            "pg_pts": 19.8,
+            "pg_sos": 9.8,
+            "adv_trb%": 12.1,
+            "adv_ast%": 18.7,
+            "pg_tov": 2.4
+          }
+        },
+        "Paige Bueckers": {
+          "player_url": "offline://paige-bueckers",
+          "features": {
+            "pg_2p%": 0.53,
+            "adv_stl%": 2.1,
+            "pg_fg%": 0.48,
+            "pg_pts": 17.2,
+            "pg_sos": 9.8,
+            "adv_trb%": 10.3,
+            "adv_ast%": 27.4,
+            "pg_tov": 2.8
+          }
+        }
+      }
+    },
+    "South Carolina": {
+      "team_url": "offline://south-carolina",
+      "team_sos": 8.9,
+      "players": {
+        "Aaliyah Boston": {
+          "player_url": "offline://aaliyah-boston",
+          "features": {
+            "pg_2p%": 0.58,
+            "adv_stl%": 2.0,
+            "pg_fg%": 0.54,
+            "pg_pts": 14.8,
+            "pg_sos": 8.9,
+            "adv_trb%": 16.5,
+            "adv_ast%": 8.2,
+            "pg_tov": 2.1
+          }
+        },
+        "Aliyah Collier": {
+          "player_url": "offline://aliyah-collier",
+          "features": {
+            "pg_2p%": 0.49,
+            "adv_stl%": 1.8,
+            "pg_fg%": 0.46,
+            "pg_pts": 11.6,
+            "pg_sos": 8.9,
+            "adv_trb%": 12.4,
+            "adv_ast%": 12.6,
+            "pg_tov": 2.5
+          }
+        }
+      }
+    }
+  }
+}

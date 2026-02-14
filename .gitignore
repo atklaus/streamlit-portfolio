@@ -124,6 +124,8 @@ celerybeat.pid
 
 # Environments
 .env
+.s3cfg
+.streamlit/secrets.toml
 .venv
 env/
 venv/
@@ -180,4 +182,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
