@@ -185,22 +185,24 @@ html {
   text-align: right;
 }
 .ads-labs {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.012);
+  border: none;
   border-radius: 14px;
   padding: 0.15rem 0.15rem;
   margin-top: 1.5rem;
 }
 .ads-labs [data-testid="stExpander"] > details {
   background: transparent;
+  border: none;
+  box-shadow: none;
 }
 .ads-labs [data-testid="stExpander"] > details > summary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  border: none;
   border-radius: 12px;
 }
 .ads-labs [data-testid="stExpander"] > details[open] > summary {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 .ads-labs [data-testid="stExpander"] > details > div {
   padding: 24px 24px 32px 24px;

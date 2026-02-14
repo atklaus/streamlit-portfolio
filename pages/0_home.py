@@ -1,4 +1,3 @@
-import base64
 import os
 
 import streamlit as st
@@ -16,13 +15,6 @@ st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs
 logo_path = "static/images/ads_logo.png"
 logo_base64 = stu.get_image_base64(logo_path)
 
-def get_pdf_base64(file_path):
-    with open(file_path, "rb") as f:
-        return base64.b64encode(f.read()).decode("utf-8")
-
-resume_path = "static/files/Adam_Klaus_Resume.pdf"
-resume_base64 = get_pdf_base64(resume_path)
-
 github_profile_url = "https://github.com/atklaus"
 linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
 email_address = "mailto:atk14219@gmail.com"
@@ -39,7 +31,6 @@ hero_html = f"""
       <div class="ads-cta-row">
         <a class="ads-pill" href="{github_profile_url}" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
         <a class="ads-pill" href="{linkedin_profile_url}" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
-        <a class="ads-pill" href="data:application/pdf;base64,{resume_base64}" target="_blank" rel="noopener"><i class="fas fa-file-pdf"></i> Resume</a>
         <a class="ads-pill" href="{email_address}" target="_blank" rel="noopener"><i class="fas fa-envelope"></i> Email</a>
       </div>
     </div>

@@ -1,4 +1,3 @@
-import base64
 import re
 from pathlib import Path
 
@@ -6,6 +5,7 @@ import streamlit as st
 
 from .. import config as c
 from app.shared_ui import theme
+from shared.logging import instrument_page
 
 BACKGROUND_COLOR = "white"
 COLOR = "black"
@@ -95,25 +95,8 @@ def get_page_path(name: str) -> str:
     return index.get(_standardize_name(name), index["home"])
 
 
-def _get_resume_data_url() -> str:
-    cache_key = "resume_data_url"
-    if cache_key in st.session_state:
-        return st.session_state[cache_key]
-    repo_root = Path(__file__).resolve().parents[2]
-    pdf_path = repo_root / "static" / "files" / "Adam_Klaus_Resume.pdf"
-    try:
-        data = pdf_path.read_bytes()
-        b64 = base64.b64encode(data).decode("utf-8")
-        url = f"data:application/pdf;base64,{b64}"
-    except Exception:
-        url = ""
-    st.session_state[cache_key] = url
-    return url
-
-
 def render_sidebar_nav(page_name: str):
     with st.sidebar:
-        resume_url = _get_resume_data_url()
         github_profile_url = "https://github.com/atklaus"
         linkedin_profile_url = "https://linkedin.com/in/adam-klaus"
         email_address = "mailto:atk14219@gmail.com"
@@ -195,7 +178,6 @@ def render_sidebar_nav(page_name: str):
     <h4>Quick links</h4>
     <a href="{github_profile_url}" target="_blank" rel="noopener">GitHub</a>
     <a href="{linkedin_profile_url}" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="{resume_url}" target="_blank" rel="noopener">Resume</a>
     <a href="{email_address}" target="_blank" rel="noopener">Email</a>
   </div>
 </div>
@@ -204,6 +186,10 @@ def render_sidebar_nav(page_name: str):
 
 def page_header(title, page_name, container_style=True):
     theme.inject_base_styles()
+    try:
+        instrument_page(str(page_name))
+    except Exception:
+        pass
     render_sidebar_nav(page_name)
     if container_style:
         set_page_container_style(

@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  dataengbuilds:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      LOGGING_ENABLED: "true"
+      LOG_DIR: "/app/data/logs"
+      LOG_FLUSH_EVENTS: "25"
+      LOG_FLUSH_SECONDS: "5"
+      LOG_SESSION_FLUSH_SECONDS: "60"
+      APP_VERSION: "dev"
+    volumes:
+      - /var/lib/dataengbuilds/data:/app/data

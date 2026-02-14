@@ -19,6 +19,7 @@ PAGES = [
     st.Page("pages/5_ellipses.py", title="Random Ellipses", icon="♾️"),
     st.Page("pages/6_happy_prime.py", title="Happy Prime", icon="🙂"),
     st.Page("pages/7_analytics.py", title="Analytics", icon="📈"),
+    st.Page("pages/9_telemetry_admin.py", title="Telemetry", icon="🧭"),
 ]
 
 nav = st.navigation(PAGES, position="hidden")
